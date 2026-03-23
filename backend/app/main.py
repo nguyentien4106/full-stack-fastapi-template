@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
@@ -20,14 +22,14 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
 )
 
-# Set all CORS enabled origins
-if settings.all_cors_origins:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.all_cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+# Allow all CORS origins (useful for local development). If you want to restrict
+# origins in production, change this to use `settings.all_cors_origins` instead.
+app.add_middleware(
+    cast(Any, CORSMiddleware),
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

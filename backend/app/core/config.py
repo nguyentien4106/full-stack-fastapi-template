@@ -41,7 +41,7 @@ class Settings(BaseSettings):
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = []
 
-    @computed_field  # type: ignore[prop-decorator]
+    @computed_field
     @property
     def all_cors_origins(self) -> list[str]:
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = ""
 
-    @computed_field  # type: ignore[prop-decorator]
+    @computed_field
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
         return PostgresDsn.build(
@@ -85,7 +85,7 @@ class Settings(BaseSettings):
 
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
 
-    @computed_field  # type: ignore[prop-decorator]
+    @computed_field
     @property
     def emails_enabled(self) -> bool:
         return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
@@ -93,6 +93,14 @@ class Settings(BaseSettings):
     EMAIL_TEST_USER: EmailStr = "test@example.com"
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
+
+    # S3 / R2 settings (optional). If using Cloudflare R2, set S3_ENDPOINT_URL to your
+    # R2 endpoint and provide access keys. These are intentionally optional so local
+    # dev continues to work without them.
+    R2_ACCESS_KEY: str | None = None
+    R2_SECRET_KEY: str | None = None
+    R2_BUCKET_NAME: str | None = None
+    R2_ACCOUNT_ID: str | None = None
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
