@@ -18,6 +18,10 @@ import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicDashboardRouteImport } from './routes/_public/trial'
+import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -44,7 +48,7 @@ const LayoutRoute = LayoutRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const LayoutIndexRoute = LayoutIndexRouteImport.update({
-  id: '/',
+  id: '/_layout/',
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
@@ -63,9 +67,28 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/_public/',
+  path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicDashboardRoute = PublicDashboardRouteImport.update({
+  id: '/_public/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPricingRoute = PublicPricingRouteImport.update({
+  id: '/_public/pricing',
+  path: '/pricing',
+  getParentRoute: () => PublicRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof LayoutIndexRoute
+  '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -73,6 +96,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/dashboard': typeof PublicDashboardRoute
+  '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -82,11 +107,14 @@ export interface FileRoutesByTo {
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
-  '/': typeof LayoutIndexRoute
+  '/': typeof PublicIndexRoute
+  '/dashboard': typeof PublicDashboardRoute
+  '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -95,6 +123,9 @@ export interface FileRoutesById {
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_public/': typeof PublicIndexRoute
+  '/_public/dashboard': typeof PublicDashboardRoute
+  '/_public/pricing': typeof PublicPricingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +138,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/items'
     | '/settings'
+    | '/dashboard'
+    | '/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -117,9 +150,12 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/'
+    | '/dashboard'
+    | '/pricing'
   id:
     | '__root__'
     | '/_layout'
+    | '/_public'
     | '/login'
     | '/recover-password'
     | '/reset-password'
@@ -128,10 +164,14 @@ export interface FileRouteTypes {
     | '/_layout/items'
     | '/_layout/settings'
     | '/_layout/'
+    | '/_public/'
+    | '/_public/dashboard'
+    | '/_public/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   LoginRoute: typeof LoginRoute
   RecoverPasswordRoute: typeof RecoverPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -171,7 +211,7 @@ declare module '@tanstack/react-router' {
     '/_layout': {
       id: '/_layout'
       path: ''
-      fullPath: '/'
+      fullPath: ''
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -203,6 +243,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/dashboard': {
+      id: '/_public/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PublicDashboardRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/pricing': {
+      id: '/_public/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PublicPricingRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
@@ -223,8 +291,24 @@ const LayoutRouteChildren: LayoutRouteChildren = {
 const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
+interface PublicRouteChildren {
+  PublicIndexRoute: typeof PublicIndexRoute
+  PublicDashboardRoute: typeof PublicDashboardRoute
+  PublicPricingRoute: typeof PublicPricingRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicIndexRoute: PublicIndexRoute,
+  PublicDashboardRoute: PublicDashboardRoute,
+  PublicPricingRoute: PublicPricingRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   LoginRoute: LoginRoute,
   RecoverPasswordRoute: RecoverPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
