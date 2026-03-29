@@ -122,6 +122,12 @@ class Settings(BaseSettings):
         )
 
         return self
+    
+    OCR_API_URL: HttpUrl | None = None
+    OCR_API_TOKEN: str | None = None
+    OCR_JOB_URL: HttpUrl | None = None
+    OCR_JOB_POLLING_INTERVAL: int = 5  # in seconds
+    OCR_MODEL: str = "PaddleOCR-VL"
 
 
 settings = Settings()  # type: ignore

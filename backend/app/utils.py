@@ -21,3 +21,14 @@ from app.users.utils import (  # noqa: F401
 
 def get_datetime_utc() -> datetime:
     return datetime.now(timezone.utc)
+
+def get_bytes_from_file_url(file_url: str) -> bytes:
+    """
+    Utility function to fetch file bytes from a given URL.
+    This can be used for processing files stored in R2/S3 or other locations.
+    """
+    import requests
+
+    response = requests.get(file_url)
+    response.raise_for_status()
+    return response.content

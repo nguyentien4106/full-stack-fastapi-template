@@ -1,5 +1,8 @@
-import { FileText, Download, Eye } from "lucide-react"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { Download, Eye, FileText } from "lucide-react"
+import { FilesService } from "@/client"
 import { Button } from "@/components/ui/button"
+import { Empty } from "@/components/ui/empty"
 import {
   Table,
   TableBody,
@@ -9,15 +12,27 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBadge } from "./StatusBadge"
-import { Empty } from "@/components/ui/empty"
-import type { FileHistoryItem } from "@/lib/mock-data"
+import dayjs from "dayjs"
+import { DateTimeFormat } from "@/utils"
 
-interface FileHistoryTableProps {
-  files: FileHistoryItem[]
+function getRecentUploadFilesQueryOptions() {
+  return {
+    queryFn: () => FilesService.listFiles({ skip: 0, limit: 5 }),
+    queryKey: ["files-recent-upload"],
+  }
 }
 
-export function FileHistoryTable({ files }: FileHistoryTableProps) {
-  if (files.length === 0) {
+const fileSizeInMB = (sizeInBytes: number | null | undefined) => {
+  if (sizeInBytes == null) return "N/A";
+  return (sizeInBytes / (1024 * 1024)).toFixed(2) + " MB"
+}
+
+export function FileHistoryTable() {
+  const { data: recentFiles } = useSuspenseQuery(
+    getRecentUploadFilesQueryOptions(),
+  )
+
+  if (recentFiles.count === 0) {
     return (
       <Empty>
         <FileText className="w-12 h-12 text-muted-foreground mb-2" />
@@ -35,7 +50,6 @@ export function FileHistoryTable({ files }: FileHistoryTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead>Filename</TableHead>
-            <TableHead>Bank</TableHead>
             <TableHead>Size</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Date</TableHead>
@@ -43,7 +57,7 @@ export function FileHistoryTable({ files }: FileHistoryTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {files.map((file) => (
+          {recentFiles.data.map((file) => (
             <TableRow key={file.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -51,17 +65,25 @@ export function FileHistoryTable({ files }: FileHistoryTableProps) {
                   <span className="truncate font-medium">{file.filename}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-foreground/70">{file.bankType}</TableCell>
-              <TableCell className="text-foreground/70">{file.size}</TableCell>
+              <TableCell className="text-foreground/70">{fileSizeInMB(file.size)}</TableCell> 
               <TableCell>
-                <StatusBadge status={file.status} />
+                <StatusBadge
+                  status={
+                    file.job_status as
+                      | "pending"
+                      | "running"
+                      | "done"
+                      | "failed"
+                      | undefined
+                  }
+                />
               </TableCell>
               <TableCell className="text-foreground/70">
-                {file.uploadDate}
+                {dayjs(file.created_at).format(DateTimeFormat)}
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
-                  {file.status === "completed" && (
+                  {file.job_status === "done" && (
                     <>
                       <Button
                         variant="ghost"

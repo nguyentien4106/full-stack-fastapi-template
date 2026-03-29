@@ -67,7 +67,7 @@ def create_item_endpoint(
     """
     Create new item.
     """
-    item = create_item(session=session, item_in=item_in, owner_id=current_user.id)
+    item = create_item(session=session, item_in=item_in, user_id=current_user.id)
     return item
 
 

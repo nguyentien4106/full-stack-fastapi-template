@@ -29,3 +29,5 @@ export const getInitials = (name: string): string => {
     .join("")
     .toUpperCase()
 }
+
+export const DateTimeFormat = "hh:mm A, MMMM d, YYYY"

@@ -3,7 +3,137 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesPresignUploadData, FilesPresignUploadResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class FilesService {
+    /**
+     * Upload File Endpoint
+     * Upload a file to R2/S3 storage.
+     * @param data The data for the request.
+     * @param data.formData
+     * @returns FilePublic Successful Response
+     * @throws ApiError
+     */
+    public static uploadFileEndpoint(data: FilesUploadFileEndpointData): CancelablePromise<FilesUploadFileEndpointResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/files/',
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Files
+     * List all files uploaded by the current user.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @returns FilesPublic Successful Response
+     * @throws ApiError
+     */
+    public static listFiles(data: FilesListFilesData = {}): CancelablePromise<FilesListFilesResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/files/',
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Presign Upload
+     * Generate a presigned PUT URL for direct client uploads.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns PresignResponse Successful Response
+     * @throws ApiError
+     */
+    public static presignUpload(data: FilesPresignUploadData): CancelablePromise<FilesPresignUploadResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/files/presign',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Update File Job Status Endpoint
+     * Update the job status for a file based on OCR job updates.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @param data.jobStatus
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static updateFileJobStatusEndpoint(data: FilesUpdateFileJobStatusEndpointData): CancelablePromise<FilesUpdateFileJobStatusEndpointResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/files/{file_id}?job_status={job_status}',
+            path: {
+                file_id: data.fileId,
+                job_status: data.jobStatus
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get File Status
+     * Get the current status of a file, including OCR job status if applicable.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @returns FilePublic Successful Response
+     * @throws ApiError
+     */
+    public static getFileStatus(data: FilesGetFileStatusData): CancelablePromise<FilesGetFileStatusResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/files/{file_id}/status',
+            path: {
+                file_id: data.fileId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Download Table Excel File
+     * Generate a presigned URL for downloading the OCR result JSON as an Excel file.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static downloadTableExcelFile(data: FilesDownloadTableExcelFileData): CancelablePromise<FilesDownloadTableExcelFileResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/files/{file_id}/download',
+            path: {
+                file_id: data.fileId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class ItemsService {
     /**
@@ -30,14 +160,14 @@ export class ItemsService {
     }
     
     /**
-     * Create Item
+     * Create Item Endpoint
      * Create new item.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns ItemPublic Successful Response
      * @throws ApiError
      */
-    public static createItem(data: ItemsCreateItemData): CancelablePromise<ItemsCreateItemResponse> {
+    public static createItemEndpoint(data: ItemsCreateItemEndpointData): CancelablePromise<ItemsCreateItemEndpointResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/items/',
@@ -71,7 +201,7 @@ export class ItemsService {
     }
     
     /**
-     * Update Item
+     * Update Item Endpoint
      * Update an item.
      * @param data The data for the request.
      * @param data.id
@@ -79,7 +209,7 @@ export class ItemsService {
      * @returns ItemPublic Successful Response
      * @throws ApiError
      */
-    public static updateItem(data: ItemsUpdateItemData): CancelablePromise<ItemsUpdateItemResponse> {
+    public static updateItemEndpoint(data: ItemsUpdateItemEndpointData): CancelablePromise<ItemsUpdateItemEndpointResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/items/{id}',
@@ -260,14 +390,14 @@ export class UsersService {
     }
     
     /**
-     * Create User
+     * Create User Endpoint
      * Create new user.
      * @param data The data for the request.
      * @param data.requestBody
      * @returns UserPublic Successful Response
      * @throws ApiError
      */
-    public static createUser(data: UsersCreateUserData): CancelablePromise<UsersCreateUserResponse> {
+    public static createUserEndpoint(data: UsersCreateUserEndpointData): CancelablePromise<UsersCreateUserEndpointResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/users/',
@@ -387,7 +517,7 @@ export class UsersService {
     }
     
     /**
-     * Update User
+     * Update User Endpoint
      * Update a user.
      * @param data The data for the request.
      * @param data.userId
@@ -395,7 +525,7 @@ export class UsersService {
      * @returns UserPublic Successful Response
      * @throws ApiError
      */
-    public static updateUser(data: UsersUpdateUserData): CancelablePromise<UsersUpdateUserResponse> {
+    public static updateUserEndpoint(data: UsersUpdateUserEndpointData): CancelablePromise<UsersUpdateUserEndpointResponse> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/v1/users/{user_id}',

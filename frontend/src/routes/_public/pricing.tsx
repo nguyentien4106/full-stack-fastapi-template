@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { Check } from "lucide-react"
+import { PricingCard } from "@/components/PricingCard"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { PricingCard } from "@/components/PricingCard"
 import { pricingTiers } from "@/lib/mock-data"
-import { Check } from "lucide-react"
 
 export const Route = createFileRoute("/_public/pricing")({
   component: Pricing,
@@ -151,7 +151,8 @@ function Pricing() {
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-foreground/60 max-w-2xl mx-auto">
-            Choose the plan that's right for you. No hidden fees, cancel anytime.
+            Choose the plan that's right for you. No hidden fees, cancel
+            anytime.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router"
+import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Check } from "lucide-react"
 import type { PricingTier } from "@/lib/mock-data"
 
 interface PricingCardProps {

@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { ArrowRight, Check, Clock, FileText, Lock, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ArrowRight, Zap, Lock, Clock, FileText, Check } from "lucide-react"
 
-export const Route = createFileRoute("/_public/")({
+export const Route = createFileRoute("/_public/home")({
   component: Home,
   head: () => ({
     meta: [{ title: "BankToExcel - Convert Bank Statements to Excel" }],
@@ -15,12 +15,14 @@ function Home() {
     {
       icon: Zap,
       title: "Lightning Fast",
-      description: "Convert your bank statements to Excel in seconds, not minutes",
+      description:
+        "Convert your bank statements to Excel in seconds, not minutes",
     },
     {
       icon: Lock,
       title: "Secure & Private",
-      description: "Your data is encrypted and deleted immediately after conversion",
+      description:
+        "Your data is encrypted and deleted immediately after conversion",
     },
     {
       icon: Clock,
@@ -30,7 +32,8 @@ function Home() {
     {
       icon: FileText,
       title: "Auto-Detection",
-      description: "Automatically detects and formats data from any bank statement",
+      description:
+        "Automatically detects and formats data from any bank statement",
     },
   ]
 
@@ -60,8 +63,8 @@ function Home() {
 
           <p className="text-xl text-foreground/60 max-w-2xl mx-auto text-pretty">
             Stop wasting time manually copying bank transactions. BankToExcel
-            converts your statements to perfectly formatted Excel files instantly.
-            Built for accountants in Vietnam.
+            converts your statements to perfectly formatted Excel files
+            instantly. Built for accountants in Vietnam.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -112,7 +115,9 @@ function Home() {
               return (
                 <Card key={feature.title} className="p-6">
                   <Icon className="w-10 h-10 text-primary mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-foreground/60">{feature.description}</p>
                 </Card>
               )
@@ -169,7 +174,9 @@ function Home() {
                   <p className="text-xs text-foreground/50">
                     📊 transactions.xlsx
                   </p>
-                  <p className="text-xs text-foreground/50">✓ Formatted columns</p>
+                  <p className="text-xs text-foreground/50">
+                    ✓ Formatted columns
+                  </p>
                   <p className="text-xs text-foreground/50">
                     ✓ Categorized entries
                   </p>
@@ -213,7 +220,8 @@ function Home() {
             Ready to simplify your accounting?
           </h2>
           <p className="text-lg text-foreground/60 mb-8 max-w-2xl mx-auto">
-            Join hundreds of accountants and finance teams saving hours every week
+            Join hundreds of accountants and finance teams saving hours every
+            week
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/dashboard">

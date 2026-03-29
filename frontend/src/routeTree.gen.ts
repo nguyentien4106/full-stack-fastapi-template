@@ -13,15 +13,16 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
+import { Route as PublicHomeRouteImport } from './routes/_public/home'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutFilesRouteImport } from './routes/_layout/files'
+import { Route as LayoutDashboardRouteImport } from './routes/_layout/dashboard'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
-import { Route as PublicRouteImport } from './routes/_public'
-import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as PublicDashboardRouteImport } from './routes/_public/trial'
-import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -43,14 +44,28 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LayoutIndexRoute = LayoutIndexRouteImport.update({
-  id: '/_layout/',
+  id: '/',
   path: '/',
   getParentRoute: () => LayoutRoute,
+} as any)
+const PublicPricingRoute = PublicPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicHomeRoute = PublicHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => PublicRoute,
 } as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
@@ -62,53 +77,48 @@ const LayoutItemsRoute = LayoutItemsRouteImport.update({
   path: '/items',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutFilesRoute = LayoutFilesRouteImport.update({
+  id: '/files',
+  path: '/files',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutDashboardRoute = LayoutDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutAdminRoute = LayoutAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: '/_public/',
-  path: '/',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicDashboardRoute = PublicDashboardRouteImport.update({
-  id: '/_public/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicPricingRoute = PublicPricingRouteImport.update({
-  id: '/_public/pricing',
-  path: '/pricing',
-  getParentRoute: () => PublicRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof PublicIndexRoute
+  '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/dashboard': typeof LayoutDashboardRoute
+  '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
-  '/dashboard': typeof PublicDashboardRoute
+  '/home': typeof PublicHomeRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/dashboard': typeof LayoutDashboardRoute
+  '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
-  '/': typeof PublicIndexRoute
-  '/dashboard': typeof PublicDashboardRoute
+  '/home': typeof PublicHomeRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesById {
@@ -120,12 +130,13 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/dashboard': typeof LayoutDashboardRoute
+  '/_layout/files': typeof LayoutFilesRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
-  '/_layout/': typeof LayoutIndexRoute
-  '/_public/': typeof PublicIndexRoute
-  '/_public/dashboard': typeof PublicDashboardRoute
+  '/_public/home': typeof PublicHomeRoute
   '/_public/pricing': typeof PublicPricingRoute
+  '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,21 +147,25 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/dashboard'
+    | '/files'
     | '/items'
     | '/settings'
-    | '/dashboard'
+    | '/home'
     | '/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/login'
     | '/recover-password'
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/dashboard'
+    | '/files'
     | '/items'
     | '/settings'
-    | '/'
-    | '/dashboard'
+    | '/home'
     | '/pricing'
   id:
     | '__root__'
@@ -161,12 +176,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/admin'
+    | '/_layout/dashboard'
+    | '/_layout/files'
     | '/_layout/items'
     | '/_layout/settings'
-    | '/_layout/'
-    | '/_public/'
-    | '/_public/dashboard'
+    | '/_public/home'
     | '/_public/pricing'
+    | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -208,10 +224,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_layout': {
       id: '/_layout'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -221,6 +244,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
+    }
+    '/_public/pricing': {
+      id: '/_public/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PublicPricingRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/home': {
+      id: '/_public/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof PublicHomeRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_layout/settings': {
       id: '/_layout/settings'
@@ -236,6 +273,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutItemsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/files': {
+      id: '/_layout/files'
+      path: '/files'
+      fullPath: '/files'
+      preLoaderRoute: typeof LayoutFilesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/dashboard': {
+      id: '/_layout/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof LayoutDashboardRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/admin': {
       id: '/_layout/admin'
       path: '/admin'
@@ -243,39 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PublicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public/': {
-      id: '/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/dashboard': {
-      id: '/_public/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof PublicDashboardRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/pricing': {
-      id: '/_public/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PublicPricingRouteImport
-      parentRoute: typeof PublicRoute
-    }
   }
 }
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutDashboardRoute: typeof LayoutDashboardRoute
+  LayoutFilesRoute: typeof LayoutFilesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -283,6 +308,8 @@ interface LayoutRouteChildren {
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutDashboardRoute: LayoutDashboardRoute,
+  LayoutFilesRoute: LayoutFilesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
@@ -292,14 +319,12 @@ const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 interface PublicRouteChildren {
-  PublicIndexRoute: typeof PublicIndexRoute
-  PublicDashboardRoute: typeof PublicDashboardRoute
+  PublicHomeRoute: typeof PublicHomeRoute
   PublicPricingRoute: typeof PublicPricingRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
-  PublicIndexRoute: PublicIndexRoute,
-  PublicDashboardRoute: PublicDashboardRoute,
+  PublicHomeRoute: PublicHomeRoute,
   PublicPricingRoute: PublicPricingRoute,
 }
 

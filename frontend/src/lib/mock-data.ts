@@ -3,7 +3,7 @@ export interface FileHistoryItem {
   filename: string
   uploadDate: string
   size: string
-  status: "pending" | "processing" | "completed" | "error"
+  status: "pending" | "running" | "done" | "failed"
   bankType: string
 }
 
@@ -22,7 +22,7 @@ export const mockFileHistory: FileHistoryItem[] = [
     filename: "Vietcombank_Statement_May_2024.pdf",
     uploadDate: "2024-05-15",
     size: "2.4 MB",
-    status: "completed" as const,
+    status: "done" as const,
     bankType: "Vietcombank",
   },
   {
@@ -30,7 +30,7 @@ export const mockFileHistory: FileHistoryItem[] = [
     filename: "Techcombank_April_Statement.pdf",
     uploadDate: "2024-04-28",
     size: "1.8 MB",
-    status: "completed" as const,
+    status: "done" as const,
     bankType: "Techcombank",
   },
   {
@@ -38,7 +38,7 @@ export const mockFileHistory: FileHistoryItem[] = [
     filename: "ACB_Statement_June.pdf",
     uploadDate: "2024-06-10",
     size: "3.1 MB",
-    status: "processing" as const,
+    status: "running" as const,
     bankType: "ACB",
   },
   {
@@ -46,7 +46,7 @@ export const mockFileHistory: FileHistoryItem[] = [
     filename: "BIDV_May_Statement.pdf",
     uploadDate: "2024-05-20",
     size: "2.7 MB",
-    status: "completed" as const,
+    status: "done" as const,
     bankType: "BIDV",
   },
 ]
