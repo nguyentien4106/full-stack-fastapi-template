@@ -1,3 +1,5 @@
+import { isLoggedIn } from '@/hooks/useAuth'
+import { useNavigate } from '@tanstack/react-router'
 import React, { useState, useRef } from 'react'
 
 interface HeroProps {
@@ -7,6 +9,15 @@ interface HeroProps {
 export default function Hero({ onOpenDialog }: HeroProps) {
   const [isDrag, setIsDrag] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
+
+  const requireAuth = (action: () => void) => {
+    if (!isLoggedIn()) {
+      navigate({ to: '/login' })
+      return
+    }
+    action()
+  }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -20,14 +31,15 @@ export default function Hero({ onOpenDialog }: HeroProps) {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDrag(false)
-    const files = e.dataTransfer.files
-    if (files.length > 0) {
-      const file = files[0]
-      const isValidType = file.type === 'application/pdf' || file.type.startsWith('image/')
-      if (isValidType) {
-        console.log('[v0] File selected:', file.name)
-      }
-    }
+    requireAuth(() => {
+      navigate({ to: '/dashboard' })
+    })
+  }
+
+  const handleClick = () => {
+    requireAuth(() => {
+      navigate({ to: '/dashboard' })
+    })
   }
 
   return (
@@ -42,11 +54,13 @@ export default function Hero({ onOpenDialog }: HeroProps) {
           </p>
 
           <div className="mt-16 w-full">
+            {/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
+            {/** biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={handleClick}
               className={`cursor-pointer rounded-2xl border-2 border-dashed p-16 sm:p-20 text-center transition-all ${
                 isDrag
                   ? 'border-primary bg-primary/10 shadow-2xl scale-105'
@@ -54,6 +68,7 @@ export default function Hero({ onOpenDialog }: HeroProps) {
               }`}
             >
               <div className="flex justify-center mb-6">
+                {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                 <svg className="h-24 w-24 text-primary/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                 </svg>
@@ -79,6 +94,7 @@ export default function Hero({ onOpenDialog }: HeroProps) {
           <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8">
             <div className="flex flex-col items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                 <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -88,6 +104,7 @@ export default function Hero({ onOpenDialog }: HeroProps) {
             </div>
             <div className="flex flex-col items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                 <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
