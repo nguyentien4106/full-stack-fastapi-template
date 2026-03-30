@@ -130,7 +130,7 @@ function Dashboard() {
 
           {/* Sidebar Stats */}
           <div className="space-y-6">
-            <Card className="p-6 bg-primary/5 border-primary/10">
+            {/* <Card className="p-6 bg-primary/5 border-primary/10">
               <div className="text-center">
                 <p className="text-4xl font-bold text-primary mb-2">12</p>
                 <p className="text-sm text-foreground/70 mb-4">
@@ -146,7 +146,7 @@ function Dashboard() {
                   60% of monthly quota
                 </p>
               </div>
-            </Card>
+            </Card> */}
 
             <Card className="p-6">
               <h3 className="font-semibold mb-4">Quick Stats</h3>

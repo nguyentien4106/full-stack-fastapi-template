@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
+import { FaFileExcel } from "react-icons/fa6"
 
 async function downloadExcel(fileId: string, filename: string) {
   const token =
@@ -147,7 +148,7 @@ export const columns: ColumnDef<FilePublic>[] = [
           {file.job_status === "done" && (
             <>
               <div className="flex items-center gap-1.5 group">
-                <Check className="w-4 h-4 text-green-500" />
+                <FaFileExcel className="w-4 h-4 text-green-500" />
               </div>
               <DownloadButton file={file} />
             </>
