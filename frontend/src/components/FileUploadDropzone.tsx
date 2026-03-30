@@ -133,8 +133,13 @@ export function FileUploadDropzone({ onFilesSelect }: FileUploadDropzoneProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null)
+
     const files = Array.from(e.target.files ?? [])
     if (files.length === 0) return
+
+    // webkitRelativePath is "folderName/file.pdf" when a directory is picked
+    const firstRelative = files[0].webkitRelativePath
+    const folderName = firstRelative ? firstRelative.split("/")[0] : null
 
     const validationError = runValidation(files)
     if (validationError) {
@@ -142,7 +147,7 @@ export function FileUploadDropzone({ onFilesSelect }: FileUploadDropzoneProps) {
       return
     }
 
-    commit(files, null)
+    commit(files, folderName)
   }
 
   /** Validates a list of files against all rules. Returns an error string or null. */
@@ -197,7 +202,9 @@ export function FileUploadDropzone({ onFilesSelect }: FileUploadDropzoneProps) {
             <div className="mb-4">
               <Upload className="w-12 h-12 text-primary/60 mx-auto" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Upload bank statement</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              Upload bank statement
+            </h3>
             <p className="text-sm text-foreground/60 mb-6">
               Drag and drop a file or folder here, or click to browse
             </p>
@@ -237,8 +244,7 @@ export function FileUploadDropzone({ onFilesSelect }: FileUploadDropzoneProps) {
               </label>
             </div>
             <p className="text-xs text-foreground/50 mt-4">
-              Accepted: images (JPEG, PNG, WebP, …) or PDF · Max 100 MB per
-              file
+              Accepted: images (JPEG, PNG, WebP, …) or PDF · Max 100 MB per file
               <br />
               Folders must contain only images or only PDFs
             </p>

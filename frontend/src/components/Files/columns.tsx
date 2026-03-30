@@ -1,14 +1,14 @@
 import type { ColumnDef } from "@tanstack/react-table"
+import dayjs from "dayjs"
 import { Check, DownloadIcon, Loader2, RefreshCcw } from "lucide-react"
 import { useState } from "react"
-
 import { type FilePublic, FilesService } from "@/client"
 import { OpenAPI } from "@/client/core/OpenAPI"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { StatusBadge } from "../StatusBadge"
-import dayjs from "dayjs"
 import { DateTimeFormat } from "@/utils"
+import { StatusBadge } from "../StatusBadge"
+
 async function downloadExcel(fileId: string, filename: string) {
   const token =
     typeof OpenAPI.TOKEN === "function"
@@ -132,23 +132,23 @@ export const columns: ColumnDef<FilePublic>[] = [
       return (
         <div className="flex justify-end gap-2">
           {(file.job_status === "running" || file.job_status === "pending") && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-8 h-8 p-0"
-                title="View"
-                onClick={() => {
-                  FilesService.getFileStatus({ fileId: file.id })
-                }}
-              >
-                <RefreshCcw className="w-4 h-4 text-green-300" />
-              </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-8 h-8 p-0"
+              title="View"
+              onClick={() => {
+                FilesService.getFileStatus({ fileId: file.id })
+              }}
+            >
+              <RefreshCcw className="w-4 h-4 text-green-300" />
+            </Button>
           )}
           {file.job_status === "done" && (
             <>
               <div className="flex items-center gap-1.5 group">
                 <Check className="w-4 h-4 text-green-500" />
-                </div>
+              </div>
               <DownloadButton file={file} />
             </>
           )}

@@ -1,4 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
+import dayjs from "dayjs"
 import { Download, Eye, FileText } from "lucide-react"
 import { FilesService } from "@/client"
 import { Button } from "@/components/ui/button"
@@ -11,9 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { StatusBadge } from "./StatusBadge"
-import dayjs from "dayjs"
 import { DateTimeFormat } from "@/utils"
+import { StatusBadge } from "./StatusBadge"
 
 function getRecentUploadFilesQueryOptions() {
   return {
@@ -23,8 +23,8 @@ function getRecentUploadFilesQueryOptions() {
 }
 
 const fileSizeInMB = (sizeInBytes: number | null | undefined) => {
-  if (sizeInBytes == null) return "N/A";
-  return (sizeInBytes / (1024 * 1024)).toFixed(2) + " MB"
+  if (sizeInBytes == null) return "N/A"
+  return `${(sizeInBytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
 export function FileHistoryTable() {
@@ -65,7 +65,9 @@ export function FileHistoryTable() {
                   <span className="truncate font-medium">{file.filename}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-foreground/70">{fileSizeInMB(file.size)}</TableCell> 
+              <TableCell className="text-foreground/70">
+                {fileSizeInMB(file.size)}
+              </TableCell>
               <TableCell>
                 <StatusBadge
                   status={

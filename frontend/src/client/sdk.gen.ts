@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesPresignUploadData, FilesPresignUploadResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesPresignUploadData, FilesPresignUploadResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesGetJobStatusEndpointData, FilesGetJobStatusEndpointResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, StoragesGetMyStorageStatResponse, StoragesUpdateMyStorageStatData, StoragesUpdateMyStorageStatResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class FilesService {
     /**
@@ -115,7 +115,7 @@ export class FilesService {
     
     /**
      * Download Table Excel File
-     * Generate a presigned URL for downloading the OCR result JSON as an Excel file.
+     * Stream an Excel file built from the OCR result JSON stored in R2.
      * @param data The data for the request.
      * @param data.fileId
      * @returns unknown Successful Response
@@ -128,6 +128,48 @@ export class FilesService {
             path: {
                 file_id: data.fileId
             },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Job Status Endpoint
+     * Get the status of an OCR job by job ID.
+     * @param data The data for the request.
+     * @param data.jobId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getJobStatusEndpoint(data: FilesGetJobStatusEndpointData): CancelablePromise<FilesGetJobStatusEndpointResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/filesjobs/{job_id}/status',
+            path: {
+                job_id: data.jobId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Files Batch Status
+     * Accept a list of file IDs, refresh each file's OCR job status,
+     * and return the updated list of files.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns FilesPublic Successful Response
+     * @throws ApiError
+     */
+    public static getFilesBatchStatus(data: FilesGetFilesBatchStatusData): CancelablePromise<FilesGetFilesBatchStatusResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/files/batch/status',
+            body: data.requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: 'Validation Error'
             }
@@ -356,6 +398,41 @@ export class PrivateService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/private/users/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class StoragesService {
+    /**
+     * Get My Storage Stat
+     * Return the storage statistics for the current user.
+     * @returns UserStorageStatPublic Successful Response
+     * @throws ApiError
+     */
+    public static getMyStorageStat(): CancelablePromise<StoragesGetMyStorageStatResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/storages/me'
+        });
+    }
+    
+    /**
+     * Update My Storage Stat
+     * Update the storage statistics for the current user.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns UserStorageStatPublic Successful Response
+     * @throws ApiError
+     */
+    public static updateMyStorageStat(data: StoragesUpdateMyStorageStatData): CancelablePromise<StoragesUpdateMyStorageStatResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v1/storages/me',
             body: data.requestBody,
             mediaType: 'application/json',
             errors: {

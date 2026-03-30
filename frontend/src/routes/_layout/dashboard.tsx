@@ -1,58 +1,65 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { useState } from "react";
-import { FilesService } from "@/client";
-import { FileHistoryTable } from "@/components/FileHistoryTable";
-import { FileUploadDropzone } from "@/components/FileUploadDropzone";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import useCustomToast from "@/hooks/useCustomToast";
-import { handleError } from "@/utils";
-import { useLoadingSpinner } from "@/components/loading-spinner-provider";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { createFileRoute } from "@tanstack/react-router"
+import { ArrowRight } from "lucide-react"
+import { useState } from "react"
+import { FilesService, StoragesService } from "@/client"
+import { FileHistoryTable } from "@/components/FileHistoryTable"
+import { FileUploadDropzone } from "@/components/FileUploadDropzone"
+import { useLoadingSpinner } from "@/components/loading-spinner-provider"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import useCustomToast from "@/hooks/useCustomToast"
+import { handleError, formatBytes } from "@/utils"
+import { FilesTableContent } from "./files"
 
 export const Route = createFileRoute("/_layout/dashboard")({
   component: Dashboard,
-});
+})
 
 function Dashboard() {
-  const queryClient = useQueryClient();
-  const { showSuccessToast, showErrorToast } = useCustomToast();
-  const { showSpinner, hideSpinner } = useLoadingSpinner();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const queryClient = useQueryClient()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { showSpinner, hideSpinner } = useLoadingSpinner()
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+
+  const { data: storageStat } = useQuery({
+    queryKey: ["storageStat"],
+    queryFn: () => StoragesService.getMyStorageStat(),
+  })
 
   const uploadMutation = useMutation({
     mutationFn: async (files: File[]) => {
       for (const file of files) {
-        await FilesService.uploadFileEndpoint({ formData: { file } });
+        showSpinner(`Uploading "${file.name}"...`)
+        await FilesService.uploadFileEndpoint({ formData: { file } })
       }
+      hideSpinner()
     },
     onSuccess: () => {
-      const count = selectedFiles.length;
+      const count = selectedFiles.length
       showSuccessToast(
         count === 1
           ? "File uploaded successfully."
           : `${count} files uploaded successfully.`,
-      );
-      setSelectedFiles([]);
-      queryClient.invalidateQueries({ queryKey: ["files"] });
+      )
+      setSelectedFiles([])
+      queryClient.invalidateQueries({ queryKey: ["files"] })
     },
     onError: handleError.bind(showErrorToast),
-  });
+  })
 
   const handleFilesSelect = (files: File[]) => {
-    setSelectedFiles(files);
-  };
+    setSelectedFiles(files)
+  }
 
   const handleUpload = () => {
-    if (selectedFiles.length === 0) return;
-    showSpinner("Uploading and processing your file...");
+    if (selectedFiles.length === 0) return
     uploadMutation.mutate(selectedFiles, {
       onSettled: () => {
-        hideSpinner();
+        hideSpinner()
       },
-    });
-  };
+    })
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,7 +90,9 @@ function Dashboard() {
                 {/* Convert Button */}
                 <Button
                   onClick={handleUpload}
-                  disabled={selectedFiles.length === 0 || uploadMutation.isPending}
+                  disabled={
+                    selectedFiles.length === 0 || uploadMutation.isPending
+                  }
                   className="w-full gap-2"
                   size="lg"
                 >
@@ -112,7 +121,9 @@ function Dashboard() {
             <div>
               <h2 className="text-2xl font-bold mb-6">Recent Conversions</h2>
               <Card className="overflow-hidden">
-                <FileHistoryTable />
+                {/* <FileHistoryTable /> */}
+                <FilesTableContent limit={5}/>
+
               </Card>
             </div>
           </div>
@@ -142,15 +153,31 @@ function Dashboard() {
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between">
                   <span className="text-foreground/60">Total Files</span>
-                  <span className="font-semibold">48</span>
+                  <span className="font-semibold">
+                    {storageStat?.file_count ?? "—"}
+                  </span>
                 </div>
                 <div className="border-t border-border pt-4 flex justify-between">
                   <span className="text-foreground/60">Total Transactions</span>
-                  <span className="font-semibold">2,847</span>
+                  <span className="font-semibold">
+                    {storageStat?.total_transactions?.toLocaleString() ?? "—"}
+                  </span>
                 </div>
                 <div className="border-t border-border pt-4 flex justify-between">
                   <span className="text-foreground/60">Storage Used</span>
-                  <span className="font-semibold">245 MB</span>
+                  <span className="font-semibold">
+                    {storageStat
+                      ? formatBytes(storageStat.total_size)
+                      : "—"}
+                  </span>
+                </div>
+                <div className="border-t border-border pt-4 flex justify-between">
+                  <span className="text-foreground/60">Total Cost</span>
+                  <span className="font-semibold">
+                    {storageStat
+                      ? `$${storageStat.total_cost.toFixed(2)}`
+                      : "—"}
+                  </span>
                 </div>
               </div>
             </Card>
@@ -166,5 +193,5 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -166,6 +166,22 @@ export const FilesPublicSchema = {
     title: 'FilesPublic'
 } as const;
 
+export const FilesStatusRequestSchema = {
+    properties: {
+        file_ids: {
+            items: {
+                type: 'string',
+                format: 'uuid'
+            },
+            type: 'array',
+            title: 'File Ids'
+        }
+    },
+    type: 'object',
+    required: ['file_ids'],
+    title: 'FilesStatusRequest'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -570,6 +586,118 @@ export const UserRegisterSchema = {
     type: 'object',
     required: ['email', 'password'],
     title: 'UserRegister'
+} as const;
+
+export const UserStorageStatPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        },
+        file_count: {
+            type: 'integer',
+            title: 'File Count'
+        },
+        total_size: {
+            type: 'integer',
+            title: 'Total Size'
+        },
+        total_cost: {
+            type: 'number',
+            title: 'Total Cost'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        total_transactions: {
+            type: 'integer',
+            title: 'Total Transactions'
+        },
+        extracted_pages: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Extracted Pages'
+        }
+    },
+    type: 'object',
+    required: ['id', 'user_id', 'file_count', 'total_size', 'total_cost', 'updated_at', 'total_transactions'],
+    title: 'UserStorageStatPublic'
+} as const;
+
+export const UserStorageStatUpdateSchema = {
+    properties: {
+        file_count: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'File Count'
+        },
+        total_size: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Size'
+        },
+        total_cost: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Cost'
+        },
+        total_transactions: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Transactions'
+        },
+        extracted_pages: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Extracted Pages'
+        }
+    },
+    type: 'object',
+    title: 'UserStorageStatUpdate'
 } as const;
 
 export const UserUpdateSchema = {

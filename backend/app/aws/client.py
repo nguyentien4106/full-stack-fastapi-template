@@ -1,12 +1,10 @@
 from __future__ import annotations
-from alembic.autogenerate.api import log
-from app.backend_pre_start import logger
-from sqlalchemy.testing.plugin.plugin_base import pre
 
 import boto3
 from botocore.client import Config
 
 from app.aws.config import aws_settings
+from app.backend_pre_start import logger
 
 
 def get_s3_client():
@@ -38,8 +36,8 @@ def generate_presigned_put_url(key: str, bucket: str | None = None, expiration: 
     return url
 
 
-def upload_file_to_r2(key: str, data: bytes, bucket: str | None = None, content_type: str | None = None, presign: bool = False) -> dict:
-    bucket = bucket or aws_settings.R2_BUCKET_NAME
+def upload_file_to_r2(key: str, data: bytes, content_type: str | None = None, presign: bool = False) -> dict:
+    bucket = aws_settings.R2_BUCKET_NAME
     if not bucket:
         raise RuntimeError("S3 bucket not configured")
 
@@ -48,10 +46,9 @@ def upload_file_to_r2(key: str, data: bytes, bucket: str | None = None, content_
     if content_type:
         extra_args["ContentType"] = content_type
 
-    logger.info(f"Uploading file to R2 with key {key} and content type {content_type}")
     resp = client.put_object(Bucket=bucket, Key=key, Body=data, **extra_args)
-    logger.info(f"Uploaded file to R2 with key {key}")
+    resp["IsSuccess"] = resp.get("ResponseMetadata", {}).get("HTTPStatusCode", 0) == 200
     if presign:
         resp["PresignedURL"] = generate_presigned_put_url(key=key, bucket=bucket)
-
+    
     return resp

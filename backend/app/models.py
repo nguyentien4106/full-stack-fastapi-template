@@ -4,6 +4,7 @@ All models now live in the per-domain model modules:
   - app.users.models / app.users.schemas
   - app.items.models / app.items.schemas
   - app.files.models / app.files.schemas
+  - app.storages.models / app.storages.schemas
   - app.auth.schemas
 """
 from sqlmodel import SQLModel  # noqa: F401
@@ -23,6 +24,11 @@ from app.items.schemas import (  # noqa: F401
     ItemPublic,
     ItemsPublic,
     ItemUpdate,
+)
+from app.storages.models import UserStorageStat  # noqa: F401
+from app.storages.schemas import (  # noqa: F401
+    UserStorageStatPublic,
+    UserStorageStatUpdate,
 )
 from app.users.models import User  # noqa: F401
 from app.users.schemas import (  # noqa: F401

@@ -29,6 +29,10 @@ export type FilesPublic = {
     count: number;
 };
 
+export type FilesStatusRequest = {
+    file_ids: Array<(string)>;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -121,6 +125,25 @@ export type UsersPublic = {
     count: number;
 };
 
+export type UserStorageStatPublic = {
+    id: string;
+    user_id: string;
+    file_count: number;
+    total_size: number;
+    total_cost: number;
+    updated_at: string;
+    total_transactions: number;
+    extracted_pages?: (number | null);
+};
+
+export type UserStorageStatUpdate = {
+    file_count?: (number | null);
+    total_size?: (number | null);
+    total_cost?: (number | null);
+    total_transactions?: (number | null);
+    extracted_pages?: (number | null);
+};
+
 export type UserUpdate = {
     email?: (string | null);
     password?: (string | null);
@@ -180,7 +203,19 @@ export type FilesDownloadTableExcelFileData = {
     fileId: string;
 };
 
-export type FilesDownloadTableExcelFileResponse = Blob;
+export type FilesDownloadTableExcelFileResponse = (unknown);
+
+export type FilesGetJobStatusEndpointData = {
+    jobId: string;
+};
+
+export type FilesGetJobStatusEndpointResponse = (unknown);
+
+export type FilesGetFilesBatchStatusData = {
+    requestBody: FilesStatusRequest;
+};
+
+export type FilesGetFilesBatchStatusResponse = (FilesPublic);
 
 export type ItemsReadItemsData = {
     limit?: number;
@@ -245,6 +280,14 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type StoragesGetMyStorageStatResponse = (UserStorageStatPublic);
+
+export type StoragesUpdateMyStorageStatData = {
+    requestBody: UserStorageStatUpdate;
+};
+
+export type StoragesUpdateMyStorageStatResponse = (UserStorageStatPublic);
 
 export type UsersReadUsersData = {
     limit?: number;

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlmodel import Field, SQLModel
 
+
 class FileBase(SQLModel):
     filename: str = Field(min_length=1, max_length=255)
     content_type: str = Field(min_length=1, max_length=255)
@@ -21,3 +22,7 @@ class FilePublic(FileBase):
 class FilesPublic(SQLModel):
     data: list[FilePublic]
     count: int
+
+
+class FilesStatusRequest(SQLModel):
+    file_ids: list[uuid.UUID]

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 class ExtractProgress(BaseModel):
     totalPages: int | None = None
-    extractedPages: int | None = None
+    extractedPages: int
     startTime: str | None = None
     endTime: str | None = None
 

@@ -1,17 +1,16 @@
 import io
-from app.files.utils import get_df_from_result_json
-from app.aws.config import aws_settings
-from app.aws.client import generate_presigned_put_url
 import uuid
 from urllib.parse import quote
-from app.files.dependencies import CurrentUser, SessionDep
 
+import pandas as pd
 from sqlmodel import Session
 
+from app.aws.client import generate_presigned_put_url
+from app.aws.config import aws_settings
+from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.schemas import FileCreate
-
-import pandas as pd  # type: ignore[import]
+from app.files.utils import get_df_from_result_json
 
 
 def create_file(*, session: Session, file_in: FileCreate, user_id: uuid.UUID) -> File:
@@ -27,7 +26,7 @@ def delete_file(*, session: Session, file_id: uuid.UUID) -> None:
         session.delete(db_file)
         session.commit()
 
-def update_file_job_status(
+def update_file_job_info(
     session: Session, file_id: uuid.UUID, job_status: str, job_id: str | None = None, err_msg : str | None = None
 ) -> File | None:
     db_file: File | None = session.get(File, file_id)

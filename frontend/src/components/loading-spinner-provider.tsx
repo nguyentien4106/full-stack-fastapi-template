@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react"
-import { Spinner } from "./ui/spinner"
 import { cn } from "@/lib/utils"
+import { Spinner } from "./ui/spinner"
 
 type LoadingSpinnerContextType = {
   isLoading: boolean

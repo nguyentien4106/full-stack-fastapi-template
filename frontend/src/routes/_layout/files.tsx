@@ -1,4 +1,4 @@
-import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { Suspense, useEffect, useRef } from "react"
@@ -16,8 +16,6 @@ function getFilesQueryOptions(limit = 0) {
   }
 }
 
-
-
 export const Route = createFileRoute("/_layout/files")({
   component: Files,
   head: () => ({
@@ -29,9 +27,9 @@ export const Route = createFileRoute("/_layout/files")({
   }),
 })
 
-function FilesTableContent() {
+export function FilesTableContent({ limit = 0 }: { limit?: number }) {
   const queryClient = useQueryClient()
-  const { data: files } = useSuspenseQuery(getFilesQueryOptions())
+  const { data: files } = useSuspenseQuery(getFilesQueryOptions(limit))
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -41,6 +39,7 @@ function FilesTableContent() {
       )
 
       if (pendingFiles.length === 0) {
+        console.log('No pending files, stopping polling.')
         if (pollingRef.current) {
           clearInterval(pollingRef.current)
           pollingRef.current = null
@@ -48,18 +47,18 @@ function FilesTableContent() {
         return
       }
 
-      await Promise.allSettled(
-        pendingFiles.map(async (file) => {
-          const updated = await FilesService.getFileStatus({ fileId: file.id })
-          queryClient.setQueryData(["files"], (old: typeof files | undefined) => {
-            if (!old) return old
-            return {
-              ...old,
-              data: old.data.map((f) => (f.id === updated.id ? updated : f)),
-            }
-          })
-        }),
-      )
+      const result = await FilesService.getFilesBatchStatus({
+        requestBody: { file_ids: pendingFiles.map((f) => f.id) },
+      })
+
+      queryClient.setQueryData(["files"], (old: typeof files | undefined) => {
+        if (!old) return old
+        const updatedMap = new Map(result.data.map((f) => [f.id, f]))
+        return {
+          ...old,
+          data: old.data.map((f) => updatedMap.get(f.id) ?? f),
+        }
+      })
     }
 
     pollingRef.current = setInterval(pollPendingFiles, 3000)
