@@ -1,21 +1,22 @@
-import React from 'react'
-
 const steps = [
   {
-    number: '1',
-    title: 'Upload Your Bank Statement',
-    description: 'Drag and drop your PDF or image bank statement. Supports JPG, PNG, and PDF formats.'
+    number: "1",
+    title: "Upload Your Bank Statement",
+    description:
+      "Drag and drop your PDF or image bank statement. Supports JPG, PNG, and PDF formats.",
   },
   {
-    number: '2',
-    title: 'We Extract the Data',
-    description: 'Our AI-powered system analyzes and extracts all transaction details automatically in seconds.'
+    number: "2",
+    title: "We Extract the Data",
+    description:
+      "Our AI-powered system analyzes and extracts all transaction details automatically in seconds.",
   },
   {
-    number: '3',
-    title: 'Download as Excel',
-    description: 'Your bank statement is now organized in an Excel file, ready for analysis and archiving.'
-  }
+    number: "3",
+    title: "Download as Excel",
+    description:
+      "Your bank statement is now organized in an Excel file, ready for analysis and archiving.",
+  },
 ]
 
 export default function HowItWorks() {
@@ -54,7 +55,8 @@ export default function HowItWorks() {
 
         <div className="mt-16 rounded-lg bg-primary/5 border border-primary/20 p-8 text-center">
           <p className="text-foreground font-semibold">
-            Convert your first bank statement for free. Unlock unlimited conversions with KeToanAuto Pro.
+            Convert your first bank statement for free. Unlock unlimited
+            conversions with KeToanAuto Pro.
           </p>
         </div>
       </div>

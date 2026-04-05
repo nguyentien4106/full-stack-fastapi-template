@@ -1,6 +1,3 @@
-from sqlalchemy.testing.util import total_size
-from app.storages.service import update_storage_stat, increment_storage_stat
-from app.storages.schemas import UserStorageStatUpdate
 import logging
 
 import requests
@@ -13,6 +10,7 @@ from app.files.service import update_file_job_info
 from app.ocrs.constants import OcrJobStatus
 from app.ocrs.dependencies import CurrentUser, SessionDep
 from app.ocrs.schemas import OcrJobResponse, OcrSubmitResponse
+from app.storages.service import increment_storage_stat
 from app.utils import get_bytes_from_file_url
 
 logger = logging.getLogger(__name__)

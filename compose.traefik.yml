@@ -6,6 +6,8 @@ services:
       - 80:80
       # Listen on port 443, default for HTTPS
       - 443:443
+
+      - 8080:8080 # Port for the Traefik Dashboard (optional)
     restart: always
     labels:
       # Enable Traefik for this service, to make it available in the public network

@@ -1,24 +1,25 @@
-import React from 'react'
-
 const testimonials = [
   {
-    name: 'Sarah Martinez',
-    role: 'Business Manager',
-    content: 'Easy to use, good service. Exactly what I needed for converting my documents.',
-    rating: 5
+    name: "Sarah Martinez",
+    role: "Business Manager",
+    content:
+      "Easy to use, good service. Exactly what I needed for converting my documents.",
+    rating: 5,
   },
   {
-    name: 'James Chen',
-    role: 'Freelance Designer',
-    content: 'Great experience, high quality service! The conversion was perfect and very fast.',
-    rating: 5
+    name: "James Chen",
+    role: "Freelance Designer",
+    content:
+      "Great experience, high quality service! The conversion was perfect and very fast.",
+    rating: 5,
   },
   {
-    name: 'Emily Rodriguez',
-    role: 'Data Analyst',
-    content: 'Good Service, Very good customer service! They helped me when I had questions.',
-    rating: 5
-  }
+    name: "Emily Rodriguez",
+    role: "Data Analyst",
+    content:
+      "Good Service, Very good customer service! They helped me when I had questions.",
+    rating: 5,
+  },
 ]
 
 export default function Testimonials() {
@@ -42,7 +43,9 @@ export default function Testimonials() {
             >
               <div className="flex items-center gap-1 mb-4">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <span key={i} className="text-yellow-400">★</span>
+                  <span key={i} className="text-yellow-400">
+                    ★
+                  </span>
                 ))}
               </div>
               <p className="text-card-foreground mb-6 leading-relaxed">

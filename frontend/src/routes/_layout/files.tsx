@@ -39,7 +39,7 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
       )
 
       if (pendingFiles.length === 0) {
-        console.log('No pending files, stopping polling.')
+        console.log("No pending files, stopping polling.")
         if (pollingRef.current) {
           clearInterval(pollingRef.current)
           pollingRef.current = null

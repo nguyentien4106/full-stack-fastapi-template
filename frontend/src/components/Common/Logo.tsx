@@ -35,21 +35,23 @@ export function Logo({
             className,
           )}
         />
-          <img
-            src={iconLogo}
-            alt="Logo"
-            className={cn(
-              "h-24 w-auto object-contain hidden group-data-[collapsible=icon]:block",
-              className,
-            )}
-          />
+        <img
+          src={iconLogo}
+          alt="Logo"
+          className={cn(
+            "h-24 w-auto object-contain hidden group-data-[collapsible=icon]:block",
+            className,
+          )}
+        />
       </>
     ) : (
       <img
         src={variant === "full" ? fullLogo : iconLogo}
         alt="Logo"
         className={cn(
-          variant === "full" ? "h-24 w-auto object-contain" : "h-24 w-auto object-contain",
+          variant === "full"
+            ? "h-24 w-auto object-contain"
+            : "h-24 w-auto object-contain",
           className,
         )}
       />

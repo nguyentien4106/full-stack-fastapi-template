@@ -54,7 +54,7 @@ const AddItem = () => {
 
   const mutation = useMutation({
     mutationFn: (data: ItemCreate) =>
-      ItemsService.createItem({ requestBody: data }),
+      ItemsService.createItemEndpoint({ requestBody: data }),
     onSuccess: () => {
       showSuccessToast("Item created successfully")
       form.reset()

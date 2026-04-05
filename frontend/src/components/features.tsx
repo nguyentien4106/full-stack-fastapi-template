@@ -1,36 +1,40 @@
-import React from 'react'
-
 const features = [
   {
-    icon: '📄',
-    title: 'Multiple File Types',
-    description: 'Convert bank statements from PDF and image formats. Supports JPG, PNG, and PDF uploads.'
+    icon: "📄",
+    title: "Multiple File Types",
+    description:
+      "Convert bank statements from PDF and image formats. Supports JPG, PNG, and PDF uploads.",
   },
   {
-    icon: '🔒',
-    title: 'Bank-Grade Security',
-    description: 'Your financial data is encrypted and never stored on our servers. Complete privacy guaranteed.'
+    icon: "🔒",
+    title: "Bank-Grade Security",
+    description:
+      "Your financial data is encrypted and never stored on our servers. Complete privacy guaranteed.",
   },
   {
-    icon: '⚡',
-    title: 'Instant Conversion',
-    description: 'Process your bank statements in seconds. Get organized Excel files ready to use immediately.'
+    icon: "⚡",
+    title: "Instant Conversion",
+    description:
+      "Process your bank statements in seconds. Get organized Excel files ready to use immediately.",
   },
   {
-    icon: '✅',
-    title: 'Accurate Data Extraction',
-    description: 'Preserves all transaction details, amounts, and dates with 99.9% accuracy. No data loss.'
+    icon: "✅",
+    title: "Accurate Data Extraction",
+    description:
+      "Preserves all transaction details, amounts, and dates with 99.9% accuracy. No data loss.",
   },
   {
-    icon: '📊',
-    title: 'Ready for Analysis',
-    description: 'Converted Excel files are fully formatted and compatible with all spreadsheet applications.'
+    icon: "📊",
+    title: "Ready for Analysis",
+    description:
+      "Converted Excel files are fully formatted and compatible with all spreadsheet applications.",
   },
   {
-    icon: '🚀',
-    title: 'Zero Setup Required',
-    description: 'No installation, no registration required. Start converting your bank statements instantly.'
-  }
+    icon: "🚀",
+    title: "Zero Setup Required",
+    description:
+      "No installation, no registration required. Start converting your bank statements instantly.",
+  },
 ]
 
 export default function Features() {
@@ -56,9 +60,7 @@ export default function Features() {
               <h3 className="text-lg font-semibold text-card-foreground mb-2">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground">
-                {feature.description}
-              </p>
+              <p className="text-muted-foreground">{feature.description}</p>
             </div>
           ))}
         </div>

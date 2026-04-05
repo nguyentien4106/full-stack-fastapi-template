@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as PublicHomeRouteImport } from './routes/_public/home'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
@@ -55,6 +56,11 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LayoutRoute,
+} as any)
+const PublicPricingRoute = PublicPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicHomeRoute = PublicHomeRouteImport.update({
   id: '/home',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/home': typeof PublicHomeRoute
+  '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/home': typeof PublicHomeRoute
+  '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_public/home': typeof PublicHomeRoute
+  '/_public/pricing': typeof PublicPricingRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/home'
+    | '/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/home'
+    | '/pricing'
   id:
     | '__root__'
     | '/_layout'
@@ -170,6 +181,7 @@ export interface FileRouteTypes {
     | '/_layout/items'
     | '/_layout/settings'
     | '/_public/home'
+    | '/_public/pricing'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -232,6 +244,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
+    }
+    '/_public/pricing': {
+      id: '/_public/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PublicPricingRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/home': {
       id: '/_public/home'
@@ -301,10 +320,12 @@ const LayoutRouteWithChildren =
 
 interface PublicRouteChildren {
   PublicHomeRoute: typeof PublicHomeRoute
+  PublicPricingRoute: typeof PublicPricingRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicHomeRoute: PublicHomeRoute,
+  PublicPricingRoute: PublicPricingRoute,
 }
 
 const PublicRouteWithChildren =

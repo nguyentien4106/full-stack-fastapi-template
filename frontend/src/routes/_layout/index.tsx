@@ -111,7 +111,6 @@ function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature) => {
-              const _Icon = feature.icon
               return (
                 <Card key={feature.title} className="p-6">
                   {/* <Icon className="w-10 h-10 text-primary mb-4" /> */}
@@ -229,9 +228,9 @@ function Home() {
                 Start for Free <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link to="/pricing">
+            {/* <Link to="/pricing">
               <Button variant="outline">View Pricing</Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
@@ -248,11 +247,11 @@ function Home() {
                     Features
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/pricing" className="hover:text-foreground">
                     Pricing
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/" className="hover:text-foreground">
                     Security

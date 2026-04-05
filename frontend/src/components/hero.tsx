@@ -1,19 +1,16 @@
-import { isLoggedIn } from '@/hooks/useAuth'
-import { useNavigate } from '@tanstack/react-router'
-import React, { useState, useRef } from 'react'
+import { useNavigate } from "@tanstack/react-router"
+import type React from "react"
+import { useRef, useState } from "react"
+import { isLoggedIn } from "@/hooks/useAuth"
 
-interface HeroProps {
-  onOpenDialog: () => void
-}
-
-export default function Hero({ onOpenDialog }: HeroProps) {
+export default function Hero() {
   const [isDrag, setIsDrag] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
   const requireAuth = (action: () => void) => {
     if (!isLoggedIn()) {
-      navigate({ to: '/login' })
+      navigate({ to: "/login" })
       return
     }
     action()
@@ -32,13 +29,13 @@ export default function Hero({ onOpenDialog }: HeroProps) {
     e.preventDefault()
     setIsDrag(false)
     requireAuth(() => {
-      navigate({ to: '/dashboard' })
+      navigate({ to: "/dashboard" })
     })
   }
 
   const handleClick = () => {
     requireAuth(() => {
-      navigate({ to: '/dashboard' })
+      navigate({ to: "/dashboard" })
     })
   }
 
@@ -50,7 +47,8 @@ export default function Hero({ onOpenDialog }: HeroProps) {
             Convert Bank Statements to Excel
           </h1>
           <p className="mt-6 text-xl text-muted-foreground sm:text-2xl max-w-3xl mx-auto">
-            Upload your PDF or image bank statements and get organized Excel files instantly
+            Upload your PDF or image bank statements and get organized Excel
+            files instantly
           </p>
 
           <div className="mt-16 w-full">
@@ -63,14 +61,24 @@ export default function Hero({ onOpenDialog }: HeroProps) {
               onClick={handleClick}
               className={`cursor-pointer rounded-2xl border-2 border-dashed p-16 sm:p-20 text-center transition-all ${
                 isDrag
-                  ? 'border-primary bg-primary/10 shadow-2xl scale-105'
-                  : 'border-primary/40 bg-primary/5 hover:bg-primary/8 hover:border-primary/60 shadow-lg hover:shadow-2xl'
+                  ? "border-primary bg-primary/10 shadow-2xl scale-105"
+                  : "border-primary/40 bg-primary/5 hover:bg-primary/8 hover:border-primary/60 shadow-lg hover:shadow-2xl"
               }`}
             >
               <div className="flex justify-center mb-6">
                 {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                <svg className="h-24 w-24 text-primary/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                <svg
+                  className="h-24 w-24 text-primary/80"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
               </div>
               <p className="text-2xl sm:text-3xl font-bold text-foreground">
@@ -95,31 +103,74 @@ export default function Hero({ onOpenDialog }: HeroProps) {
             <div className="flex flex-col items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
                 {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="h-8 w-8 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground text-lg">Instant Conversion</h3>
-              <p className="text-sm text-muted-foreground">PDFs & images to Excel</p>
+              <h3 className="font-semibold text-foreground text-lg">
+                Instant Conversion
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                PDFs & images to Excel
+              </p>
             </div>
             <div className="flex flex-col items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
                 {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  className="h-8 w-8 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground text-lg">Bank-Grade Security</h3>
-              <p className="text-sm text-muted-foreground">Your data is encrypted</p>
+              <h3 className="font-semibold text-foreground text-lg">
+                Bank-Grade Security
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Your data is encrypted
+              </p>
             </div>
             <div className="flex flex-col items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+                <svg
+                  className="h-8 w-8 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground text-lg">100% Accurate</h3>
-              <p className="text-sm text-muted-foreground">Preserves all data</p>
+              <h3 className="font-semibold text-foreground text-lg">
+                100% Accurate
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Preserves all data
+              </p>
             </div>
           </div>
         </div>

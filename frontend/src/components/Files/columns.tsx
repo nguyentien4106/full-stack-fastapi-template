@@ -1,14 +1,14 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import dayjs from "dayjs"
-import { Check, DownloadIcon, Loader2, RefreshCcw } from "lucide-react"
+import { DownloadIcon, Loader2, RefreshCcw } from "lucide-react"
 import { useState } from "react"
+import { FaFileExcel } from "react-icons/fa6"
 import { type FilePublic, FilesService } from "@/client"
 import { OpenAPI } from "@/client/core/OpenAPI"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
-import { FaFileExcel } from "react-icons/fa6"
 
 async function downloadExcel(fileId: string, filename: string) {
   const token =

@@ -3,13 +3,12 @@ import { createFileRoute } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
 import { useState } from "react"
 import { FilesService, StoragesService } from "@/client"
-import { FileHistoryTable } from "@/components/FileHistoryTable"
 import { FileUploadDropzone } from "@/components/FileUploadDropzone"
 import { useLoadingSpinner } from "@/components/loading-spinner-provider"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import useCustomToast from "@/hooks/useCustomToast"
-import { handleError, formatBytes } from "@/utils"
+import { formatBytes, handleError } from "@/utils"
 import { FilesTableContent } from "./files"
 
 export const Route = createFileRoute("/_layout/dashboard")({
@@ -122,8 +121,7 @@ function Dashboard() {
               <h2 className="text-2xl font-bold mb-6">Recent Conversions</h2>
               <Card className="overflow-hidden">
                 {/* <FileHistoryTable /> */}
-                <FilesTableContent limit={5}/>
-
+                <FilesTableContent limit={5} />
               </Card>
             </div>
           </div>
@@ -166,9 +164,7 @@ function Dashboard() {
                 <div className="border-t border-border pt-4 flex justify-between">
                   <span className="text-foreground/60">Storage Used</span>
                   <span className="font-semibold">
-                    {storageStat
-                      ? formatBytes(storageStat.total_size)
-                      : "—"}
+                    {storageStat ? formatBytes(storageStat.total_size) : "—"}
                   </span>
                 </div>
                 <div className="border-t border-border pt-4 flex justify-between">
