@@ -15,9 +15,8 @@ import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as LayoutRouteImport } from './routes/_layout'
-import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
-import { Route as PublicHomeRouteImport } from './routes/_public/home'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutFilesRouteImport } from './routes/_layout/files'
@@ -52,19 +51,14 @@ const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutIndexRoute = LayoutIndexRouteImport.update({
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicPricingRoute = PublicPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicHomeRoute = PublicHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
   getParentRoute: () => PublicRoute,
 } as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
@@ -94,7 +88,7 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof LayoutIndexRoute
+  '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -104,11 +98,10 @@ export interface FileRoutesByFullPath {
   '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
-  '/home': typeof PublicHomeRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof LayoutIndexRoute
+  '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -118,7 +111,6 @@ export interface FileRoutesByTo {
   '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
-  '/home': typeof PublicHomeRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesById {
@@ -134,9 +126,8 @@ export interface FileRoutesById {
   '/_layout/files': typeof LayoutFilesRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
-  '/_public/home': typeof PublicHomeRoute
   '/_public/pricing': typeof PublicPricingRoute
-  '/_layout/': typeof LayoutIndexRoute
+  '/_public/': typeof PublicIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,7 +142,6 @@ export interface FileRouteTypes {
     | '/files'
     | '/items'
     | '/settings'
-    | '/home'
     | '/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,7 +155,6 @@ export interface FileRouteTypes {
     | '/files'
     | '/items'
     | '/settings'
-    | '/home'
     | '/pricing'
   id:
     | '__root__'
@@ -180,9 +169,8 @@ export interface FileRouteTypes {
     | '/_layout/files'
     | '/_layout/items'
     | '/_layout/settings'
-    | '/_public/home'
     | '/_public/pricing'
-    | '/_layout/'
+    | '/_public/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -238,25 +226,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexRouteImport
-      parentRoute: typeof LayoutRoute
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/pricing': {
       id: '/_public/pricing'
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PublicPricingRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/home': {
-      id: '/_public/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof PublicHomeRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_layout/settings': {
@@ -303,7 +284,6 @@ interface LayoutRouteChildren {
   LayoutFilesRoute: typeof LayoutFilesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
-  LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -312,20 +292,19 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutFilesRoute: LayoutFilesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
-  LayoutIndexRoute: LayoutIndexRoute,
 }
 
 const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 interface PublicRouteChildren {
-  PublicHomeRoute: typeof PublicHomeRoute
   PublicPricingRoute: typeof PublicPricingRoute
+  PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
-  PublicHomeRoute: PublicHomeRoute,
   PublicPricingRoute: PublicPricingRoute,
+  PublicIndexRoute: PublicIndexRoute,
 }
 
 const PublicRouteWithChildren =

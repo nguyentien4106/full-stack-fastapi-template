@@ -5,12 +5,28 @@ from urllib.parse import quote
 import pandas as pd
 from sqlmodel import Session
 
-from app.aws.client import generate_presigned_put_url
+from app.aws.client import generate_presigned_put_url, upload_file_to_r2
 from app.aws.config import aws_settings
 from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.schemas import FileCreate
 from app.files.utils import get_df_from_result_json
+
+
+def handle_uploaded_file(*, session: Session, file: File, user: CurrentUser, file_bytes: bytes) -> None:
+    """
+    Handle a newly uploaded file by creating a File record in the database.
+    The actual file content is expected to be uploaded separately to the provided presigned URL.
+    """
+    # upload to r2
+    r2_result = upload_file_to_r2(
+        key=user.email + "/" + str(file.id) + "/" + file.filename,  # Use DB record ID for unique key
+        data=file_bytes,
+        content_type=file.content_type,
+        presign=True
+    )
+
+    # enqueue OCR job
 
 
 def create_file(*, session: Session, file_in: FileCreate, user_id: uuid.UUID) -> File:

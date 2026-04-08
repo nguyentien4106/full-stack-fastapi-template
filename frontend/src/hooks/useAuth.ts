@@ -55,7 +55,7 @@ const useAuth = () => {
 
   const logout = () => {
     localStorage.removeItem("access_token")
-    navigate({ to: "/home" })
+    navigate({ to: "/" })
   }
 
   return {

@@ -15,10 +15,9 @@ from app.files.service import (
     create_file,
     delete_file,
     download_excel_file,
-    update_file_job_info,
+    update_file_job_info, handle_uploaded_file,
 )
 from app.ocrs.service import get_job_status, update_ocr_job_status, upload_ocr_job
-from app.storages.service import increment_storage_stat
 
 router = APIRouter(prefix="/files", tags=["files"])
 
@@ -36,28 +35,34 @@ def upload_file_endpoint(
     file_type = file.content_type or "application/octet-stream"
     file_create = FileCreate(filename=file_name, content_type=file_type, size=len(file_bytes), url="")
     file_result = create_file(session=session, file_in=file_create, user_id=user.id)
-
     try:
-        r2_result = upload_file_to_r2(
-            key=user.email + "/" + str(file_result.id) + "/" + file_name,  # Use DB record ID for unique key
-            data=file_bytes,
-            content_type=file_type,
-            presign=True
-        )
-        if not r2_result.get("IsSuccess"):
-            delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-            raise HTTPException(status_code=500, detail="Failed to upload file to R2")
-
-        (is_success, msg) = upload_ocr_job(session=session, file=file_result, file_url=r2_result["PresignedURL"])
-        if not is_success:
-            delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-            raise HTTPException(status_code=500, detail=f"OCR job upload failed: {msg}")
+        handle_uploaded_file(session=session, file=file_result, user=user, file_bytes=file_bytes)  # Upload to R2 and enqueue OCR job
         return file_result
-
     except Exception as exc:
         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-        logger.error(f"Error uploading file {file_name}: {exc}")
+        logger.error(f"Error handling uploaded file {file_name}: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
+    # try:
+    #     r2_result = upload_file_to_r2(
+    #         key=user.email + "/" + str(file_result.id) + "/" + file_name,  # Use DB record ID for unique key
+    #         data=file_bytes,
+    #         content_type=file_type,
+    #         presign=True
+    #     )
+    #     if not r2_result.get("IsSuccess"):
+    #         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
+    #         raise HTTPException(status_code=500, detail="Failed to upload file to R2")
+
+    #     (is_success, msg) = upload_ocr_job(session=session, file=file_result, file_url=r2_result["PresignedURL"])
+    #     if not is_success:
+    #         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
+    #         raise HTTPException(status_code=500, detail=f"OCR job upload failed: {msg}")
+    #     return file_result
+
+    # except Exception as exc:
+    #     delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
+    #     logger.error(f"Error uploading file {file_name}: {exc}")
+    #     raise HTTPException(status_code=500, detail=str(exc))
 
 @router.get("/presign", response_model=PresignResponse)
 def presign_upload(req: PresignRequest):

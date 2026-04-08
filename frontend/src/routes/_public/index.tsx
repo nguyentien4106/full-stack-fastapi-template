@@ -11,7 +11,7 @@ import Hero from "@/components/hero"
 import HowItWorks from "@/components/how-it-works"
 import Testimonials from "@/components/testimonials"
 
-export const Route = createFileRoute("/_public/home")({
+export const Route = createFileRoute("/_public/")({
   component: Home,
   head: () => ({
     meta: [{ title: "BankToExcel - Convert Bank Statements to Excel" }],

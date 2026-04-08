@@ -293,7 +293,7 @@ function PricingPage() {
                 Start for free
               </Button>
             </Link>
-            <Link to="/home">
+            <Link to="/">
               <Button size="lg" variant="outline" className="px-8">
                 See how it works
               </Button>

@@ -1,22 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  createFileRoute,
-  Link as RouterLink,
-  redirect,
-  useNavigate,
-} from "@tanstack/react-router"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import type { Body_login_login_access_token as AccessToken } from "@/client"
-// AuthLayout intentionally not used — login is presented as a modal dialog
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
+import useAuth from "@/hooks/useAuth"
 import {
   Form,
   FormControl,
@@ -28,47 +16,23 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
-import useAuth, { isLoggedIn } from "@/hooks/useAuth"
+import { Link as RouterLink } from "@tanstack/react-router"
 
 const formSchema = z.object({
-  username: z.email(),
-  password: z
-    .string()
-    .min(1, { message: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters" }),
+  username: z.string().email(),
+  password: z.string().min(8),
 }) satisfies z.ZodType<AccessToken>
 
 type FormData = z.infer<typeof formSchema>
 
-export const Route = createFileRoute("/login")({
-  component: Login,
-  beforeLoad: async () => {
-    if (isLoggedIn()) {
-      throw redirect({
-        to: "/dashboard",
-      })
-    }
-  },
-  head: () => ({
-    meta: [
-      {
-        title: "Log In - FastAPI Template",
-      },
-    ],
-  }),
-})
-
-function Login() {
+export default function LoginModal({ trigger }: { trigger: React.ReactNode }) {
   const { loginMutation } = useAuth()
-  const navigate = useNavigate()
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
     criteriaMode: "all",
-    defaultValues: {
-      username: "",
-      password: "",
-    },
+    defaultValues: { username: "", password: "" },
   })
 
   const onSubmit = (data: FormData) => {
@@ -77,13 +41,12 @@ function Login() {
   }
 
   return (
-    <Dialog defaultOpen onOpenChange={(open) => !open && navigate({ to: "/" })}>
+    <Dialog>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Login to your account</DialogTitle>
-          <DialogDescription className="mb-2">
-            Log in to access your dashboard and manage your files.
-          </DialogDescription>
+          <DialogTitle>Welcome back</DialogTitle>
+          <DialogDescription>Log in to unlock advanced features</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -96,14 +59,9 @@ function Login() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        data-testid="email-input"
-                        placeholder="user@example.com"
-                        type="email"
-                        {...field}
-                      />
+                      <Input placeholder="Enter your email" type="email" {...field} />
                     </FormControl>
-                    <FormMessage className="text-xs" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -115,35 +73,25 @@ function Login() {
                   <FormItem>
                     <div className="flex items-center">
                       <FormLabel>Password</FormLabel>
-                      <RouterLink
-                        to="/recover-password"
-                        className="ml-auto text-sm underline-offset-4 hover:underline"
-                      >
+                      <RouterLink to="/recover-password" className="ml-auto text-sm underline-offset-4 hover:underline">
                         Forgot your password?
                       </RouterLink>
                     </div>
                     <FormControl>
-                      <PasswordInput
-                        data-testid="password-input"
-                        placeholder="Password"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Enter your password" {...field} />
                     </FormControl>
-                    <FormMessage className="text-xs" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
               <LoadingButton type="submit" loading={loginMutation.isPending}>
-                Log In
+                Sign In
               </LoadingButton>
             </div>
 
             <div className="text-center text-sm">
-              Don't have an account yet?{" "}
-              <RouterLink to="/signup" className="underline underline-offset-4">
-                Sign up
-              </RouterLink>
+              Don't have an account? <RouterLink to="/signup" className="underline underline-offset-4">Sign up</RouterLink>
             </div>
           </form>
         </Form>
