@@ -31,6 +31,9 @@ class OcrSubmitResponse(BaseModel):
     msg: str | None = None
     data: OcrSubmitData
 
+    def is_success(self) -> bool:
+        return self.code == 0
+
 
 # ---------------------------------------------------------------------------
 # Job-level response (GET /jobs/{jobId})
@@ -49,6 +52,9 @@ class OcrJobResponse(BaseModel):
     code: int | None = None
     msg: str | None = None
     data: OcrJobData
+
+    def is_success(self) -> bool:
+        return self.code == 0
 
 
 # ---------------------------------------------------------------------------

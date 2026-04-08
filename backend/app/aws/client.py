@@ -28,11 +28,11 @@ def generate_presigned_put_url(key: str, bucket: str | None = None, expiration: 
 
     client = get_s3_client()
     params = {"Bucket": bucket, "Key": key}
-    logger.info(f"Generating presigned PUT URL for bucket {bucket} and key {key} with expiration {expiration} seconds")
+
     url = client.generate_presigned_url(
         ClientMethod="get_object", Params=params, ExpiresIn=expiration
     )
-    logger.info(f"Generated presigned URL for key {key}: {url}")
+
     return url
 
 
@@ -50,5 +50,4 @@ def upload_file_to_r2(key: str, data: bytes, content_type: str | None = None, pr
     resp["IsSuccess"] = resp.get("ResponseMetadata", {}).get("HTTPStatusCode", 0) == 200
     if presign:
         resp["PresignedURL"] = generate_presigned_put_url(key=key, bucket=bucket)
-    
     return resp

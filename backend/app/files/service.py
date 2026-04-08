@@ -5,28 +5,12 @@ from urllib.parse import quote
 import pandas as pd
 from sqlmodel import Session
 
-from app.aws.client import generate_presigned_put_url, upload_file_to_r2
+from app.aws.client import generate_presigned_put_url
 from app.aws.config import aws_settings
 from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.schemas import FileCreate
 from app.files.utils import get_df_from_result_json
-
-
-def handle_uploaded_file(*, session: Session, file: File, user: CurrentUser, file_bytes: bytes) -> None:
-    """
-    Handle a newly uploaded file by creating a File record in the database.
-    The actual file content is expected to be uploaded separately to the provided presigned URL.
-    """
-    # upload to r2
-    r2_result = upload_file_to_r2(
-        key=user.email + "/" + str(file.id) + "/" + file.filename,  # Use DB record ID for unique key
-        data=file_bytes,
-        content_type=file.content_type,
-        presign=True
-    )
-
-    # enqueue OCR job
 
 
 def create_file(*, session: Session, file_in: FileCreate, user_id: uuid.UUID) -> File:
@@ -42,7 +26,7 @@ def delete_file(*, session: Session, file_id: uuid.UUID) -> None:
         session.delete(db_file)
         session.commit()
 
-def update_file_job_info(
+def update_file_info(
     session: Session, file_id: uuid.UUID, job_status: str, job_id: str | None = None, err_msg : str | None = None
 ) -> File | None:
     db_file: File | None = session.get(File, file_id)
@@ -68,7 +52,7 @@ def download_excel_file(file: File, user: CurrentUser) -> tuple[bytes, str]:
     df = get_df_from_result_json(presigned_url)
 
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine="openpyxl") as writer:  # type: ignore[abstract]
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:  # type: ignore[abstract]  # ty:ignore[invalid-argument-type]
         df.to_excel(writer, index=False, sheet_name="OCR Tables")
     excel_bytes = output.getvalue()
 

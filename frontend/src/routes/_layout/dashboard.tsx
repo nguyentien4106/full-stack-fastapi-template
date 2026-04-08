@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
 import { useState } from "react"
-import { FilesService, StoragesService } from "@/client"
+import { FilesService, FilesUploadFileEndpointResponse, StoragesService } from "@/client"
 import { FileUploadDropzone } from "@/components/FileUploadDropzone"
 import { useLoadingSpinner } from "@/components/loading-spinner-provider"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_layout/dashboard")({
 })
 
 function Dashboard() {
+
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { showSpinner, hideSpinner } = useLoadingSpinner()
@@ -28,19 +29,22 @@ function Dashboard() {
 
   const uploadMutation = useMutation({
     mutationFn: async (files: File[]) => {
-      for (const file of files) {
-        showSpinner(`Uploading "${file.name}"...`)
-        await FilesService.uploadFileEndpoint({ formData: { file } })
+      // Upload all files in parallel using Promise.all; each promise resolves
+      // to an UploadResult (ok or error) so we can report partial failures.
+      showSpinner(`Uploading ${files.length} file(s)...`)
+      try {
+        const promises = files.map((file) =>
+          FilesService.uploadFileEndpoint({ formData: { file } })
+        )
+
+        const results = await Promise.all(promises)
+        console.log("Upload results:", results)
+        return results
+      } finally {
+        hideSpinner()
       }
-      hideSpinner()
     },
     onSuccess: () => {
-      const count = selectedFiles.length
-      showSuccessToast(
-        count === 1
-          ? "File uploaded successfully."
-          : `${count} files uploaded successfully.`,
-      )
       setSelectedFiles([])
       queryClient.invalidateQueries({ queryKey: ["files"] })
     },

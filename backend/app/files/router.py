@@ -15,9 +15,9 @@ from app.files.service import (
     create_file,
     delete_file,
     download_excel_file,
-    update_file_job_info, handle_uploaded_file,
+    update_file_info,
 )
-from app.ocrs.service import get_job_status, update_ocr_job_status, upload_ocr_job
+from app.ocrs.service import get_ocr_job_status, post_ocr_jobs
 
 router = APIRouter(prefix="/files", tags=["files"])
 
@@ -35,53 +35,29 @@ def upload_file_endpoint(
     file_type = file.content_type or "application/octet-stream"
     file_create = FileCreate(filename=file_name, content_type=file_type, size=len(file_bytes), url="")
     file_result = create_file(session=session, file_in=file_create, user_id=user.id)
+    key = user.email + "/" + str(file_result.id) + "/" + file_name
+
     try:
-        handle_uploaded_file(session=session, file=file_result, user=user, file_bytes=file_bytes)  # Upload to R2 and enqueue OCR job
+         # upload to r2
+        r2_result = upload_file_to_r2(
+            key=key,  # Use DB record ID for unique key
+            data=file_bytes,
+            content_type=file.content_type,
+            presign=True
+        )
+
+    # enqueue OCR job
+        if not r2_result.get("IsSuccess"):
+            delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
+            raise HTTPException(status_code=500, detail="Failed to upload file to R2")
+
+        post_ocr_jobs(session=session, file=file_result, file_url=r2_result["PresignedURL"])
+
         return file_result
     except Exception as exc:
         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
         logger.error(f"Error handling uploaded file {file_name}: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
-    # try:
-    #     r2_result = upload_file_to_r2(
-    #         key=user.email + "/" + str(file_result.id) + "/" + file_name,  # Use DB record ID for unique key
-    #         data=file_bytes,
-    #         content_type=file_type,
-    #         presign=True
-    #     )
-    #     if not r2_result.get("IsSuccess"):
-    #         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-    #         raise HTTPException(status_code=500, detail="Failed to upload file to R2")
-
-    #     (is_success, msg) = upload_ocr_job(session=session, file=file_result, file_url=r2_result["PresignedURL"])
-    #     if not is_success:
-    #         delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-    #         raise HTTPException(status_code=500, detail=f"OCR job upload failed: {msg}")
-    #     return file_result
-
-    # except Exception as exc:
-    #     delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
-    #     logger.error(f"Error uploading file {file_name}: {exc}")
-    #     raise HTTPException(status_code=500, detail=str(exc))
-
-@router.get("/presign", response_model=PresignResponse)
-def presign_upload(req: PresignRequest):
-    """
-    Generate a presigned PUT URL for direct client uploads.
-    """
-    from app.aws.client import generate_presigned_put_url
-
-    if not aws_settings.R2_BUCKET_NAME and not req.bucket:
-        raise HTTPException(status_code=500, detail="S3 bucket not configured")
-
-    key = req.filename
-    try:
-        url = generate_presigned_put_url(key=key, bucket=req.bucket, expiration=3600)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
-
-    return PresignResponse(url=url, key=key)
-
 
 @router.put("/{file_id}?job_status={job_status}")
 def update_file_job_status_endpoint(
@@ -93,7 +69,7 @@ def update_file_job_status_endpoint(
     Update the job status for a file based on OCR job updates.
     """
 
-    updated_file = update_file_job_info(session=session, file_id=file_id, job_status=job_status)
+    updated_file = update_file_info(session=session, file_id=file_id, job_status=job_status)
     if not updated_file:
         raise HTTPException(status_code=404, detail="File not found")
     return {"message": "Job status updated", "file_id": str(updated_file.id), "job_status": updated_file.job_status}
@@ -107,8 +83,7 @@ def get_file_status(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
 
-    ocr_result = update_ocr_job_status(file=file,  session=session, user=user)  # Poll OCR API for latest status
-    file.job_status = ocr_result.data.state  # Update file status based on OCR job state
+    file.job_status = get_ocr_job_status(file=file,  session=session, user=user)  # Poll OCR API for latest status
 
     return file
 
@@ -127,7 +102,7 @@ def list_files(session: SessionDep, user: CurrentUser, skip: int = 0, limit: int
 
     return FilesPublic(data=files, count=len(files))  # ty:ignore[invalid-argument-type]
 
-@router.post("/{file_id}/download")
+@router.post("/{file_id}/download", response_class=Response)
 def download_table_excel_file(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
     """
     Stream an Excel file built from the OCR result JSON stored in R2.
@@ -148,21 +123,6 @@ def download_table_excel_file(file_id: uuid.UUID, session: SessionDep, user: Cur
         headers={"Content-Disposition": content_disposition},
     )
 
-@router.get("jobs/{job_id}/status")
-def get_job_status_endpoint(job_id: str):
-    """
-    Get the status of an OCR job by job ID.
-    """
-    # This endpoint can be used by a background worker to poll OCR job status if needed
-    # For now, we handle polling in the get_file_status endpoint, but this can be useful for more direct checks
-
-    try:
-        ocr_status = get_job_status(job_id=job_id)
-        return {"job_id": job_id, "status": ocr_status}
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
-
-
 @router.post("/batch/status", response_model=FilesPublic)
 def get_files_batch_status(
     body: FilesStatusRequest,
@@ -173,6 +133,7 @@ def get_files_batch_status(
     Accept a list of file IDs, refresh each file's OCR job status,
     and return the updated list of files.
     """
+    logger.info(f"Received batch status request for file IDs: {body.file_ids} from user {user.email}")
     files: list[File] = []
     for file_id in body.file_ids:
         file = session.get(File, file_id)
@@ -182,8 +143,7 @@ def get_files_batch_status(
             raise HTTPException(status_code=403, detail=f"Not authorized to access file {file_id}")
 
         try:
-            ocr_result = update_ocr_job_status(file=file, session=session, user=user)
-            file.job_status = ocr_result.data.state
+            file.job_status = get_ocr_job_status(file=file, session=session, user=user)
         except Exception as exc:
             logger.error(f"Error refreshing OCR status for file {file_id}: {exc}")
 
