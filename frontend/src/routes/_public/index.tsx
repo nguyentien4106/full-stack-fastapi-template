@@ -1,14 +1,12 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
-
 import * as Dialog from "@radix-ui/react-dialog"
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
+import FileUploadZone from "@/components/FileUploadZone"
 import FAQ from "@/components/faq"
 import Features from "@/components/features"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import Hero from "@/components/hero"
-import FileUploadZone from "@/components/FileUploadZone"
 import HowItWorks from "@/components/how-it-works"
 import Testimonials from "@/components/testimonials"
 import { Button } from "@/components/ui/button"

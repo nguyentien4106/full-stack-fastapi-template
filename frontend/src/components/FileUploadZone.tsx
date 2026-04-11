@@ -38,7 +38,8 @@ export default function FileUploadZone({
     const files = e.dataTransfer.files
     if (files.length > 0) {
       const file = files[0]
-      const isValidType = file.type === "application/pdf" || file.type.startsWith("image/")
+      const isValidType =
+        file.type === "application/pdf" || file.type.startsWith("image/")
       if (isValidType) {
         onFileSelect?.(file)
       }
@@ -68,18 +69,36 @@ export default function FileUploadZone({
           }
         }}
         className={`cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-all ${
-          isDrag ? "border-primary bg-secondary" : "border-border bg-muted hover:bg-secondary"
+          isDrag
+            ? "border-primary bg-secondary"
+            : "border-border bg-muted hover:bg-secondary"
         } ${className ?? ""}`}
       >
-        <svg className="mx-auto h-12 w-12 text-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="mx-auto h-12 w-12 text-primary/60"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <title>Upload icon</title>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 4v16m8-8H4"
+          />
         </svg>
         <p className="mt-4 text-sm font-medium text-foreground">{title}</p>
         <p className="mt-1 text-xs text-muted-foreground">{description}</p>
         <p className="mt-2 text-xs text-muted-foreground">{sizeHint}</p>
       </button>
-      <input ref={fileInputRef} type="file" accept={accept} onChange={handleFileSelect} className="hidden" />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        onChange={handleFileSelect}
+        className="hidden"
+      />
     </div>
   )
 }

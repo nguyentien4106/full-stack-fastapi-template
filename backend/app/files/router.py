@@ -1,12 +1,13 @@
+import os
+import tempfile
 import uuid
+from urllib.parse import quote
 
 from fastapi import APIRouter, HTTPException, Response, UploadFile
 from sqlalchemy import desc
 from sqlmodel import select
 
 from app.aws.client import upload_file_to_r2
-from app.aws.config import aws_settings
-from app.aws.schemas import PresignRequest, PresignResponse
 from app.backend_pre_start import logger
 from app.files.dependencies import CurrentUser, SessionDep
 from app.files.models import File
@@ -14,7 +15,8 @@ from app.files.schemas import FileCreate, FilePublic, FilesPublic, FilesStatusRe
 from app.files.service import (
     create_file,
     delete_file,
-    download_excel_file,
+    download_file,
+    get_gemini_response_for_file,
     update_file_info,
 )
 from app.ocrs.service import get_ocr_job_status, post_ocr_jobs
@@ -60,7 +62,7 @@ def upload_file_endpoint(
         logger.error(f"Error handling uploaded file {file_name}: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
 
-@router.put("/{file_id}?job_status={job_status}")
+@router.put("/{file_id}")
 def update_file_job_status_endpoint(
     file_id: uuid.UUID,
     job_status: str,
@@ -104,7 +106,7 @@ def list_files(session: SessionDep, user: CurrentUser, skip: int = 0, limit: int
     return FilesPublic(data=files, count=len(files))  # ty:ignore[invalid-argument-type]
 
 @router.post("/{file_id}/download", response_class=Response)
-def download_table_excel_file(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep, user: CurrentUser,):
     """
     Stream an Excel file built from the OCR result JSON stored in R2.
     """
@@ -116,13 +118,78 @@ def download_table_excel_file(file_id: uuid.UUID, session: SessionDep, user: Cur
     if file.job_status != "done":
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
 
-    excel_bytes, content_disposition = download_excel_file(file=file, user=user)
+    excel_bytes, content_disposition = download_file(file=file, user=user, type=type)
+    media_type = {
+        "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "csv": "text/csv",
+        "json": "application/json",
+        "html": "text/html",
+    }.get(type, "application/octet-stream")
 
     return Response(
         content=excel_bytes,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        media_type=media_type,
         headers={"Content-Disposition": content_disposition},
     )
+
+
+@router.post("/{file_id}/download/new", response_class=Response)
+def download_new_version_excel(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+    """
+    Generate and return a new version of the Excel file created by the standard
+    download endpoint. This will fetch the existing generated Excel bytes, write
+    them to a temporary file, call `get_gemini_response_for_file` to produce a
+    modified xlsx, and stream that back to the client.
+    """
+    file = session.get(File, file_id)
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+    if file.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to access this file")
+    if file.job_status != "done":
+        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+
+    # Get the existing excel bytes (as produced by download_table_excel_file)
+    excel_bytes, _ = download_file(file=file, user=user, type='xlsx')
+
+    # Write input bytes to a temporary file and prepare an output temp file
+    input_fd, input_path = tempfile.mkstemp(suffix=".xlsx")
+    os.close(input_fd)
+    output_fd, output_path = tempfile.mkstemp(suffix=".xlsx")
+    os.close(output_fd)
+
+    try:
+        with open(input_path, "wb") as f:
+            f.write(excel_bytes)
+
+        # Call the service function which talks to Gemini and writes the output xlsx
+        get_gemini_response_for_file(input_path=input_path, output_path=output_path)
+
+        with open(output_path, "rb") as out_f:
+            new_bytes = out_f.read()
+
+        safe_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
+        excel_filename = f"{safe_name}_tables_new.xlsx"
+        encoded_filename = quote(excel_filename, safe="")
+        content_disposition = (
+            f"attachment; filename=\"{excel_filename}\"; "
+            f"filename*=UTF-8''{encoded_filename}"
+        )
+
+        return Response(
+            content=new_bytes,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": content_disposition},
+        )
+    finally:
+        try:
+            os.remove(input_path)
+        except Exception:
+            pass
+        try:
+            os.remove(output_path)
+        except Exception:
+            pass
 
 @router.post("/batch/status", response_model=FilesPublic)
 def get_files_batch_status(

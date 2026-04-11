@@ -169,9 +169,16 @@ export type FilesGetFileStatusResponse = (FilePublic);
 
 export type FilesDownloadTableExcelFileData = {
     fileId: string;
+    type: string;
 };
 
 export type FilesDownloadTableExcelFileResponse = (unknown);
+
+export type FilesDownloadNewVersionExcelData = {
+    fileId: string;
+};
+
+export type FilesDownloadNewVersionExcelResponse = (unknown);
 
 export type FilesGetFilesBatchStatusData = {
     requestBody: FilesStatusRequest;

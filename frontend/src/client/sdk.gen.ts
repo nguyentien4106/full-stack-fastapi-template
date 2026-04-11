@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
+import type { FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadNewVersionExcelData, FilesDownloadNewVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
 
 export class FilesService {
     /**
@@ -61,9 +61,11 @@ export class FilesService {
     public static updateFileJobStatusEndpoint(data: FilesUpdateFileJobStatusEndpointData): CancelablePromise<FilesUpdateFileJobStatusEndpointResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/files/{file_id}?job_status={job_status}',
+            url: '/api/v1/files/{file_id}',
             path: {
-                file_id: data.fileId,
+                file_id: data.fileId
+            },
+            query: {
                 job_status: data.jobStatus
             },
             errors: {
@@ -98,6 +100,7 @@ export class FilesService {
      * Stream an Excel file built from the OCR result JSON stored in R2.
      * @param data The data for the request.
      * @param data.fileId
+     * @param data.type
      * @returns unknown Successful Response
      * @throws ApiError
      */
@@ -105,6 +108,33 @@ export class FilesService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/files/{file_id}/download',
+            path: {
+                file_id: data.fileId
+            },
+            query: {
+                type: data.type
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Download New Version Excel
+     * Generate and return a new version of the Excel file created by the standard
+     * download endpoint. This will fetch the existing generated Excel bytes, write
+     * them to a temporary file, call `get_gemini_response_for_file` to produce a
+     * modified xlsx, and stream that back to the client.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static downloadNewVersionExcel(data: FilesDownloadNewVersionExcelData): CancelablePromise<FilesDownloadNewVersionExcelResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/files/{file_id}/download/new',
             path: {
                 file_id: data.fileId
             },
