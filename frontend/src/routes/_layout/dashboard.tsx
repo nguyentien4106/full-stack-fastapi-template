@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
 import { useState } from "react"
-import { FilesService, FilesUploadFileEndpointResponse, StoragesService } from "@/client"
+import { FilesService, StoragesService } from "@/client"
 import { FileUploadDropzone } from "@/components/FileUploadDropzone"
 import { useLoadingSpinner } from "@/components/loading-spinner-provider"
 import { Button } from "@/components/ui/button"
@@ -16,9 +16,8 @@ export const Route = createFileRoute("/_layout/dashboard")({
 })
 
 function Dashboard() {
-
   const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { showErrorToast } = useCustomToast()
   const { showSpinner, hideSpinner } = useLoadingSpinner()
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
@@ -34,7 +33,7 @@ function Dashboard() {
       showSpinner(`Uploading ${files.length} file(s)...`)
       try {
         const promises = files.map((file) =>
-          FilesService.uploadFileEndpoint({ formData: { file } })
+          FilesService.uploadFileEndpoint({ formData: { file } }),
         )
 
         const results = await Promise.all(promises)
@@ -160,9 +159,9 @@ function Dashboard() {
                   </span>
                 </div>
                 <div className="border-t border-border pt-4 flex justify-between">
-                  <span className="text-foreground/60">Total Transactions</span>
+                  <span className="text-foreground/60">Total Pages</span>
                   <span className="font-semibold">
-                    {storageStat?.total_transactions?.toLocaleString() ?? "—"}
+                    {storageStat?.total_pages?.toLocaleString() ?? "—"}
                   </span>
                 </div>
                 <div className="border-t border-border pt-4 flex justify-between">
@@ -181,14 +180,6 @@ function Dashboard() {
                 </div>
               </div>
             </Card>
-
-            {/* <Card className="p-6 border-primary/30 bg-primary/5">
-              <h3 className="font-semibold mb-3">Upgrade to Pro</h3>
-              <p className="text-sm text-foreground/70 mb-4">
-                Get unlimited conversions and advanced features
-              </p>
-              <Button className="w-full">Upgrade Plan</Button>
-            </Card> */}
           </div>
         </div>
       </div>

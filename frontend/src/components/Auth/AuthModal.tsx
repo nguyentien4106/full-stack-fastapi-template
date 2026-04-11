@@ -1,16 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import type { Body_login_login_access_token as AccessToken } from "@/client"
-import useAuth from "@/hooks/useAuth"
-import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { LoginService } from "@/client"
-import useCustomToast from "@/hooks/useCustomToast"
-import { handleError } from "@/utils"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -22,6 +24,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import useAuth from "@/hooks/useAuth"
+import useCustomToast from "@/hooks/useCustomToast"
+import { handleError } from "@/utils"
 
 const signInSchema = z.object({
   username: z.string().email(),
@@ -65,7 +71,12 @@ export default function AuthModal({
   const signUpForm = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
     mode: "onBlur",
-    defaultValues: { email: "", full_name: "", password: "", confirm_password: "" },
+    defaultValues: {
+      email: "",
+      full_name: "",
+      password: "",
+      confirm_password: "",
+    },
   })
 
   const recoverForm = useForm<{ email: string }>({
@@ -75,7 +86,8 @@ export default function AuthModal({
   })
 
   const recoverMutation = useMutation({
-    mutationFn: (data: { email: string }) => LoginService.recoverPassword({ email: data.email }),
+    mutationFn: (data: { email: string }) =>
+      LoginService.recoverPassword({ email: data.email }),
     onSuccess: () => {
       showSuccessToast("If that email exists, a recovery message has been sent")
       setTab("signin")
@@ -103,13 +115,20 @@ export default function AuthModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Welcome to docs2excel.ai</DialogTitle>
+          <DialogTitle className="text-center">
+            Welcome to docs2excel.ai
+          </DialogTitle>
           <DialogDescription className="text-center mb-2">
             Log in and subscribe to unlock advanced features
           </DialogDescription>
         </DialogHeader>
 
-  <Tabs value={tab} onValueChange={(v: string) => setTab(v as "signin" | "signup" | "recover")}>
+        <Tabs
+          value={tab}
+          onValueChange={(v: string) =>
+            setTab(v as "signin" | "signup" | "recover")
+          }
+        >
           <TabsList>
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -117,7 +136,10 @@ export default function AuthModal({
 
           <TabsContent value="signin">
             <Form {...signInForm}>
-              <form onSubmit={signInForm.handleSubmit(onSignIn)} className="flex flex-col gap-6">
+              <form
+                onSubmit={signInForm.handleSubmit(onSignIn)}
+                className="flex flex-col gap-6"
+              >
                 <div className="grid gap-4">
                   <FormField
                     control={signInForm.control}
@@ -126,7 +148,11 @@ export default function AuthModal({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your email" type="email" {...field} />
+                          <Input
+                            placeholder="Enter your email"
+                            type="email"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -140,19 +166,29 @@ export default function AuthModal({
                       <FormItem>
                         <div className="flex items-center">
                           <FormLabel>Password</FormLabel>
-                          <button type="button" onClick={() => setTab("recover")} className="ml-auto text-sm underline-offset-4 hover:underline">
+                          <button
+                            type="button"
+                            onClick={() => setTab("recover")}
+                            className="ml-auto text-sm underline-offset-4 hover:underline"
+                          >
                             Forgot your password?
                           </button>
                         </div>
                         <FormControl>
-                          <PasswordInput placeholder="Enter your password" {...field} />
+                          <PasswordInput
+                            placeholder="Enter your password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <LoadingButton type="submit" loading={loginMutation.isPending}>
+                  <LoadingButton
+                    type="submit"
+                    loading={loginMutation.isPending}
+                  >
                     Sign In
                   </LoadingButton>
                 </div>
@@ -162,7 +198,10 @@ export default function AuthModal({
 
           <TabsContent value="signup">
             <Form {...signUpForm}>
-              <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="flex flex-col gap-6">
+              <form
+                onSubmit={signUpForm.handleSubmit(onSignUp)}
+                className="flex flex-col gap-6"
+              >
                 <div className="grid gap-4">
                   <FormField
                     control={signUpForm.control}
@@ -185,7 +224,11 @@ export default function AuthModal({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="user@example.com" type="email" {...field} />
+                          <Input
+                            placeholder="user@example.com"
+                            type="email"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -213,20 +256,33 @@ export default function AuthModal({
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="Confirm Password" {...field} />
+                          <PasswordInput
+                            placeholder="Confirm Password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <LoadingButton type="submit" loading={signUpMutation.isPending}>
+                  <LoadingButton
+                    type="submit"
+                    loading={signUpMutation.isPending}
+                  >
                     Sign Up
                   </LoadingButton>
                 </div>
 
                 <div className="text-center text-sm">
-                  Already have an account? <button type="button" onClick={() => setTab("signin")} className="underline underline-offset-4">Log in</button>
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setTab("signin")}
+                    className="underline underline-offset-4"
+                  >
+                    Log in
+                  </button>
                 </div>
               </form>
             </Form>
@@ -234,7 +290,10 @@ export default function AuthModal({
 
           <TabsContent value="recover">
             <Form {...recoverForm}>
-              <form onSubmit={recoverForm.handleSubmit(onRecover)} className="flex flex-col gap-6">
+              <form
+                onSubmit={recoverForm.handleSubmit(onRecover)}
+                className="flex flex-col gap-6"
+              >
                 <div className="grid gap-4">
                   <FormField
                     control={recoverForm.control}
@@ -243,20 +302,34 @@ export default function AuthModal({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your account email" type="email" {...field} />
+                          <Input
+                            placeholder="Enter your account email"
+                            type="email"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <LoadingButton type="submit" loading={recoverMutation.isPending}>
+                  <LoadingButton
+                    type="submit"
+                    loading={recoverMutation.isPending}
+                  >
                     Send Recovery Email
                   </LoadingButton>
                 </div>
 
                 <div className="text-center text-sm">
-                  Remembered your password? <button type="button" onClick={() => setTab("signin")} className="underline underline-offset-4">Sign in</button>
+                  Remembered your password?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setTab("signin")}
+                    className="underline underline-offset-4"
+                  >
+                    Sign in
+                  </button>
                 </div>
               </form>
             </Form>

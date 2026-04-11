@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
+import { useState } from "react"
+import AuthModal from "@/components/Auth/AuthModal"
 import { isLoggedIn } from "@/hooks/useAuth"
 import { Appearance } from "./Common/Appearance"
 import { Logo } from "./Common/Logo"
-import AuthModal from "@/components/Auth/AuthModal"
-import { useState } from "react"
 
 export default function Header() {
   const [authOpen, setAuthOpen] = useState(false)
@@ -44,7 +44,6 @@ export default function Header() {
             >
               FAQ
             </a>
-            
           </nav>
 
           {/* Right — Actions */}
@@ -73,7 +72,11 @@ export default function Header() {
                 >
                   Sign Up
                 </button>
-                <AuthModal open={authOpen} setOpen={setAuthOpen} initialTab={authTab} />
+                <AuthModal
+                  open={authOpen}
+                  setOpen={setAuthOpen}
+                  initialTab={authTab}
+                />
               </>
             ) : (
               <Link

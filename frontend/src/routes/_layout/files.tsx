@@ -12,7 +12,7 @@ function getFilesQueryOptions(limit = 0) {
   return {
     queryFn: () => FilesService.listFiles({ skip: 0, limit }),
     queryKey: ["files"],
-    refetchInterval: 3000, // Refetch every 5 seconds to get real-time updates
+    //refetchInterval: 3000,
   }
 }
 
@@ -39,7 +39,6 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
       )
 
       if (pendingFiles.length === 0) {
-        console.log("No pending files, stopping polling.")
         if (pollingRef.current) {
           clearInterval(pollingRef.current)
           pollingRef.current = null

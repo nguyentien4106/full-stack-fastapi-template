@@ -43,7 +43,10 @@ const DeleteConfirmation = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-destructive border-destructive/50 hover:bg-destructive/10 hover:text-destructive">
+        <Button
+          variant="outline"
+          className="text-destructive border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
+        >
           Delete My Account
         </Button>
       </DialogTrigger>

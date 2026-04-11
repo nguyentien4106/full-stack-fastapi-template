@@ -51,21 +51,20 @@ export default function FAQ() {
         <Accordion.Root type="single" collapsible className="space-y-4">
           {faqs.map((faq, index) => (
             <Accordion.Item
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={index}
+              key={faq.question}
               value={`item-${index}`}
               className="rounded-lg border border-border bg-background overflow-hidden"
             >
               <Accordion.Header>
                 <Accordion.Trigger className="flex w-full items-center justify-between px-6 py-4 text-left font-semibold text-foreground hover:text-primary transition-colors [&[data-state=open]>svg]:rotate-180">
                   <span>{faq.question}</span>
-                  {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                   <svg
                     className="h-5 w-5 transition-transform duration-200"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
+                    <title>Toggle answer</title>
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"

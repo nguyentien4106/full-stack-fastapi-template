@@ -48,7 +48,7 @@ def post_ocr_jobs(session: Session, file: File, file_url: str) -> tuple[bool, st
         return (False, None)
 
     job_id = submit_response.data.jobId
-
+    logger.info("OCR job submitted successfully for file %s, job_id: %s", file.id, job_id)
     update_file_info(
         session,
         file_id=file.id,
@@ -78,18 +78,20 @@ def get_ocr_job_status(file: File, session: SessionDep, user: CurrentUser) -> st
     assert raw.status_code in (200, 404), f"OCR API returned unexpected status code {raw.status_code}"
 
     result: OcrJobResponse = OcrJobResponse.model_validate(raw.json())
-
+    logger.info("get_ocr_job_status for file %s,\n result: %s", file.json(), result.json())
     if not result.is_success():
         logger.error("Error fetching OCR job status for job_id %s: %s", file.job_id, result.msg)
         update_file_info(session, file_id=file.id, job_status=OcrJobStatus.FAILED, err_msg=result.msg)
         raise Exception(f"OCR API error: {result.msg}")
 
     state = result.data.state
-    if state != OcrJobStatus.PENDING:
-        update_file_info(session, file_id=file.id, job_status=state)  # Update all files with this job_id
+    logger.info("OCR job %s status: %s", file.job_id, state)
+    if state == OcrJobStatus.RUNNING and file.job_status == OcrJobStatus.PENDING:
+        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.RUNNING)  # Update all files with this job_id
 
     elif state == OcrJobStatus.DONE:
         logger.info("OCR job %s completed successfully. Result uploaded to R2.", file.job_id)
+        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.DONE)
         upload_ocr_job_result(user=user, file=file, result=result, session=session)
 
     elif state == OcrJobStatus.FAILED:
@@ -101,7 +103,7 @@ def get_ocr_job_status(file: File, session: SessionDep, user: CurrentUser) -> st
 def upload_ocr_job_result(user: CurrentUser, file: File, result: OcrJobResponse, session: SessionDep):
     key = f"{user.email}/{file.id}/result.json"
     (json_url, md_url) = (result.data.resultUrl.jsonUrl, result.data.resultUrl.markdownUrl) if result.data.resultUrl else (None, None)
-
+    logger.info(f"Uploading OCR job result for file {file.id} to R2, json_url: {json_url}, md_url: {md_url}")
     if json_url:
         upload_file_to_r2(key=key, data=get_bytes_from_file_url(json_url), content_type="application/json")
 

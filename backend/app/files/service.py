@@ -3,6 +3,7 @@ import uuid
 from urllib.parse import quote
 
 import pandas as pd
+from alembic.autogenerate.api import log
 from sqlmodel import Session
 
 from app.aws.client import generate_presigned_put_url
@@ -30,6 +31,7 @@ def update_file_info(
     session: Session, file_id: uuid.UUID, job_status: str, job_id: str | None = None, err_msg : str | None = None
 ) -> File | None:
     db_file: File | None = session.get(File, file_id)
+    print(f"Updating file {file_id} with job_status={job_status}, job_id={job_id}, err_msg={err_msg}")
     if db_file:
         db_file.job_status = job_status
         if job_id:

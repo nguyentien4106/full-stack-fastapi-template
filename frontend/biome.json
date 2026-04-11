@@ -26,6 +26,9 @@
         "noParameterAssign": "error",
         "useSelfClosingElements": "error",
         "noUselessElse": "error"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "error"
       }
     }
   },

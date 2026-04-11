@@ -1,10 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
+import { Link as RouterLink } from "@tanstack/react-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import type { Body_login_login_access_token as AccessToken } from "@/client"
-import useAuth from "@/hooks/useAuth"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -16,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
-import { Link as RouterLink } from "@tanstack/react-router"
+import useAuth from "@/hooks/useAuth"
 
 const formSchema = z.object({
   username: z.string().email(),
@@ -46,11 +53,16 @@ export default function LoginModal({ trigger }: { trigger: React.ReactNode }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Welcome back</DialogTitle>
-          <DialogDescription>Log in to unlock advanced features</DialogDescription>
+          <DialogDescription>
+            Log in to unlock advanced features
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-6"
+          >
             <div className="grid gap-4">
               <FormField
                 control={form.control}
@@ -59,7 +71,11 @@ export default function LoginModal({ trigger }: { trigger: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" type="email" {...field} />
+                      <Input
+                        placeholder="Enter your email"
+                        type="email"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -73,12 +89,18 @@ export default function LoginModal({ trigger }: { trigger: React.ReactNode }) {
                   <FormItem>
                     <div className="flex items-center">
                       <FormLabel>Password</FormLabel>
-                      <RouterLink to="/recover-password" className="ml-auto text-sm underline-offset-4 hover:underline">
+                      <RouterLink
+                        to="/recover-password"
+                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                      >
                         Forgot your password?
                       </RouterLink>
                     </div>
                     <FormControl>
-                      <PasswordInput placeholder="Enter your password" {...field} />
+                      <PasswordInput
+                        placeholder="Enter your password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -91,7 +113,10 @@ export default function LoginModal({ trigger }: { trigger: React.ReactNode }) {
             </div>
 
             <div className="text-center text-sm">
-              Don't have an account? <RouterLink to="/signup" className="underline underline-offset-4">Sign up</RouterLink>
+              Don't have an account?{" "}
+              <RouterLink to="/signup" className="underline underline-offset-4">
+                Sign up
+              </RouterLink>
             </div>
           </form>
         </Form>

@@ -24,7 +24,7 @@ const MonthlyUsage = () => {
     queryFn: () => StoragesService.getMyStorageStat(),
   })
 
-  const usedPages = storageStat?.extracted_pages ?? 0
+  const usedPages = storageStat?.total_pages ?? 0
   const percentUsed = Math.min((usedPages / FREE_TIER_PAGE_LIMIT) * 100, 100)
   const resetDate = getNextMonthReset()
 
@@ -59,9 +59,7 @@ const MonthlyUsage = () => {
           </div>
           <Progress value={percentUsed} className="h-2" />
         </div>
-        <p className="text-sm text-muted-foreground">
-          Resets on {resetDate}
-        </p>
+        <p className="text-sm text-muted-foreground">Resets on {resetDate}</p>
       </CardContent>
     </Card>
   )

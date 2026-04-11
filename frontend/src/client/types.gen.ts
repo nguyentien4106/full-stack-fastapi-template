@@ -69,24 +69,6 @@ export type NewPassword = {
     new_password: string;
 };
 
-export type PresignRequest = {
-    filename: string;
-    content_type?: (string | null);
-    bucket?: (string | null);
-};
-
-export type PresignResponse = {
-    url: string;
-    key: string;
-};
-
-export type PrivateUserCreate = {
-    email: string;
-    password: string;
-    full_name: string;
-    is_verified?: boolean;
-};
-
 export type Token = {
     access_token: string;
     token_type?: string;
@@ -133,15 +115,7 @@ export type UserStorageStatPublic = {
     total_cost: number;
     updated_at: string;
     total_transactions: number;
-    extracted_pages?: (number | null);
-};
-
-export type UserStorageStatUpdate = {
-    file_count?: (number | null);
-    total_size?: (number | null);
-    total_cost?: (number | null);
-    total_transactions?: (number | null);
-    extracted_pages?: (number | null);
+    total_pages?: (number | null);
 };
 
 export type UserUpdate = {
@@ -180,12 +154,6 @@ export type FilesListFilesData = {
 
 export type FilesListFilesResponse = (FilesPublic);
 
-export type FilesPresignUploadData = {
-    requestBody: PresignRequest;
-};
-
-export type FilesPresignUploadResponse = (PresignResponse);
-
 export type FilesUpdateFileJobStatusEndpointData = {
     fileId: string;
     jobStatus: string;
@@ -204,12 +172,6 @@ export type FilesDownloadTableExcelFileData = {
 };
 
 export type FilesDownloadTableExcelFileResponse = (unknown);
-
-export type FilesGetJobStatusEndpointData = {
-    jobId: string;
-};
-
-export type FilesGetJobStatusEndpointResponse = (unknown);
 
 export type FilesGetFilesBatchStatusData = {
     requestBody: FilesStatusRequest;
@@ -275,19 +237,7 @@ export type LoginRecoverPasswordHtmlContentData = {
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
 
-export type PrivateCreateUserData = {
-    requestBody: PrivateUserCreate;
-};
-
-export type PrivateCreateUserResponse = (UserPublic);
-
 export type StoragesGetMyStorageStatResponse = (UserStorageStatPublic);
-
-export type StoragesUpdateMyStorageStatData = {
-    requestBody: UserStorageStatUpdate;
-};
-
-export type StoragesUpdateMyStorageStatResponse = (UserStorageStatPublic);
 
 export type UsersReadUsersData = {
     limit?: number;
@@ -350,3 +300,5 @@ export type UtilsTestEmailData = {
 export type UtilsTestEmailResponse = (Message);
 
 export type UtilsHealthCheckResponse = (boolean);
+
+export type UtilsClearAllFilesResponse = (Message);

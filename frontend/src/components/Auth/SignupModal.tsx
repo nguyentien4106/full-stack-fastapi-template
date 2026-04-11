@@ -1,9 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
+import { Link as RouterLink } from "@tanstack/react-router"
+import type React from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
-import useAuth from "@/hooks/useAuth"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -15,8 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
-import { Link as RouterLink } from "@tanstack/react-router"
-import type React from "react"
+import useAuth from "@/hooks/useAuth"
 
 const formSchema = z
   .object({
@@ -39,7 +45,12 @@ export default function SignupModal({ trigger }: { trigger: React.ReactNode }) {
     resolver: zodResolver(formSchema),
     mode: "onBlur",
     criteriaMode: "all",
-    defaultValues: { email: "", full_name: "", password: "", confirm_password: "" },
+    defaultValues: {
+      email: "",
+      full_name: "",
+      password: "",
+      confirm_password: "",
+    },
   })
 
   const onSubmit = (data: FormData) => {
@@ -54,11 +65,16 @@ export default function SignupModal({ trigger }: { trigger: React.ReactNode }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create an account</DialogTitle>
-          <DialogDescription className="mb-2">Sign up to start your free trial</DialogDescription>
+          <DialogDescription className="mb-2">
+            Sign up to start your free trial
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-6"
+          >
             <div className="grid gap-4">
               <FormField
                 control={form.control}
@@ -81,7 +97,11 @@ export default function SignupModal({ trigger }: { trigger: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="user@example.com" type="email" {...field} />
+                      <Input
+                        placeholder="user@example.com"
+                        type="email"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -109,7 +129,10 @@ export default function SignupModal({ trigger }: { trigger: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <PasswordInput placeholder="Confirm Password" {...field} />
+                      <PasswordInput
+                        placeholder="Confirm Password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -122,7 +145,10 @@ export default function SignupModal({ trigger }: { trigger: React.ReactNode }) {
             </div>
 
             <div className="text-center text-sm">
-              Already have an account? <RouterLink to="/login" className="underline underline-offset-4">Log in</RouterLink>
+              Already have an account?{" "}
+              <RouterLink to="/login" className="underline underline-offset-4">
+                Log in
+              </RouterLink>
             </div>
           </form>
         </Form>

@@ -51,6 +51,7 @@ def upload_file_endpoint(
             delete_file(session=session, file_id=file_result.id)  # Clean up DB record on failure
             raise HTTPException(status_code=500, detail="Failed to upload file to R2")
 
+        logger.info(f"File {file_result.id} uploaded to R2 successfully, URL: {r2_result['PresignedURL']}")
         post_ocr_jobs(session=session, file=file_result, file_url=r2_result["PresignedURL"])
 
         return file_result
@@ -137,6 +138,7 @@ def get_files_batch_status(
     files: list[File] = []
     for file_id in body.file_ids:
         file = session.get(File, file_id)
+        logger.info(f"Processing file ID {file_id}: found file {file} in database")
         if not file:
             raise HTTPException(status_code=404, detail=f"File {file_id} not found")
         if file.user_id != user.id:

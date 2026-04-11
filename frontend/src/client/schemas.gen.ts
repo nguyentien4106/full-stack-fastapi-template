@@ -351,81 +351,6 @@ export const NewPasswordSchema = {
     title: 'NewPassword'
 } as const;
 
-export const PresignRequestSchema = {
-    properties: {
-        filename: {
-            type: 'string',
-            title: 'Filename'
-        },
-        content_type: {
-            anyOf: [
-                {
-                    type: 'string'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Content Type'
-        },
-        bucket: {
-            anyOf: [
-                {
-                    type: 'string'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Bucket'
-        }
-    },
-    type: 'object',
-    required: ['filename'],
-    title: 'PresignRequest'
-} as const;
-
-export const PresignResponseSchema = {
-    properties: {
-        url: {
-            type: 'string',
-            title: 'Url'
-        },
-        key: {
-            type: 'string',
-            title: 'Key'
-        }
-    },
-    type: 'object',
-    required: ['url', 'key'],
-    title: 'PresignResponse'
-} as const;
-
-export const PrivateUserCreateSchema = {
-    properties: {
-        email: {
-            type: 'string',
-            title: 'Email'
-        },
-        password: {
-            type: 'string',
-            title: 'Password'
-        },
-        full_name: {
-            type: 'string',
-            title: 'Full Name'
-        },
-        is_verified: {
-            type: 'boolean',
-            title: 'Is Verified',
-            default: false
-        }
-    },
-    type: 'object',
-    required: ['email', 'password', 'full_name'],
-    title: 'PrivateUserCreate'
-} as const;
-
 export const TokenSchema = {
     properties: {
         access_token: {
@@ -621,7 +546,7 @@ export const UserStorageStatPublicSchema = {
             type: 'integer',
             title: 'Total Transactions'
         },
-        extracted_pages: {
+        total_pages: {
             anyOf: [
                 {
                     type: 'integer'
@@ -630,74 +555,12 @@ export const UserStorageStatPublicSchema = {
                     type: 'null'
                 }
             ],
-            title: 'Extracted Pages'
+            title: 'Total Pages'
         }
     },
     type: 'object',
     required: ['id', 'user_id', 'file_count', 'total_size', 'total_cost', 'updated_at', 'total_transactions'],
     title: 'UserStorageStatPublic'
-} as const;
-
-export const UserStorageStatUpdateSchema = {
-    properties: {
-        file_count: {
-            anyOf: [
-                {
-                    type: 'integer'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'File Count'
-        },
-        total_size: {
-            anyOf: [
-                {
-                    type: 'integer'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Total Size'
-        },
-        total_cost: {
-            anyOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Total Cost'
-        },
-        total_transactions: {
-            anyOf: [
-                {
-                    type: 'integer'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Total Transactions'
-        },
-        extracted_pages: {
-            anyOf: [
-                {
-                    type: 'integer'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Extracted Pages'
-        }
-    },
-    type: 'object',
-    title: 'UserStorageStatUpdate'
 } as const;
 
 export const UserUpdateSchema = {

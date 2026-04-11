@@ -19,7 +19,10 @@ const DeleteAccount = () => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Alert variant="destructive" className="bg-destructive/5 border-destructive/30">
+        <Alert
+          variant="destructive"
+          className="bg-destructive/5 border-destructive/30"
+        >
           <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-destructive text-sm">
             <strong>This action cannot be undone</strong>

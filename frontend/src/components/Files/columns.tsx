@@ -6,6 +6,12 @@ import { FaFileExcel } from "react-icons/fa6"
 import { type FilePublic, FilesService } from "@/client"
 import { OpenAPI } from "@/client/core/OpenAPI"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
@@ -40,37 +46,51 @@ async function downloadExcel(fileId: string, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-function DownloadButton({ file }: { file: FilePublic }) {
+function DownloadMenu({ file }: { file: FilePublic }) {
   const [loading, setLoading] = useState(false)
 
-  const handleDownload = async () => {
-    setLoading(true)
-    try {
-      await downloadExcel(file.id, file.filename)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
+  const handleSelect = async (format: string) => {
+    if (format === "excel") {
+      setLoading(true)
+      try {
+        await downloadExcel(file.id, file.filename)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+      return
     }
+
+    // TODO: implement CSV/DOCX generation server-side or client-side conversion
+    console.warn(`Download format '${format}' not supported yet for file ${file.id}`)
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="w-8 h-8 p-0"
-      title="Download as Excel"
-      disabled={loading}
-      onClick={handleDownload}
-    >
-      {loading ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
-      ) : (
-        <DownloadIcon className="w-4 h-4" />
-      )}
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-8 h-8 p-0"
+          title="Download"
+          disabled={loading}
+        >
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <DownloadIcon className="w-4 h-4" />}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => void handleSelect("excel")}>Excel (.xlsx)</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => void handleSelect("csv")}>
+          CSV (.csv) — not supported
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => void handleSelect("docx")}>DOCX (.docx) — not supported</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
+
+
 
 export const columns: ColumnDef<FilePublic>[] = [
   {
@@ -146,12 +166,7 @@ export const columns: ColumnDef<FilePublic>[] = [
             </Button>
           )}
           {file.job_status === "done" && (
-            <>
-              <div className="flex items-center gap-1.5 group">
-                <FaFileExcel className="w-4 h-4 text-green-500" />
-              </div>
-              <DownloadButton file={file} />
-            </>
+            <DownloadMenu file={file} />
           )}
         </div>
       )

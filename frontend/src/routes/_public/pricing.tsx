@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { Check, HelpCircle, Zap } from "lucide-react"
 import { useState } from "react"
 import Footer from "@/components/footer"
@@ -61,7 +61,10 @@ function PricingPage() {
 
       {/* Hero */}
       <section className="py-16 px-4 text-center">
-        <Badge variant="outline" className="mb-4 gap-1.5 px-3 py-1 text-xs font-medium">
+        <Badge
+          variant="outline"
+          className="mb-4 gap-1.5 px-3 py-1 text-xs font-medium"
+        >
           <Zap className="h-3 w-3 text-primary" />
           Simple, transparent pricing
         </Badge>
@@ -213,20 +216,38 @@ function PricingPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 {[
-                  { label: "Conversions / month", values: ["5", "100", "Unlimited"] },
-                  { label: "Max file size", values: ["5 MB", "50 MB", "100 MB"] },
+                  {
+                    label: "Conversions / month",
+                    values: ["5", "100", "Unlimited"],
+                  },
+                  {
+                    label: "Max file size",
+                    values: ["5 MB", "50 MB", "100 MB"],
+                  },
                   { label: "PDF support", values: [true, true, true] },
                   { label: "Image support", values: [true, true, true] },
                   { label: "Advanced formatting", values: [false, true, true] },
-                  { label: "Transaction categorization", values: [false, true, true] },
+                  {
+                    label: "Transaction categorization",
+                    values: [false, true, true],
+                  },
                   { label: "Custom templates", values: [false, false, true] },
                   { label: "Batch processing", values: [false, false, true] },
                   { label: "API access", values: [false, false, true] },
                   { label: "Team seats", values: ["—", "1", "Up to 5"] },
-                  { label: "Download history", values: ["—", "30 days", "Unlimited"] },
-                  { label: "Support", values: ["Email", "Priority email", "Priority + SLA"] },
+                  {
+                    label: "Download history",
+                    values: ["—", "30 days", "Unlimited"],
+                  },
+                  {
+                    label: "Support",
+                    values: ["Email", "Priority email", "Priority + SLA"],
+                  },
                 ].map((row) => (
-                  <tr key={row.label} className="hover:bg-muted/50 transition-colors">
+                  <tr
+                    key={row.label}
+                    className="hover:bg-muted/50 transition-colors"
+                  >
                     <td className="p-4 text-foreground/80">{row.label}</td>
                     {row.values.map((val, i) => (
                       <td
@@ -282,7 +303,9 @@ function PricingPage() {
       {/* CTA banner */}
       <section className="border-t border-border px-4 py-20 bg-primary/5">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold">Ready to save hours every month?</h2>
+          <h2 className="text-3xl font-bold">
+            Ready to save hours every month?
+          </h2>
           <p className="mt-4 text-muted-foreground">
             Join thousands of accountants who use BankToExcel to convert
             statements in seconds — not hours.
