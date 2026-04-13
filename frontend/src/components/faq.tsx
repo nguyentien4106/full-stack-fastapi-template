@@ -1,57 +1,55 @@
 "use client"
 
 import * as Accordion from "@radix-ui/react-accordion"
-
-const faqs = [
-  {
-    question: "What is KeToanAuto?",
-    answer:
-      "KeToanAuto is an all-in-one online PDF/Images converter that lets you transform PDF/Images files into various formats, including Excel (XLSX). No installation or technical skills required.",
-  },
-  {
-    question: "Is KeToanAuto safe to use?",
-    answer:
-      "Yes, absolutely. We use advanced encryption to ensure your sensitive data stays secure throughout the entire process. Your privacy is our priority.",
-  },
-  {
-    question: "Is KeToanAuto available as a subscription or one-time purchase?",
-    answer:
-      "Your first file is always free to convert. After that, we offer flexible subscription plans to meet your needs.",
-  },
-  // {
-  //   question: "How to edit PDF files using KeToanAuto?",
-  //   answer:
-  //     "KeToanAuto provides intuitive editing tools. Simply upload your PDF, use our editor to make changes, and download your modified file.",
-  // },
-  {
-    question: "What file types does KeToanAuto support?",
-    answer:
-      "KeToanAuto supports conversion to and from PDF, Excel, Word, PowerPoint, and many other popular document formats.",
-  },
-  {
-    question: "What should I do if I encounter problems?",
-    answer:
-      "Our friendly support team is here to help. Contact us directly through the support form, and we&apos;ll get back to you quickly with a solution.",
-  },
-]
+import { useTranslation } from "react-i18next"
 
 export default function FAQ() {
+  const { t } = useTranslation()
+
+  const faqs = [
+    {
+      id: "whatIs",
+      question: t("faq.whatIs.question"),
+      answer: t("faq.whatIs.answer"),
+    },
+    {
+      id: "isSafe",
+      question: t("faq.isSafe.question"),
+      answer: t("faq.isSafe.answer"),
+    },
+    {
+      id: "pricing",
+      question: t("faq.pricing.question"),
+      answer: t("faq.pricing.answer"),
+    },
+    {
+      id: "fileTypes",
+      question: t("faq.fileTypes.question"),
+      answer: t("faq.fileTypes.answer"),
+    },
+    {
+      id: "problems",
+      question: t("faq.problems.question"),
+      answer: t("faq.problems.answer"),
+    },
+  ]
+
   return (
     <section id="faq" className="py-20 sm:py-32 bg-secondary">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Frequently Asked Questions
+            {t("faq.heading")}
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Find answers to common questions
+            {t("faq.subheading")}
           </p>
         </div>
 
         <Accordion.Root type="single" collapsible className="space-y-4">
           {faqs.map((faq, index) => (
             <Accordion.Item
-              key={faq.question}
+              key={faq.id}
               value={`item-${index}`}
               className="rounded-lg border border-border bg-background overflow-hidden"
             >

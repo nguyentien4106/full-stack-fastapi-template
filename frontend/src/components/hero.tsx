@@ -1,11 +1,13 @@
 import { useNavigate } from "@tanstack/react-router"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import FileUploadZone from "@/components/FileUploadZone"
 import { isLoggedIn } from "@/hooks/useAuth"
 
 export default function Hero() {
   const [isDrag] = useState(false)
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const requireAuth = (action: () => void) => {
     if (!isLoggedIn()) {
@@ -33,11 +35,10 @@ export default function Hero() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-foreground sm:text-6xl lg:text-7xl text-balance">
-            Convert Bank Statements to Excel
+            {t("hero.title")}
           </h1>
           <p className="mt-6 text-xl text-muted-foreground sm:text-2xl max-w-3xl mx-auto">
-            Upload your PDF or image bank statements and get organized Excel
-            files instantly
+            {t("hero.subtitle")}
           </p>
 
           <div className="mt-16 w-full">
@@ -49,9 +50,9 @@ export default function Hero() {
                   ? "border-primary bg-primary/10 shadow-2xl scale-105"
                   : "border-primary/40 bg-primary/5 hover:bg-primary/8 hover:border-primary/60 shadow-lg hover:shadow-2xl"
               }`}
-              title={"Drag and drop your bank statement"}
-              description={"or click to browse"}
-              sizeHint={"Supports PDF and images (JPG, PNG) up to 100 MB"}
+              title={t("hero.dragDrop")}
+              description={t("hero.browse")}
+              sizeHint={t("hero.sizeHint")}
             />
           </div>
 
@@ -64,7 +65,7 @@ export default function Hero() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <title>Instant Conversion</title>
+                  <title>{t("hero.instantConversion")}</title>
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -74,10 +75,10 @@ export default function Hero() {
                 </svg>
               </div>
               <h3 className="font-semibold text-foreground text-lg">
-                Instant Conversion
+                {t("hero.instantConversion")}
               </h3>
               <p className="text-sm text-muted-foreground">
-                PDFs & images to Excel
+                {t("hero.pdfsToExcel")}
               </p>
             </div>
             <div className="flex flex-col items-center gap-3">
@@ -88,7 +89,7 @@ export default function Hero() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <title>Bank-Grade Security</title>
+                  <title>{t("hero.bankGradeSecurity")}</title>
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -98,10 +99,10 @@ export default function Hero() {
                 </svg>
               </div>
               <h3 className="font-semibold text-foreground text-lg">
-                Bank-Grade Security
+                {t("hero.bankGradeSecurity")}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Your data is encrypted
+                {t("hero.dataEncrypted")}
               </p>
             </div>
             <div className="flex flex-col items-center gap-3">
@@ -112,7 +113,7 @@ export default function Hero() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <title>100% Accurate</title>
+                  <title>{t("hero.accurate")}</title>
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -122,10 +123,10 @@ export default function Hero() {
                 </svg>
               </div>
               <h3 className="font-semibold text-foreground text-lg">
-                100% Accurate
+                {t("hero.accurate")}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Preserves all data
+                {t("hero.preservesData")}
               </p>
             </div>
           </div>

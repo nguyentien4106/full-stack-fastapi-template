@@ -11,6 +11,8 @@ def init_db(session: Session) -> None:
     from app.files.models import File  # noqa: F401
     from app.items.models import Item  # noqa: F401
     from app.users.models import User
+    # ensure api_keys model is imported so SQLModel registers the table
+    from app.api_keys.models import ApiKey  # noqa: F401
     from app.users.schemas import UserCreate
     from app.users.service import create_user
 

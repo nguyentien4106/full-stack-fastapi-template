@@ -1,9 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import dayjs from "dayjs"
 import { DownloadIcon, Loader2, RefreshCcw } from "lucide-react"
-import { useState } from "react"
 import { type FilePublic, FilesService } from "@/client"
-import { OpenAPI } from "@/client/core/OpenAPI"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,79 +12,13 @@ import {
 import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
-
-async function downloadFile(fileId: string, filename: string, type: string) {
-  const token =
-    typeof OpenAPI.TOKEN === "function"
-      ? await OpenAPI.TOKEN({} as never)
-      : OpenAPI.TOKEN
-
-  const base = OpenAPI.BASE || ""
-  const response = await fetch(`${base}/api/v1/files/${fileId}/download?type=${type}`, {
-    method: "POST",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Download failed: ${response.statusText}`)
-  }
-
-  const blob = await response.blob()
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  const safeName = filename.replace(/\.[^.]+$/, "")
-  a.href = url
-  a.download = `${safeName}_tables.${type}`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
-}
-
-async function downloadNewVersion(fileId: string, filename: string) {
-  const token =
-    typeof OpenAPI.TOKEN === "function"
-      ? await OpenAPI.TOKEN({} as never)
-      : OpenAPI.TOKEN
-
-  const base = OpenAPI.BASE || ""
-  const response = await fetch(`${base}/api/v1/files/${fileId}/download/new`, {
-    method: "POST",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Download failed: ${response.statusText}`)
-  }
-
-  const blob = await response.blob()
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  const safeName = filename.replace(/\.[^.]+$/, "")
-  a.href = url
-  a.download = `${safeName}_tables_new.xlsx`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
-}
+import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
 
 function DownloadMenu({ file }: { file: FilePublic }) {
-  const [loading, setLoading] = useState(false)
+  const { mutate: download, isPending } = useDownloadFile()
 
-  const handleSelect = async (format: string) => {
-    setLoading(true)
-    try {
-      await downloadFile(file.id, file.filename, format)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
+  const handleSelect = (format: DownloadFormat) => {
+    download({ fileId: file.id, filename: file.filename, format })
   }
 
   return (
@@ -97,9 +29,9 @@ function DownloadMenu({ file }: { file: FilePublic }) {
           size="sm"
           className="w-8 h-8 p-0"
           title="Download"
-          disabled={loading}
+          disabled={isPending}
         >
-          {loading ? (
+          {isPending ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             <DownloadIcon className="w-4 h-4" />
@@ -107,57 +39,23 @@ function DownloadMenu({ file }: { file: FilePublic }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => void handleSelect("xlsx")}>
+        <DropdownMenuItem onClick={() => handleSelect("xlsx")}>
           Excel (.xlsx)
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => void handleSelect("csv")}>
+        <DropdownMenuItem onClick={() => handleSelect("xlsx-acc-code")}>
+          Analyze Account Code then Excel (.xlsx)
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleSelect("csv")}>
           CSV (.csv)
         </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={() => void handleSelect("json")}>
+        <DropdownMenuItem onClick={() => handleSelect("json")}>
           JSON (.json)
         </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={() => void handleSelect("html")}>
+        <DropdownMenuItem onClick={() => handleSelect("html")}>
           HTML (.html)
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => void handleSelect("docx")}>
-          DOCX (.docx) — not supported
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
-
-function DownloadNewButton({ file }: { file: FilePublic }) {
-  const [loading, setLoading] = useState(false)
-
-  const handleClick = async () => {
-    setLoading(true)
-    try {
-      await downloadNewVersion(file.id, file.filename)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="w-8 h-8 p-0"
-      title="Download (new)"
-      onClick={() => void handleClick()}
-      disabled={loading}
-    >
-      {loading ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
-      ) : (
-        <DownloadIcon className="w-4 h-4 text-blue-400" />
-      )}
-    </Button>
   )
 }
 
@@ -235,10 +133,7 @@ export const columns: ColumnDef<FilePublic>[] = [
             </Button>
           )}
           {file.job_status === "done" && (
-            <>
-              <DownloadNewButton file={file} />
-              <DownloadMenu file={file} />
-            </>
+            <DownloadMenu file={file} />
           )}
         </div>
       )

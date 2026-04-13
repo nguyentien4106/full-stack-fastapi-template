@@ -1,52 +1,50 @@
-const features = [
-  {
-    icon: "📄",
-    title: "Multiple File Types",
-    description:
-      "Convert bank statements from PDF and image formats. Supports JPG, PNG, and PDF uploads.",
-  },
-  {
-    icon: "🔒",
-    title: "Bank-Grade Security",
-    description:
-      "Your financial data is encrypted and never stored on our servers. Complete privacy guaranteed.",
-  },
-  {
-    icon: "⚡",
-    title: "Instant Conversion",
-    description:
-      "Process your bank statements in seconds. Get organized Excel files ready to use immediately.",
-  },
-  {
-    icon: "✅",
-    title: "Accurate Data Extraction",
-    description:
-      "Preserves all transaction details, amounts, and dates with 99.9% accuracy. No data loss.",
-  },
-  {
-    icon: "📊",
-    title: "Ready for Analysis",
-    description:
-      "Converted Excel files are fully formatted and compatible with all spreadsheet applications.",
-  },
-  {
-    icon: "🚀",
-    title: "Zero Setup Required",
-    description:
-      "No installation, no registration required. Start converting your bank statements instantly.",
-  },
-]
+import { useTranslation } from "react-i18next"
 
 export default function Features() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: "📄",
+      title: t("features.multipleFileTypes.title"),
+      description: t("features.multipleFileTypes.description"),
+    },
+    {
+      icon: "🔒",
+      title: t("features.security.title"),
+      description: t("features.security.description"),
+    },
+    {
+      icon: "⚡",
+      title: t("features.instantConversion.title"),
+      description: t("features.instantConversion.description"),
+    },
+    {
+      icon: "✅",
+      title: t("features.accurateExtraction.title"),
+      description: t("features.accurateExtraction.description"),
+    },
+    {
+      icon: "📊",
+      title: t("features.readyForAnalysis.title"),
+      description: t("features.readyForAnalysis.description"),
+    },
+    {
+      icon: "🚀",
+      title: t("features.zeroSetup.title"),
+      description: t("features.zeroSetup.description"),
+    },
+  ]
+
   return (
     <section id="features" className="py-20 sm:py-32 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Why Choose KeToanAuto
+            {t("features.heading")}
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            The smartest way to organize your bank statements
+            {t("features.subheading")}
           </p>
         </div>
 

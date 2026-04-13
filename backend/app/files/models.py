@@ -24,7 +24,7 @@ class File(SQLModel, table=True):
     bank: str | None = Field(default=None, max_length=255)
     created_at: datetime = Field(
         default_factory=get_datetime_utc,
-        sa_type=DateTime(timezone=True),  # type: ignore[call-arg]
+        sa_type=DateTime(timezone=True),  # ty:ignore[invalid-argument-type]
     )
     user_id: uuid.UUID = Field(
         foreign_key="users.id", nullable=False, ondelete="CASCADE"

@@ -1,14 +1,17 @@
 import { Link } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import AuthModal from "@/components/Auth/AuthModal"
 import { isLoggedIn } from "@/hooks/useAuth"
 import { Appearance } from "./Common/Appearance"
+import { LanguageSwitcher } from "./Common/LanguageSwitcher"
 import { Logo } from "./Common/Logo"
 
 export default function Header() {
   const [authOpen, setAuthOpen] = useState(false)
   const [authTab, setAuthTab] = useState<"signin" | "signup">("signin")
+  const { t } = useTranslation()
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,30 +27,31 @@ export default function Header() {
               href="/#features"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Features
+              {t("nav.features")}
             </a>
             <Link
               to="/pricing"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Pricing
+              {t("nav.pricing")}
             </Link>
             <a
               href="/#how"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              How it works
+              {t("nav.howItWorks")}
             </a>
             <a
               href="/#faq"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              FAQ
+              {t("nav.faq")}
             </a>
           </nav>
 
           {/* Right — Actions */}
           <div className="flex items-center gap-4 shrink-0">
+            <LanguageSwitcher />
             <Appearance />
             {!isLoggedIn() ? (
               <>
@@ -60,7 +64,7 @@ export default function Header() {
                   }}
                   className="hidden sm:inline-flex text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Sign In
+                  {t("nav.signIn")}
                 </button>
                 <button
                   type="button"
@@ -70,7 +74,7 @@ export default function Header() {
                   }}
                   className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
-                  Sign Up
+                  {t("nav.signUp")}
                 </button>
                 <AuthModal
                   open={authOpen}
@@ -84,7 +88,7 @@ export default function Header() {
                 className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  Dashboard
+                  {t("nav.dashboard")}
                   <ArrowRight className="w-4 h-4" />
                 </div>
               </Link>

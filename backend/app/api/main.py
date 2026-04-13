@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.routes.utils import router as utils_router
+from app.api_keys.router import router as api_keys_router
 from app.auth.router import router as login_router
 from app.core.config import settings
 from app.files.router import router as files_router
@@ -15,6 +16,7 @@ api_router.include_router(utils_router)
 api_router.include_router(items_router)
 api_router.include_router(files_router)
 api_router.include_router(storages_router)
+api_router.include_router(api_keys_router)
 
 if settings.ENVIRONMENT == "local":
     from app.api.routes.private import router as private_router

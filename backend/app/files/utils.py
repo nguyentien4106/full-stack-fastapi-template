@@ -1,7 +1,9 @@
-from pandas import DataFrame
 from io import StringIO
-import requests
+
 import pandas as pd
+import requests
+from pandas import DataFrame
+
 
 def extract_tables_from_ocr(data) -> pd.DataFrame:
     all_dfs: list[DataFrame] = []
@@ -21,8 +23,7 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
                         df["__page__"] = page_idx + 1  # debug tracking
                         all_dfs.append(df)
                 except Exception as e:
-                    print(f"Skip bad table on page {page_idx+1}: {e}")
-
+                    pass
     if not all_dfs:
         raise Exception("No tables found")
 

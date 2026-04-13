@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Convert Bank Statements to Excel",
+    "subtitle": "Upload your PDF or image bank statements and get organized Excel files instantly",
+    "dragDrop": "Drag and drop your bank statement",
+    "browse": "or click to browse",
+    "sizeHint": "Supports PDF and images (JPG, PNG) up to 100 MB",
+    "instantConversion": "Instant Conversion",
+    "pdfsToExcel": "PDFs & images to Excel",
+    "bankGradeSecurity": "Bank-Grade Security",
+    "dataEncrypted": "Your data is encrypted",
+    "accurate": "100% Accurate",
+    "preservesData": "Preserves all data"
+  },
+  "features": {
+    "heading": "Why Choose KeToanAuto",
+    "subheading": "The smartest way to organize your bank statements",
+    "multipleFileTypes": {
+      "title": "Multiple File Types",
+      "description": "Convert bank statements from PDF and image formats. Supports JPG, PNG, and PDF uploads."
+    },
+    "security": {
+      "title": "Bank-Grade Security",
+      "description": "Your financial data is encrypted and never stored on our servers. Complete privacy guaranteed."
+    },
+    "instantConversion": {
+      "title": "Instant Conversion",
+      "description": "Process your bank statements in seconds. Get organized Excel files ready to use immediately."
+    },
+    "accurateExtraction": {
+      "title": "Accurate Data Extraction",
+      "description": "Preserves all transaction details, amounts, and dates with 99.9% accuracy. No data loss."
+    },
+    "readyForAnalysis": {
+      "title": "Ready for Analysis",
+      "description": "Converted Excel files are fully formatted and compatible with all spreadsheet applications."
+    },
+    "zeroSetup": {
+      "title": "Zero Setup Required",
+      "description": "No installation, no registration required. Start converting your bank statements instantly."
+    }
+  },
+  "howItWorks": {
+    "heading": "How KeToanAuto Works",
+    "subheading": "Three simple steps to organize your bank statements",
+    "step1": {
+      "title": "Upload Your Bank Statement",
+      "description": "Drag and drop your PDF or image bank statement. Supports JPG, PNG, and PDF formats."
+    },
+    "step2": {
+      "title": "We Extract the Data",
+      "description": "Our AI-powered system analyzes and extracts all transaction details automatically in seconds."
+    },
+    "step3": {
+      "title": "Download as Excel",
+      "description": "Your bank statement is now organized in an Excel file, ready for analysis and archiving."
+    },
+    "cta": "Convert your first bank statement for free. Unlock unlimited conversions with KeToanAuto Pro."
+  },
+  "testimonials": {
+    "heading": "What Users Are Saying",
+    "subheading": "Trusted by thousands of users worldwide",
+    "verified": "Verified",
+    "sarah": {
+      "name": "Sarah Martinez",
+      "role": "Business Manager",
+      "content": "Easy to use, good service. Exactly what I needed for converting my documents."
+    },
+    "james": {
+      "name": "James Chen",
+      "role": "Freelance Designer",
+      "content": "Great experience, high quality service! The conversion was perfect and very fast."
+    },
+    "emily": {
+      "name": "Emily Rodriguez",
+      "role": "Data Analyst",
+      "content": "Good Service, Very good customer service! They helped me when I had questions."
+    }
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "subheading": "Find answers to common questions",
+    "whatIs": {
+      "question": "What is KeToanAuto?",
+      "answer": "KeToanAuto is an all-in-one online PDF/Images converter that lets you transform PDF/Images files into various formats, including Excel (XLSX). No installation or technical skills required."
+    },
+    "isSafe": {
+      "question": "Is KeToanAuto safe to use?",
+      "answer": "Yes, absolutely. We use advanced encryption to ensure your sensitive data stays secure throughout the entire process. Your privacy is our priority."
+    },
+    "pricing": {
+      "question": "Is KeToanAuto available as a subscription or one-time purchase?",
+      "answer": "Your first file is always free to convert. After that, we offer flexible subscription plans to meet your needs."
+    },
+    "fileTypes": {
+      "question": "What file types does KeToanAuto support?",
+      "answer": "KeToanAuto supports conversion to and from PDF, Excel, Word, PowerPoint, and many other popular document formats."
+    },
+    "problems": {
+      "question": "What should I do if I encounter problems?",
+      "answer": "Our friendly support team is here to help. Contact us directly through the support form, and we'll get back to you quickly with a solution."
+    }
+  },
+  "footer": {
+    "tagline": "Convert your PDFs with confidence",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "features": "Features",
+    "pricing": "Pricing",
+    "security": "Security",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "support": "Support",
+    "careers": "Careers",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "cookiePolicy": "Cookie Policy",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  }
+}

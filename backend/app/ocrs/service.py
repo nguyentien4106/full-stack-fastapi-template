@@ -5,8 +5,8 @@ from sqlmodel import Session
 
 from app.aws.client import upload_file_to_r2
 from app.core.config import settings
+from app.files.crud import update_file_info
 from app.files.models import File
-from app.files.service import update_file_info
 from app.ocrs.constants import OcrJobStatus
 from app.ocrs.dependencies import CurrentUser, SessionDep
 from app.ocrs.schemas import OcrJobResponse, OcrSubmitResponse

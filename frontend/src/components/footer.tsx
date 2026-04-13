@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next"
+
 export default function Footer() {
+  const { t } = useTranslation()
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -26,19 +29,19 @@ export default function Footer() {
               <span className="font-bold text-foreground">PDF Guru</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Convert your PDFs with confidence
+              {t("footer.tagline")}
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Product</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t("footer.product")}</h4>
             <ul className="space-y-2">
               <li>
                 <a
                   href="/#features"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Features
+                  {t("footer.features")}
                 </a>
               </li>
               <li>
@@ -46,7 +49,7 @@ export default function Footer() {
                   href="/pricing"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Pricing
+                  {t("footer.pricing")}
                 </a>
               </li>
               <li>
@@ -54,7 +57,7 @@ export default function Footer() {
                   href="/security"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Security
+                  {t("footer.security")}
                 </a>
               </li>
               <li>
@@ -62,21 +65,21 @@ export default function Footer() {
                   href="/blog"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Blog
+                  {t("footer.blog")}
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Company</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t("footer.company")}</h4>
             <ul className="space-y-2">
               <li>
                 <a
                   href="/about"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  About
+                  {t("footer.about")}
                 </a>
               </li>
               <li>
@@ -84,7 +87,7 @@ export default function Footer() {
                   href="/contact"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Contact
+                  {t("footer.contact")}
                 </a>
               </li>
               <li>
@@ -92,7 +95,7 @@ export default function Footer() {
                   href="/support"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Support
+                  {t("footer.support")}
                 </a>
               </li>
               <li>
@@ -100,21 +103,21 @@ export default function Footer() {
                   href="/careers"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Careers
+                  {t("footer.careers")}
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h4>
             <ul className="space-y-2">
               <li>
                 <a
                   href="/privacy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Privacy Policy
+                  {t("footer.privacyPolicy")}
                 </a>
               </li>
               <li>
@@ -122,7 +125,7 @@ export default function Footer() {
                   href="/terms"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Terms of Use
+                  {t("footer.termsOfUse")}
                 </a>
               </li>
               <li>
@@ -130,7 +133,7 @@ export default function Footer() {
                   href="/cookies"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Cookie Policy
+                  {t("footer.cookiePolicy")}
                 </a>
               </li>
             </ul>
@@ -140,7 +143,7 @@ export default function Footer() {
         <div className="border-t border-border pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} PDF Guru. All rights reserved.
+              © {new Date().getFullYear()} PDF Guru. {t("footer.rights")}
             </p>
             <div className="flex items-center gap-4">
               <a

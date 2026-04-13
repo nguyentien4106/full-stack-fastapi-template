@@ -1,44 +1,48 @@
-const testimonials = [
-  {
-    name: "Sarah Martinez",
-    role: "Business Manager",
-    content:
-      "Easy to use, good service. Exactly what I needed for converting my documents.",
-    rating: 5,
-  },
-  {
-    name: "James Chen",
-    role: "Freelance Designer",
-    content:
-      "Great experience, high quality service! The conversion was perfect and very fast.",
-    rating: 5,
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "Data Analyst",
-    content:
-      "Good Service, Very good customer service! They helped me when I had questions.",
-    rating: 5,
-  },
-]
+import { useTranslation } from "react-i18next"
 
 export default function Testimonials() {
+  const { t } = useTranslation()
+
+  const testimonials = [
+    {
+      id: "sarah",
+      name: t("testimonials.sarah.name"),
+      role: t("testimonials.sarah.role"),
+      content: t("testimonials.sarah.content"),
+      rating: 5,
+    },
+    {
+      id: "james",
+      name: t("testimonials.james.name"),
+      role: t("testimonials.james.role"),
+      content: t("testimonials.james.content"),
+      rating: 5,
+    },
+    {
+      id: "emily",
+      name: t("testimonials.emily.name"),
+      role: t("testimonials.emily.role"),
+      content: t("testimonials.emily.content"),
+      rating: 5,
+    },
+  ]
+
   return (
     <section className="py-20 sm:py-32 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            What Users Are Saying
+            {t("testimonials.heading")}
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Trusted by thousands of users worldwide
+            {t("testimonials.subheading")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <div
-              key={index}
+              key={testimonial.id}
               className="rounded-lg border border-border bg-card p-8 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-1 mb-4">
@@ -60,7 +64,7 @@ export default function Testimonials() {
                 </p>
               </div>
               <div className="mt-4 flex items-center gap-2 text-xs font-medium text-primary">
-                ✓ Verified
+                ✓ {t("testimonials.verified")}
               </div>
             </div>
           ))}

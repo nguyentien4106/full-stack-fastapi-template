@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "howItWorks": "Cách hoạt động",
+    "faq": "Câu hỏi thường gặp",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "dashboard": "Bảng điều khiển"
+  },
+  "hero": {
+    "title": "Chuyển đổi sao kê ngân hàng sang Excel",
+    "subtitle": "Tải lên file PDF hoặc hình ảnh sao kê ngân hàng và nhận file Excel có tổ chức ngay lập tức",
+    "dragDrop": "Kéo và thả sao kê ngân hàng của bạn",
+    "browse": "hoặc nhấp để chọn file",
+    "sizeHint": "Hỗ trợ PDF và hình ảnh (JPG, PNG) lên đến 100 MB",
+    "instantConversion": "Chuyển đổi tức thì",
+    "pdfsToExcel": "PDF & hình ảnh sang Excel",
+    "bankGradeSecurity": "Bảo mật cấp ngân hàng",
+    "dataEncrypted": "Dữ liệu của bạn được mã hóa",
+    "accurate": "100% Chính xác",
+    "preservesData": "Bảo toàn toàn bộ dữ liệu"
+  },
+  "features": {
+    "heading": "Tại sao chọn KeToanAuto",
+    "subheading": "Cách thông minh nhất để tổ chức sao kê ngân hàng của bạn",
+    "multipleFileTypes": {
+      "title": "Nhiều loại file",
+      "description": "Chuyển đổi sao kê ngân hàng từ định dạng PDF và hình ảnh. Hỗ trợ tải lên JPG, PNG và PDF."
+    },
+    "security": {
+      "title": "Bảo mật cấp ngân hàng",
+      "description": "Dữ liệu tài chính của bạn được mã hóa và không bao giờ lưu trữ trên máy chủ của chúng tôi. Đảm bảo quyền riêng tư hoàn toàn."
+    },
+    "instantConversion": {
+      "title": "Chuyển đổi tức thì",
+      "description": "Xử lý sao kê ngân hàng của bạn trong vài giây. Nhận file Excel có tổ chức sẵn sàng sử dụng ngay."
+    },
+    "accurateExtraction": {
+      "title": "Trích xuất dữ liệu chính xác",
+      "description": "Bảo toàn tất cả chi tiết giao dịch, số tiền và ngày tháng với độ chính xác 99,9%. Không mất dữ liệu."
+    },
+    "readyForAnalysis": {
+      "title": "Sẵn sàng để phân tích",
+      "description": "File Excel được chuyển đổi có định dạng đầy đủ và tương thích với tất cả các ứng dụng bảng tính."
+    },
+    "zeroSetup": {
+      "title": "Không cần cài đặt",
+      "description": "Không cần cài đặt, không cần đăng ký. Bắt đầu chuyển đổi sao kê ngân hàng của bạn ngay lập tức."
+    }
+  },
+  "howItWorks": {
+    "heading": "KeToanAuto hoạt động như thế nào",
+    "subheading": "Ba bước đơn giản để tổ chức sao kê ngân hàng của bạn",
+    "step1": {
+      "title": "Tải lên sao kê ngân hàng",
+      "description": "Kéo và thả file PDF hoặc hình ảnh sao kê ngân hàng. Hỗ trợ định dạng JPG, PNG và PDF."
+    },
+    "step2": {
+      "title": "Chúng tôi trích xuất dữ liệu",
+      "description": "Hệ thống AI của chúng tôi tự động phân tích và trích xuất tất cả chi tiết giao dịch trong vài giây."
+    },
+    "step3": {
+      "title": "Tải xuống dưới dạng Excel",
+      "description": "Sao kê ngân hàng của bạn giờ đây được tổ chức trong file Excel, sẵn sàng để phân tích và lưu trữ."
+    },
+    "cta": "Chuyển đổi sao kê ngân hàng đầu tiên của bạn miễn phí. Mở khóa chuyển đổi không giới hạn với KeToanAuto Pro."
+  },
+  "testimonials": {
+    "heading": "Người dùng nói gì về chúng tôi",
+    "subheading": "Được tin dùng bởi hàng nghìn người dùng trên toàn thế giới",
+    "verified": "Đã xác minh",
+    "sarah": {
+      "name": "Sarah Martinez",
+      "role": "Quản lý kinh doanh",
+      "content": "Dễ sử dụng, dịch vụ tốt. Đúng những gì tôi cần để chuyển đổi tài liệu."
+    },
+    "james": {
+      "name": "James Chen",
+      "role": "Nhà thiết kế tự do",
+      "content": "Trải nghiệm tuyệt vời, dịch vụ chất lượng cao! Việc chuyển đổi hoàn hảo và rất nhanh."
+    },
+    "emily": {
+      "name": "Emily Rodriguez",
+      "role": "Nhà phân tích dữ liệu",
+      "content": "Dịch vụ tốt, dịch vụ khách hàng rất tốt! Họ đã giúp tôi khi tôi có thắc mắc."
+    }
+  },
+  "faq": {
+    "heading": "Câu hỏi thường gặp",
+    "subheading": "Tìm câu trả lời cho các câu hỏi phổ biến",
+    "whatIs": {
+      "question": "KeToanAuto là gì?",
+      "answer": "KeToanAuto là một công cụ chuyển đổi PDF/Hình ảnh trực tuyến tất cả trong một, cho phép bạn chuyển đổi file PDF/Hình ảnh sang nhiều định dạng khác nhau, bao gồm Excel (XLSX). Không cần cài đặt hoặc kỹ năng kỹ thuật."
+    },
+    "isSafe": {
+      "question": "KeToanAuto có an toàn để sử dụng không?",
+      "answer": "Có, hoàn toàn. Chúng tôi sử dụng mã hóa nâng cao để đảm bảo dữ liệu nhạy cảm của bạn được bảo mật trong suốt quá trình. Quyền riêng tư của bạn là ưu tiên của chúng tôi."
+    },
+    "pricing": {
+      "question": "KeToanAuto có đăng ký theo tháng hay mua một lần?",
+      "answer": "File đầu tiên của bạn luôn được chuyển đổi miễn phí. Sau đó, chúng tôi cung cấp các gói đăng ký linh hoạt để đáp ứng nhu cầu của bạn."
+    },
+    "fileTypes": {
+      "question": "KeToanAuto hỗ trợ những loại file nào?",
+      "answer": "KeToanAuto hỗ trợ chuyển đổi sang và từ PDF, Excel, Word, PowerPoint và nhiều định dạng tài liệu phổ biến khác."
+    },
+    "problems": {
+      "question": "Tôi phải làm gì nếu gặp sự cố?",
+      "answer": "Đội ngũ hỗ trợ thân thiện của chúng tôi luôn sẵn sàng giúp đỡ. Liên hệ trực tiếp với chúng tôi qua biểu mẫu hỗ trợ, và chúng tôi sẽ phản hồi bạn nhanh chóng với giải pháp."
+    }
+  },
+  "footer": {
+    "tagline": "Chuyển đổi PDF của bạn với sự tự tin",
+    "product": "Sản phẩm",
+    "company": "Công ty",
+    "legal": "Pháp lý",
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "security": "Bảo mật",
+    "blog": "Blog",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "support": "Hỗ trợ",
+    "careers": "Tuyển dụng",
+    "privacyPolicy": "Chính sách bảo mật",
+    "termsOfUse": "Điều khoản sử dụng",
+    "cookiePolicy": "Chính sách cookie",
+    "rights": "Bản quyền thuộc về chúng tôi."
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "close": "Đóng"
+  }
+}
