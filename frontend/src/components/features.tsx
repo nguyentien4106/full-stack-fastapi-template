@@ -51,7 +51,7 @@ export default function Features() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
-              key={index}
+              key={`${feature.title}-${index}`}
               className="rounded-lg border border-border bg-card p-8 hover:border-primary/50 hover:shadow-lg transition-all"
             >
               <div className="text-4xl mb-4">{feature.icon}</div>

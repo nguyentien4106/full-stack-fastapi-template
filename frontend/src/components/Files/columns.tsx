@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
 import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
+import { FilePreviewModal } from "./FilePreviewModal"
 
 function DownloadMenu({ file }: { file: FilePublic }) {
   const { mutate: download, isPending } = useDownloadFile()
@@ -133,7 +134,10 @@ export const columns: ColumnDef<FilePublic>[] = [
             </Button>
           )}
           {file.job_status === "done" && (
-            <DownloadMenu file={file} />
+            <>
+              <FilePreviewModal file={file} />
+              <DownloadMenu file={file} />
+            </>
           )}
         </div>
       )
