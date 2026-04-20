@@ -1,27 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
-import { OpenAPI } from "@/client/core/OpenAPI"
 import useCustomToast from "./useCustomToast"
-import { ApiError } from "@/client"
-
-async function fetchDownload(url: string): Promise<Blob> {
-  const token =
-    typeof OpenAPI.TOKEN === "function"
-      ? await OpenAPI.TOKEN({} as never)
-      : OpenAPI.TOKEN
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  })
-  console.log('response', response)
-  if (!response.ok) {
-    throw new Error(`Download failed: ${response.statusText}`)
-  }
-
-  return response.blob()
-}
+import type { ApiError } from "@/client"
+import { fetchBlobWithAuth } from "@/lib/fetchWithAuth"
 
 function triggerBlobDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob)
@@ -47,18 +27,13 @@ export function useDownloadFile() {
 
   return useMutation({
     mutationFn: async ({ fileId, filename, format }: DownloadFileParams) => {
-      const base = OpenAPI.BASE || ""
       const safeName = filename.replace(/\.[^.]+$/, "")
 
       if (format === "xlsx-acc-code") {
-        const blob = await fetchDownload(
-          `${base}/api/v1/files/${fileId}/download/new`,
-        )
+        const blob = await fetchBlobWithAuth(`/api/v1/files/${fileId}/download/new`)
         triggerBlobDownload(blob, `${safeName}_tables_with_acc_codes.xlsx`)
       } else {
-        const blob = await fetchDownload(
-          `${base}/api/v1/files/${fileId}/download?type=${format}`,
-        )
+        const blob = await fetchBlobWithAuth(`/api/v1/files/${fileId}/download?type=${format}`)
         triggerBlobDownload(blob, `${safeName}_tables.${format}`)
       }
     },

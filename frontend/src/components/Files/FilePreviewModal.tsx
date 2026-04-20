@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { ChevronDown, DownloadIcon, Eye, Loader2 } from "lucide-react"
-import { OpenAPI } from "@/client/core/OpenAPI"
-import type { FilePublic } from "@/client"
+import { FilesService, type FilePublic } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -16,24 +16,7 @@ import {
 import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
 
 async function fetchPreviewJson(fileId: string): Promise<Record<string, unknown>[]> {
-  const token =
-    typeof OpenAPI.TOKEN === "function"
-      ? await OpenAPI.TOKEN({} as never)
-      : OpenAPI.TOKEN
-
-  const base = OpenAPI.BASE || ""
-  const response = await fetch(`${base}/api/v1/files/${fileId}/download?type=json`, {
-    method: "POST",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Failed to load preview: ${response.statusText}`)
-  }
-
-  return response.json()
+  return FilesService.downloadTableExcelFile({ fileId, type: "json" }) as Promise<Record<string, unknown>[]>
 }
 
 export function FilePreviewModal({ file }: { file: FilePublic }) {
@@ -77,7 +60,8 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="flex flex-col max-w-full h-[95vh] max-h-[95vh] p-0 gap-0 rounded-xl overflow-hidden">
+        <DialogContent className="flex flex-col max-w-full sm:max-w-full h-[95vh] max-h-[95vh] p-0 gap-0 rounded-xl overflow-hidden">
+          <DialogTitle className="sr-only">File Preview</DialogTitle>
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
             <div className="flex items-center gap-3">

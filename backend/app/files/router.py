@@ -1,7 +1,4 @@
-import os
-import tempfile
 import uuid
-from urllib.parse import quote
 
 from fastapi import APIRouter, HTTPException, Response, UploadFile
 from sqlalchemy import desc
@@ -15,7 +12,7 @@ from app.files.models import File
 from app.files.schemas import FileCreate, FilePublic, FilesPublic, FilesStatusRequest
 from app.files.service import (
     download_file,
-    get_gemini_response_for_file, download_file_with_account_code,
+    download_file_with_account_code,
 )
 from app.ocrs.service import get_ocr_job_status, post_ocr_jobs
 
@@ -115,7 +112,7 @@ def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep
         raise HTTPException(status_code=403, detail="Not authorized to access this file")
     if file.job_status != "done":
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
-
+    logger.info(f"Preparing to stream file {file_id} for user {user.email} with requested type {type}")
     excel_bytes, content_disposition = download_file(file=file, user=user, type=type)
     media_type = {
         "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -123,7 +120,7 @@ def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep
         "json": "application/json",
         "html": "text/html",
     }.get(type, "application/octet-stream")
-
+    logger.info(f"Streaming file {file_id} to user {user.email} with media type {media_type}")
     return Response(
         content=excel_bytes,
         media_type=media_type,

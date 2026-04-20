@@ -7,18 +7,18 @@ from pandas.core.frame import DataFrame
 from sqlmodel import Session
 
 from app.api_keys.crud import get_api_key_by_user
-from app.aws.client import generate_presigned_put_url
+from app.aws.client import download_file_from_r2, generate_presigned_put_url
 from app.aws.config import aws_settings
 from app.core.config import settings
 from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.strategies import DOWNLOAD_STRATEGIES
-from app.files.utils import get_df_from_result_json
+from app.files.utils import get_df_from_json_bytes, get_df_from_result_json
 
 user_instruction = (
-    "Tôi muốn bạn đọc file này. Sau đó dựa vào nội dung trong cột thứ 2 để xác định giao dịch "
+    "Tôi muốn bạn đọc file này. Sau đó dựa vào nội dung để xác định giao dịch (Bạn phải tự xác định cột chứa nội dung giao dịch)"
     "này thuộc mã tài khoản kế toán nào (mã này được lấy từ thị trường Việt Nam). Sau đó trả ra "
-    "cho tôi file mới có thêm cột mã tk, và tên tk ở cuối.\n\n"
+    "cho tôi file mới có thêm cột mã tk, và tên tk ở cuối. Nếu nội dung chuyển khoản không chắc chắn, hãy bỏ trống\n\n"
     "Dưới đây là nội dung file (nguyên văn). Hãy trả lại CHÍNH XÁC NỘI DUNG file mới dưới dạng CSV hoặc plain text, "
     "không thêm giải thích, chú thích hay văn bản khác. Chỉ output nội dung file mới.\n\n"
 )
@@ -39,9 +39,10 @@ def download_file(file: File, user: CurrentUser, type: str = "xlsx") -> tuple[by
 
     json_key = f"{user.email}/{file.id}/result.json"
 
-    presigned_url = generate_presigned_put_url(key=json_key, bucket=aws_settings.R2_BUCKET_NAME, expiration=3600)
-    df: DataFrame = get_df_from_result_json(presigned_url)
-
+    # presigned_url = generate_presigned_put_url(key=json_key, bucket=aws_settings.R2_BUCKET_NAME, expiration=3600)
+    # df: DataFrame = get_df_from_result_json(presigned_url)
+    json_file = download_file_from_r2(key=json_key, bucket=aws_settings.R2_BUCKET_NAME)
+    df = get_df_from_json_bytes(json_file)
     safe_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
     data_bytes, content_disposition = strategy.convert(df, safe_name)
 

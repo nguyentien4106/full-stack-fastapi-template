@@ -51,3 +51,13 @@ def upload_file_to_r2(key: str, data: bytes, content_type: str | None = None, pr
     if presign:
         resp["PresignedURL"] = generate_presigned_put_url(key=key, bucket=bucket)
     return resp
+
+def download_file_from_r2(key: str, bucket: str | None = None) -> bytes:
+    bucket = bucket or aws_settings.R2_BUCKET_NAME
+    if not bucket:
+        raise RuntimeError("S3 bucket not configured")
+
+    client = get_s3_client()
+    response = client.get_object(Bucket=bucket, Key=key)
+    print('S3 get_object response metadata:', response.get("ResponseMetadata", {}))
+    return response["Body"].read()

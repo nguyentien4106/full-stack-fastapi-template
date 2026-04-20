@@ -1,3 +1,4 @@
+import json
 from io import StringIO
 
 import pandas as pd
@@ -40,3 +41,9 @@ def get_df_from_result_json(url) -> DataFrame:
     data = res.json()
 
     return extract_tables_from_ocr(data)
+
+def get_df_from_json_bytes(json_bytes: bytes) -> DataFrame:
+
+    json_data = json.loads(json_bytes.decode("utf-8"))
+
+    return extract_tables_from_ocr(json_data)
