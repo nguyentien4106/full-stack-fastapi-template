@@ -27,8 +27,11 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
                     pass
     if not all_dfs:
         raise Exception("No tables found")
-
+        
     # Merge all tables
+    for i in range(1, len(all_dfs)):
+        all_dfs[i].drop(0)
+
     merged = pd.concat(all_dfs, ignore_index=True)
 
     return merged

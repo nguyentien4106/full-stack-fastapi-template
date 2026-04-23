@@ -33,6 +33,7 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
     setError(null)
     try {
       const data = await fetchPreviewJson(file.id)
+      data[0] && console.log("Preview data sample:", data[0])
       setRows(Array.isArray(data) ? data : [])
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load preview")
@@ -60,7 +61,7 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="flex flex-col max-w-full sm:max-w-full h-[95vh] max-h-[95vh] p-0 gap-0 rounded-xl overflow-hidden">
+        <DialogContent className="flex flex-col max-w-full sm:max-w-[70vw] h-[70vh] max-h-[95vh] p-4 gap-0 rounded-xl overflow-hidden">
           <DialogTitle className="sr-only">File Preview</DialogTitle>
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
@@ -135,25 +136,43 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
               <table className="w-full text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-background border-b">
                   <tr>
-                    {cols.map((col) => (
+                    {rows.length > 0 && Object.values(rows[0]).map((col) => (
                       <th
-                        key={col}
+                        key={String(col)}
                         className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
                       >
-                        {col}
+                        {String(col ?? "")}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row, i) => (
+                  {
+                  rows.length > 1 && rows.slice(1).map((row, i) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: rows have no stable id
                     <tr key={i} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
-                      {cols.map((col) => (
-                        <td key={col} className="px-4 py-3 whitespace-nowrap text-sm">
-                          {String(row[col] ?? "—")}
-                        </td>
-                      ))}
+                      {cols.map((col) => {
+                        const val = row[col]
+                        let display: string
+                        if (val == null || String(val).trim() === "") {
+                          display = "—"
+                        } else {
+                          const str = String(val).trim()
+                          // strip thousands separators then check if it's a pure number string
+                          const stripped = str.replace(/,/g, "")
+                          const num = Number(stripped)
+                          if (!Number.isNaN(num) && /^-?\d+(\.\d+)?$/.test(stripped)) {
+                            display = num.toLocaleString()
+                          } else {
+                            display = str
+                          }
+                        }
+                        return (
+                          <td key={col} className="px-4 py-3 whitespace-nowrap text-sm">
+                            {display}
+                          </td>
+                        )
+                      })}
                     </tr>
                   ))}
                 </tbody>

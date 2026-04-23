@@ -36,10 +36,18 @@ class DownloadStrategy(ABC):
         return quote(filename, safe="")
 
     def get_content_disposition(self, filename: str) -> str:
-        """Generate a Content-Disposition header value with both filename and filename*."""
+        """Generate a Content-Disposition header value with both filename and filename*.
+
+        The legacy ``filename`` parameter is restricted to ASCII/latin-1 so that
+        HTTP headers remain valid regardless of the server encoding.  The full
+        Unicode filename is carried by the RFC 5987 ``filename*`` parameter.
+        """
         encoded_filename = self.encode_filename(filename)
+        # Strip / replace non-ASCII chars for the legacy filename= field so the
+        # header value never triggers a UnicodeEncodeError in latin-1.
+        ascii_filename = filename.encode("ascii", errors="replace").decode("ascii")
         return (
-            f"attachment; filename=\"{filename}\"; "
+            f"attachment; filename=\"{ascii_filename}\"; "
             f"filename*=UTF-8''{encoded_filename}"
         )
 
