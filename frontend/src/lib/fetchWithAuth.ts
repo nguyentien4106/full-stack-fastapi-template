@@ -1,6 +1,5 @@
 import axios from "axios"
 import { OpenAPI } from "@/client/core/OpenAPI"
-import { FilesService } from "@/client"
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const token =

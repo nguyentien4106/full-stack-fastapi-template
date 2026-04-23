@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SUPPORTED_LANGUAGES } from "@/i18n"
-import { useTranslation } from "react-i18next"
 
 export const LanguageSwitcher = () => {
   const { i18n } = useTranslation()

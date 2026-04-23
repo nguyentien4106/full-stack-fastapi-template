@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.api.routes.topup import router as topup_router
 from app.api.routes.utils import router as utils_router
 from app.api_keys.router import router as api_keys_router
 from app.auth.router import router as login_router
@@ -17,6 +18,7 @@ api_router.include_router(items_router)
 api_router.include_router(files_router)
 api_router.include_router(storages_router)
 api_router.include_router(api_keys_router)
+api_router.include_router(topup_router)
 
 if settings.ENVIRONMENT == "local":
     from app.api.routes.private import router as private_router

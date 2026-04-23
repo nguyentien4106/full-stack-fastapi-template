@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
-import useCustomToast from "./useCustomToast"
 import type { ApiError } from "@/client"
 import { fetchBlobWithAuth } from "@/lib/fetchWithAuth"
+import useCustomToast from "./useCustomToast"
 
 function triggerBlobDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob)
@@ -30,15 +30,19 @@ export function useDownloadFile() {
       const safeName = filename.replace(/\.[^.]+$/, "")
 
       if (format === "xlsx-acc-code") {
-        const blob = await fetchBlobWithAuth(`/api/v1/files/${fileId}/download/new`)
+        const blob = await fetchBlobWithAuth(
+          `/api/v1/files/${fileId}/download/new`,
+        )
         triggerBlobDownload(blob, `${safeName}_tables_with_acc_codes.xlsx`)
       } else {
-        const blob = await fetchBlobWithAuth(`/api/v1/files/${fileId}/download?type=${format}`)
+        const blob = await fetchBlobWithAuth(
+          `/api/v1/files/${fileId}/download?type=${format}`,
+        )
         triggerBlobDownload(blob, `${safeName}_tables.${format}`)
       }
     },
     onError: (err: ApiError) => {
-        console.log("Download error:", err)
+      console.log("Download error:", err)
       showErrorToast(err instanceof Error ? err.message : "Download failed")
     },
   })

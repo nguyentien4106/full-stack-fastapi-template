@@ -9,10 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
 import { cn } from "@/lib/utils"
 import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
-import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
 import { FilePreviewModal } from "./FilePreviewModal"
 
 function DownloadMenu({ file }: { file: FilePublic }) {

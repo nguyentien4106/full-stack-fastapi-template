@@ -55,9 +55,7 @@ export default function HowItWorks() {
         </div>
 
         <div className="mt-16 rounded-lg bg-primary/5 border border-primary/20 p-8 text-center">
-          <p className="text-foreground font-semibold">
-            {t("howItWorks.cta")}
-          </p>
+          <p className="text-foreground font-semibold">{t("howItWorks.cta")}</p>
         </div>
       </div>
     </section>

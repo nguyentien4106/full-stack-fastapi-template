@@ -47,7 +47,10 @@ export default function Testimonials() {
             >
               <div className="flex items-center gap-1 mb-4">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <span key={`${testimonial.id}-${i}`} className="text-yellow-400">
+                  <span
+                    key={`${testimonial.id}-${i}`}
+                    className="text-yellow-400"
+                  >
                     ★
                   </span>
                 ))}

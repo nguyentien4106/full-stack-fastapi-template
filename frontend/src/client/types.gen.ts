@@ -29,6 +29,16 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type CreatePaymentRequest = {
+    amount: number;
+};
+
+export type CreatePaymentResponse = {
+    payment_url: string;
+    txn_ref: string;
+    amount: number;
+};
+
 export type FilePublic = {
     filename: string;
     content_type: string;
@@ -88,6 +98,16 @@ export type NewPassword = {
 export type Token = {
     access_token: string;
     token_type?: string;
+};
+
+export type TopupPackage = {
+    id: string;
+    amount: number;
+    label: string;
+};
+
+export type TopupPackagesResponse = {
+    packages: Array<TopupPackage>;
 };
 
 export type UpdatePassword = {
@@ -275,6 +295,16 @@ export type LoginRecoverPasswordHtmlContentData = {
 export type LoginRecoverPasswordHtmlContentResponse = (string);
 
 export type StoragesGetMyStorageStatResponse = (UserStorageStatPublic);
+
+export type TopupGetTopupPackagesResponse = (TopupPackagesResponse);
+
+export type TopupCreateTopupPaymentData = {
+    requestBody: CreatePaymentRequest;
+};
+
+export type TopupCreateTopupPaymentResponse = (CreatePaymentResponse);
+
+export type TopupTopupReturnResponse = (unknown);
 
 export type UsersReadUsersData = {
     limit?: number;

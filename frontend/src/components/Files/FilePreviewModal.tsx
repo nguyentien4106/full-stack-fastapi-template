@@ -1,12 +1,8 @@
-import { useState } from "react"
 import { ChevronDown, DownloadIcon, Eye, Loader2 } from "lucide-react"
-import { FilesService, type FilePublic } from "@/client"
+import { useState } from "react"
+import { type FilePublic, FilesService } from "@/client"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { type DownloadFormat, useDownloadFile } from "@/hooks/useDownloadFile"
 
-async function fetchPreviewJson(fileId: string): Promise<Record<string, unknown>[]> {
-  return FilesService.downloadTableExcelFile({ fileId, type: "json" }) as Promise<Record<string, unknown>[]>
+async function fetchPreviewJson(
+  fileId: string,
+): Promise<Record<string, unknown>[]> {
+  return FilesService.downloadTableExcelFile({
+    fileId,
+    type: "json",
+  }) as Promise<Record<string, unknown>[]>
 }
 
 export function FilePreviewModal({ file }: { file: FilePublic }) {
@@ -95,7 +96,9 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
                 <DropdownMenuItem onClick={() => handleDownload("xlsx")}>
                   Excel (.xlsx)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDownload("xlsx-acc-code")}>
+                <DropdownMenuItem
+                  onClick={() => handleDownload("xlsx-acc-code")}
+                >
                   Analyze Account Code then Excel (.xlsx)
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleDownload("csv")}>
@@ -136,45 +139,54 @@ export function FilePreviewModal({ file }: { file: FilePublic }) {
               <table className="w-full text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-background border-b">
                   <tr>
-                    {rows.length > 0 && Object.values(rows[0]).map((col) => (
-                      <th
-                        key={String(col)}
-                        className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
-                      >
-                        {String(col ?? "")}
-                      </th>
-                    ))}
+                    {rows.length > 0 &&
+                      Object.values(rows[0]).map((col) => (
+                        <th
+                          key={String(col)}
+                          className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
+                        >
+                          {String(col ?? "")}
+                        </th>
+                      ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                  rows.length > 1 && rows.slice(1).map((row, i) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: rows have no stable id
-                    <tr key={i} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
-                      {cols.map((col) => {
-                        const val = row[col]
-                        let display: string
-                        if (val == null || String(val).trim() === "") {
-                          display = "—"
-                        } else {
-                          const str = String(val).trim()
-                          // strip thousands separators then check if it's a pure number string
-                          const stripped = str.replace(/,/g, "")
-                          const num = Number(stripped)
-                          if (!Number.isNaN(num) && /^-?\d+(\.\d+)?$/.test(stripped)) {
-                            display = num.toLocaleString()
+                  {rows.length > 1 &&
+                    rows.slice(1).map((row, i) => (
+                      <tr
+                        key={`row-${row.id ?? i}`} // use index as fallback key if no id
+                        className="border-b last:border-0 hover:bg-muted/40 transition-colors"
+                      >
+                        {cols.map((col) => {
+                          const val = row[col]
+                          let display: string
+                          if (val == null || String(val).trim() === "") {
+                            display = "—"
                           } else {
-                            display = str
+                            const str = String(val).trim()
+                            // strip thousands separators then check if it's a pure number string
+                            const stripped = str.replace(/,/g, "")
+                            const num = Number(stripped)
+                            if (
+                              !Number.isNaN(num) &&
+                              /^-?\d+(\.\d+)?$/.test(stripped)
+                            ) {
+                              display = num.toLocaleString()
+                            } else {
+                              display = str
+                            }
                           }
-                        }
-                        return (
-                          <td key={col} className="px-4 py-3 whitespace-nowrap text-sm">
-                            {display}
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  ))}
+                          return (
+                            <td
+                              key={col}
+                              className="px-4 py-3 whitespace-nowrap text-sm"
+                            >
+                              {display}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}

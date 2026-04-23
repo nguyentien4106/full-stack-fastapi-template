@@ -199,9 +199,7 @@ function ApiKeysPage() {
                   {k.name || "(unnamed)"}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {k.created_at
-                    ? new Date(k.created_at).toLocaleString()
-                    : "—"}
+                  {k.created_at ? new Date(k.created_at).toLocaleString() : "—"}
                 </TableCell>
                 <TableCell className="text-right">
                   <Button

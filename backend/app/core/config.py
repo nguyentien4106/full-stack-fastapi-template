@@ -129,7 +129,7 @@ class Settings(BaseSettings):
     OCR_JOB_POLLING_INTERVAL: int = 5  # in seconds
     OCR_MODEL: str = "PaddleOCR-VL"
 
-    GMN_API_KEY: str | None = None
-
+    VNPAY_TMN_CODE: str | None = None
+    VNPAY_HASH_SECRET: str | None = None
 
 settings = Settings()  # type: ignore

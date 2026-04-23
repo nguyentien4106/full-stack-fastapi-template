@@ -34,7 +34,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">{t("footer.product")}</h4>
+            <h4 className="font-semibold text-foreground mb-4">
+              {t("footer.product")}
+            </h4>
             <ul className="space-y-2">
               <li>
                 <a
@@ -72,7 +74,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">{t("footer.company")}</h4>
+            <h4 className="font-semibold text-foreground mb-4">
+              {t("footer.company")}
+            </h4>
             <ul className="space-y-2">
               <li>
                 <a
@@ -110,7 +114,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h4>
+            <h4 className="font-semibold text-foreground mb-4">
+              {t("footer.legal")}
+            </h4>
             <ul className="space-y-2">
               <li>
                 <a

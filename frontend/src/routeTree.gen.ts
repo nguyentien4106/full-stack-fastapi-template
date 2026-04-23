@@ -17,6 +17,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
+import { Route as LayoutTopupRouteImport } from './routes/_layout/topup'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutFilesRouteImport } from './routes/_layout/files'
@@ -62,6 +63,11 @@ const PublicPricingRoute = PublicPricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => PublicRoute,
 } as any)
+const LayoutTopupRoute = LayoutTopupRouteImport.update({
+  id: '/topup',
+  path: '/topup',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/topup': typeof LayoutTopupRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesByTo {
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/files': typeof LayoutFilesRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/topup': typeof LayoutTopupRoute
   '/pricing': typeof PublicPricingRoute
 }
 export interface FileRoutesById {
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/_layout/files': typeof LayoutFilesRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/topup': typeof LayoutTopupRoute
   '/_public/pricing': typeof PublicPricingRoute
   '/_public/': typeof PublicIndexRoute
 }
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/files'
     | '/items'
     | '/settings'
+    | '/topup'
     | '/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/files'
     | '/items'
     | '/settings'
+    | '/topup'
     | '/pricing'
   id:
     | '__root__'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_layout/files'
     | '/_layout/items'
     | '/_layout/settings'
+    | '/_layout/topup'
     | '/_public/pricing'
     | '/_public/'
   fileRoutesById: FileRoutesById
@@ -252,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPricingRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_layout/topup': {
+      id: '/_layout/topup'
+      path: '/topup'
+      fullPath: '/topup'
+      preLoaderRoute: typeof LayoutTopupRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -304,6 +323,7 @@ interface LayoutRouteChildren {
   LayoutFilesRoute: typeof LayoutFilesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutTopupRoute: typeof LayoutTopupRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -313,6 +333,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutFilesRoute: LayoutFilesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutTopupRoute: LayoutTopupRoute,
 }
 
 const LayoutRouteWithChildren =

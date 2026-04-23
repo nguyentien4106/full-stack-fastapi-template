@@ -148,6 +148,38 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const CreatePaymentRequestSchema = {
+    properties: {
+        amount: {
+            type: 'integer',
+            title: 'Amount'
+        }
+    },
+    type: 'object',
+    required: ['amount'],
+    title: 'CreatePaymentRequest'
+} as const;
+
+export const CreatePaymentResponseSchema = {
+    properties: {
+        payment_url: {
+            type: 'string',
+            title: 'Payment Url'
+        },
+        txn_ref: {
+            type: 'string',
+            title: 'Txn Ref'
+        },
+        amount: {
+            type: 'integer',
+            title: 'Amount'
+        }
+    },
+    type: 'object',
+    required: ['payment_url', 'txn_ref', 'amount'],
+    title: 'CreatePaymentResponse'
+} as const;
+
 export const FilePublicSchema = {
     properties: {
         filename: {
@@ -444,6 +476,41 @@ export const TokenSchema = {
     type: 'object',
     required: ['access_token'],
     title: 'Token'
+} as const;
+
+export const TopupPackageSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            title: 'Id'
+        },
+        amount: {
+            type: 'integer',
+            title: 'Amount'
+        },
+        label: {
+            type: 'string',
+            title: 'Label'
+        }
+    },
+    type: 'object',
+    required: ['id', 'amount', 'label'],
+    title: 'TopupPackage'
+} as const;
+
+export const TopupPackagesResponseSchema = {
+    properties: {
+        packages: {
+            items: {
+                '$ref': '#/components/schemas/TopupPackage'
+            },
+            type: 'array',
+            title: 'Packages'
+        }
+    },
+    type: 'object',
+    required: ['packages'],
+    title: 'TopupPackagesResponse'
 } as const;
 
 export const UpdatePasswordSchema = {
