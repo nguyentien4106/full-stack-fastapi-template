@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import dayjs from "dayjs"
 import { DownloadIcon, Loader2, RefreshCcw } from "lucide-react"
-import { type FilePublic, FilesService } from "@/client"
+import { type FileWithJobPublic, FilesService } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import { DateTimeFormat } from "@/utils"
 import { StatusBadge } from "../StatusBadge"
 import { FilePreviewModal } from "./FilePreviewModal"
 
-function DownloadMenu({ file }: { file: FilePublic }) {
+function DownloadMenu({ file }: { file: FileWithJobPublic }) {
   const { mutate: download, isPending } = useDownloadFile()
 
   const handleSelect = (format: DownloadFormat) => {
@@ -60,7 +60,12 @@ function DownloadMenu({ file }: { file: FilePublic }) {
   )
 }
 
-export const columns: ColumnDef<FilePublic>[] = [
+export const columns: ColumnDef<FileWithJobPublic>[] = [
+  {
+    accessorKey: "id",
+    header: "File ID",
+    cell: ({ row }) => <span className="font-medium">{row.original.id}</span>,
+  },
   {
     accessorKey: "filename",
     header: "File Name",
@@ -89,7 +94,7 @@ export const columns: ColumnDef<FilePublic>[] = [
     id: "state",
     header: "State",
     cell: ({ row }) => {
-      const state = row.original.job_status as
+      const state = row.original.job?.state as
         | "pending"
         | "running"
         | "done"
@@ -118,14 +123,15 @@ export const columns: ColumnDef<FilePublic>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const file = row.original
+      const jobState = file.job?.state
       return (
         <div className="flex justify-end gap-2">
-          {(file.job_status === "running" || file.job_status === "pending") && (
+          {(jobState === "running" || jobState === "pending" || !jobState) && (
             <Button
               variant="ghost"
               size="sm"
               className="w-8 h-8 p-0"
-              title="View"
+              title="Refresh status"
               onClick={() => {
                 FilesService.getFileStatus({ fileId: file.id })
               }}
@@ -133,7 +139,7 @@ export const columns: ColumnDef<FilePublic>[] = [
               <RefreshCcw className="w-4 h-4 text-green-300" />
             </Button>
           )}
-          {file.job_status === "done" && (
+          {jobState === "done" && (
             <>
               <FilePreviewModal file={file} />
               <DownloadMenu file={file} />

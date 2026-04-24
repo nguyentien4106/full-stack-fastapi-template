@@ -11,7 +11,7 @@ from sqlmodel import SQLModel  # noqa: F401
 
 from app.api_keys.models import ApiKey  # noqa: F401
 from app.auth.schemas import NewPassword, Token, TokenPayload  # noqa: F401
-from app.files.models import File  # noqa: F401
+from app.files.models import File, FileJob  # noqa: F401
 from app.files.schemas import (  # noqa: F401
     FileBase,
     FileCreate,

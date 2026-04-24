@@ -39,24 +39,43 @@ export type CreatePaymentResponse = {
     amount: number;
 };
 
+export type FileJobPublic = {
+    id: string;
+    job_id: string;
+    file_id: string;
+    state: string;
+    total_pages?: (number | null);
+    extracted_pages?: (number | null);
+    json_url?: (string | null);
+    markdown_url?: (string | null);
+    err_msg?: (string | null);
+    created_at?: (string | null);
+};
+
 export type FilePublic = {
     filename: string;
     content_type: string;
     size?: (number | null);
-    job_id?: (string | null);
-    job_status?: (string | null);
     id: string;
     created_at?: (string | null);
     user_id: string;
 };
 
-export type FilesPublic = {
-    data: Array<FilePublic>;
-    count: number;
-};
-
 export type FilesStatusRequest = {
     file_ids: Array<(string)>;
+};
+
+/**
+ * FilePublic enriched with its associated FileJob (if any).
+ */
+export type FileWithJobPublic = {
+    filename: string;
+    content_type: string;
+    size?: (number | null);
+    id: string;
+    created_at?: (string | null);
+    user_id: string;
+    job?: (FileJobPublic | null);
 };
 
 export type HTTPValidationError = {
@@ -202,20 +221,26 @@ export type FilesListFilesData = {
     skip?: number;
 };
 
-export type FilesListFilesResponse = (FilesPublic);
+export type FilesListFilesResponse = (Array<FileWithJobPublic>);
 
 export type FilesUpdateFileJobStatusEndpointData = {
     fileId: string;
     jobStatus: string;
 };
 
-export type FilesUpdateFileJobStatusEndpointResponse = (unknown);
+export type FilesUpdateFileJobStatusEndpointResponse = (FileJobPublic);
 
 export type FilesGetFileStatusData = {
     fileId: string;
 };
 
-export type FilesGetFileStatusResponse = (FilePublic);
+export type FilesGetFileStatusResponse = (FileJobPublic);
+
+export type FilesGetFileJobData = {
+    fileId: string;
+};
+
+export type FilesGetFileJobResponse = (FileJobPublic);
 
 export type FilesDownloadTableExcelFileData = {
     fileId: string;
@@ -234,7 +259,13 @@ export type FilesGetFilesBatchStatusData = {
     requestBody: FilesStatusRequest;
 };
 
-export type FilesGetFilesBatchStatusResponse = (FilesPublic);
+export type FilesGetFilesBatchStatusResponse = (Array<FileJobPublic>);
+
+export type FilesGetFileResultUrlData = {
+    fileId: string;
+};
+
+export type FilesGetFileResultUrlResponse = (unknown);
 
 export type ItemsReadItemsData = {
     limit?: number;

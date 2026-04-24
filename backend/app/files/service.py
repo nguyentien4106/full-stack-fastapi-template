@@ -7,13 +7,13 @@ from pandas.core.frame import DataFrame
 from sqlmodel import Session
 
 from app.api_keys.crud import get_api_key_by_user
-from app.aws.client import download_file_from_r2, generate_presigned_put_url
+from app.aws.client import generate_presigned_put_url
 from app.aws.config import aws_settings
-from app.core.config import settings
+from app.files.crud import get_file_job_by_file_id
 from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.strategies import DOWNLOAD_STRATEGIES
-from app.files.utils import get_df_from_json_bytes, get_df_from_result_json
+from app.files.utils import get_df_from_result_json
 
 user_instruction = (
     "Tôi muốn bạn đọc file này. Sau đó dựa vào nội dung để xác định giao dịch (Bạn phải tự xác định cột chứa nội dung giao dịch)"
@@ -23,7 +23,7 @@ user_instruction = (
     "không thêm giải thích, chú thích hay văn bản khác. Chỉ output nội dung file mới.\n\n"
 )
 
-def download_file(file: File, user: CurrentUser, type: str = "xlsx") -> tuple[bytes, str]:
+def download_file(session: Session, file: File, user: CurrentUser, type: str = "xlsx") -> tuple[bytes, str]:
     """
     Given a File record, download the file content from its URL and return bytes
     and a Content-Disposition header for the requested format.
@@ -37,12 +37,11 @@ def download_file(file: File, user: CurrentUser, type: str = "xlsx") -> tuple[by
     if strategy is None:
         raise ValueError(f"Unsupported file type requested: {type}")
 
-    json_key = f"{user.email}/{file.id}/result.json"
+    file_job = get_file_job_by_file_id(session=session, file_id=file.id)
+    if not file_job or not file_job.json_url:
+        raise ValueError("No OCR result available for this file yet.")
 
-    # presigned_url = generate_presigned_put_url(key=json_key, bucket=aws_settings.R2_BUCKET_NAME, expiration=3600)
-    # df: DataFrame = get_df_from_result_json(presigned_url)
-    json_file = download_file_from_r2(key=json_key, bucket=aws_settings.R2_BUCKET_NAME)
-    df = get_df_from_json_bytes(json_file)
+    df: DataFrame = get_df_from_result_json(file_job.json_url)  # type: ignore[union-attr]
     safe_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
     data_bytes, content_disposition = strategy.convert(df, safe_name)
 
@@ -68,7 +67,7 @@ def get_gemini_response_for_file(input_path: str, output_path: str, *, model: st
     Note: The GEMINI_API_KEY must be set in the environment for `genai.Client()` to authenticate.
     """
 
-    client = genai.Client(api_key=settings.GMN_API_KEY)
+    client = genai.Client()
 
     if model is None:
         model = "gemini-3-flash-preview"

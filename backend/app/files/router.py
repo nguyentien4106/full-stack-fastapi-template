@@ -6,15 +6,26 @@ from sqlmodel import select
 
 from app.aws.client import upload_file_to_r2
 from app.backend_pre_start import logger
-from app.files.crud import create_file, delete_file, update_file_info
+from app.files.crud import (
+    create_file,
+    delete_file,
+    get_file_job_by_file_id,
+    update_file_job,
+)
 from app.files.dependencies import CurrentUser, SessionDep
-from app.files.models import File
-from app.files.schemas import FileCreate, FilePublic, FilesPublic, FilesStatusRequest
+from app.files.models import File, FileJob
+from app.files.schemas import (
+    FileCreate,
+    FileJobPublic,
+    FilePublic,
+    FilesStatusRequest,
+    FileWithJobPublic,
+)
 from app.files.service import (
     download_file,
     download_file_with_account_code,
 )
-from app.ocrs.service import get_ocr_job_status, post_ocr_jobs
+from app.ocrs.service import get_ocr_job_status, get_ocr_job_status_1, post_ocr_jobs
 
 router = APIRouter(prefix="/files", tags=["files"])
 
@@ -57,7 +68,7 @@ def upload_file_endpoint(
         logger.error(f"Error handling uploaded file {file_name}: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
 
-@router.put("/{file_id}")
+@router.put("/{file_id}", response_model=FileJobPublic)
 def update_file_job_status_endpoint(
     file_id: uuid.UUID,
     job_status: str,
@@ -66,29 +77,49 @@ def update_file_job_status_endpoint(
     """
     Update the job status for a file based on OCR job updates.
     """
+    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+    if not file_job:
+        raise HTTPException(status_code=404, detail="FileJob not found")
+    updated = update_file_job(session=session, file_job=file_job, state=job_status)
+    return updated
 
-    updated_file = update_file_info(session=session, file_id=file_id, job_status=job_status)
-    if not updated_file:
-        raise HTTPException(status_code=404, detail="File not found")
-    return {"message": "Job status updated", "file_id": str(updated_file.id), "job_status": updated_file.job_status}
-
-@router.get("/{file_id}/status", response_model=FilePublic)
+@router.get("/{file_id}/status", response_model=FileJobPublic)
 def get_file_status(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
     """
-    Get the current status of a file, including OCR job status if applicable.
+    Get the current OCR job status for a file by polling the OCR API.
     """
     file = session.get(File, file_id)
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
 
-    file.job_status = get_ocr_job_status(file=file,  session=session, user=user)  # Poll OCR API for latest status
+    get_ocr_job_status(file=file, session=session, user=user)  # Poll & persist latest state
 
-    return file
+    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+    if not file_job:
+        raise HTTPException(status_code=404, detail="No job found for this file")
+    return file_job
 
-@router.get('/', response_model=FilesPublic)
+@router.get("/{file_id}/job", response_model=FileJobPublic)
+def get_file_job(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+    """
+    Get the FileJob record for a given file, containing detailed OCR progress info.
+    """
+    file = session.get(File, file_id)
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+    if file.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to access this file")
+
+    file_job: FileJob | None = get_file_job_by_file_id(session=session, file_id=file_id)
+    if not file_job:
+        raise HTTPException(status_code=404, detail="No job found for this file")
+    return file_job
+
+
+@router.get('/', response_model=list[FileWithJobPublic])
 def list_files(session: SessionDep, user: CurrentUser, skip: int = 0, limit: int = 0):
     """
-    List all files uploaded by the current user.
+    List all files uploaded by the current user, each enriched with its FileJob.
     """
     user_id = user.id
     if limit <= 0:
@@ -98,7 +129,13 @@ def list_files(session: SessionDep, user: CurrentUser, skip: int = 0, limit: int
 
     files = session.exec(statement).all()
 
-    return FilesPublic(data=files, count=len(files))  # ty:ignore[invalid-argument-type]
+    result: list[FileWithJobPublic] = []
+    for f in files:
+        file_job = get_file_job_by_file_id(session=session, file_id=f.id)
+        job_public: FileJobPublic | None = FileJobPublic.model_validate(file_job) if file_job else None
+        result.append(FileWithJobPublic.model_validate(f, update={"job": job_public}))
+
+    return result
 
 @router.post("/{file_id}/download", response_class=Response)
 def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep, user: CurrentUser,):
@@ -108,19 +145,24 @@ def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep
     file = session.get(File, file_id)
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
+
     if file.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized to access this file")
-    if file.job_status != "done":
+
+    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+
+    if not file_job or file_job.state != "done":
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
+
     logger.info(f"Preparing to stream file {file_id} for user {user.email} with requested type {type}")
-    excel_bytes, content_disposition = download_file(file=file, user=user, type=type)
+    excel_bytes, content_disposition = download_file(session=session, file=file, user=user, type=type)
     media_type = {
         "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "csv": "text/csv",
         "json": "application/json",
         "html": "text/html",
     }.get(type, "application/octet-stream")
-    logger.info(f"Streaming file {file_id} to user {user.email} with media type {media_type}")
+
     return Response(
         content=excel_bytes,
         media_type=media_type,
@@ -141,7 +183,8 @@ def download_new_version_excel(file_id: uuid.UUID, session: SessionDep, user: Cu
         raise HTTPException(status_code=404, detail="File not found")
     if file.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized to access this file")
-    if file.job_status != "done":
+    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+    if not file_job or file_job.state != "done":
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
     try:
         ex_bytes, content_disposition = download_file_with_account_code(session=session, file=file, user=user)
@@ -154,18 +197,18 @@ def download_new_version_excel(file_id: uuid.UUID, session: SessionDep, user: Cu
         headers={"Content-Disposition": content_disposition},
     )
 
-@router.post("/batch/status", response_model=FilesPublic)
+@router.post("/batch/status", response_model=list[FileJobPublic])
 def get_files_batch_status(
     body: FilesStatusRequest,
     session: SessionDep,
     user: CurrentUser,
 ):
     """
-    Accept a list of file IDs, refresh each file's OCR job status,
-    and return the updated list of files.
+    Accept a list of file IDs, refresh each file's OCR job status via the OCR API,
+    and return the updated list of FileJob records.
     """
     logger.info(f"Received batch status request for file IDs: {body.file_ids} from user {user.email}")
-    files: list[File] = []
+    file_jobs: list[FileJob] = []
     for file_id in body.file_ids:
         file = session.get(File, file_id)
         logger.info(f"Processing file ID {file_id}: found file {file} in database")
@@ -175,10 +218,29 @@ def get_files_batch_status(
             raise HTTPException(status_code=403, detail=f"Not authorized to access file {file_id}")
 
         try:
-            file.job_status = get_ocr_job_status(file=file, session=session, user=user)
+            get_ocr_job_status(file=file, session=session, user=user)
         except Exception as exc:
             logger.error(f"Error refreshing OCR status for file {file_id}: {exc}")
 
-        files.append(file)
+        file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+        if file_job:
+            file_jobs.append(file_job)
 
-    return FilesPublic(data=[FilePublic.model_validate(f) for f in files], count=len(files))
+    return file_jobs
+
+@router.get("/{file_id}/result_url")
+def get_file_result_url(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+    """
+    Get the presigned URL for the OCR result JSON file in R2 for a given file ID.
+    """
+    file = session.get(File, file_id)
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+    if file.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to access this file")
+    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
+    if not file_job or file_job.state != "done":
+        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+
+    result = get_ocr_job_status_1(file=file, session=session, user=user)
+    return {"result": result}

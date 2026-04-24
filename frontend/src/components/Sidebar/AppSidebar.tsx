@@ -1,4 +1,4 @@
-import { Files, Home, Users, Key, Wallet } from "lucide-react"
+import { Files, Home, Key, Users, Wallet } from "lucide-react"
 
 import { SidebarAppearance } from "@/components/Common/Appearance"
 import { Logo } from "@/components/Common/Logo"

@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadNewVersionExcelData, FilesDownloadNewVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreateTopupPaymentData, TopupCreateTopupPaymentResponse, TopupTopupReturnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
+import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesGetFileJobData, FilesGetFileJobResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadNewVersionExcelData, FilesDownloadNewVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, FilesGetFileResultUrlData, FilesGetFileResultUrlResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreateTopupPaymentData, TopupCreateTopupPaymentResponse, TopupTopupReturnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
 
 export class ApiKeysService {
     /**
@@ -83,11 +83,11 @@ export class FilesService {
     
     /**
      * List Files
-     * List all files uploaded by the current user.
+     * List all files uploaded by the current user, each enriched with its FileJob.
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
-     * @returns FilesPublic Successful Response
+     * @returns FileWithJobPublic Successful Response
      * @throws ApiError
      */
     public static listFiles(data: FilesListFilesData = {}): CancelablePromise<FilesListFilesResponse> {
@@ -110,7 +110,7 @@ export class FilesService {
      * @param data The data for the request.
      * @param data.fileId
      * @param data.jobStatus
-     * @returns unknown Successful Response
+     * @returns FileJobPublic Successful Response
      * @throws ApiError
      */
     public static updateFileJobStatusEndpoint(data: FilesUpdateFileJobStatusEndpointData): CancelablePromise<FilesUpdateFileJobStatusEndpointResponse> {
@@ -131,16 +131,37 @@ export class FilesService {
     
     /**
      * Get File Status
-     * Get the current status of a file, including OCR job status if applicable.
+     * Get the current OCR job status for a file by polling the OCR API.
      * @param data The data for the request.
      * @param data.fileId
-     * @returns FilePublic Successful Response
+     * @returns FileJobPublic Successful Response
      * @throws ApiError
      */
     public static getFileStatus(data: FilesGetFileStatusData): CancelablePromise<FilesGetFileStatusResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/files/{file_id}/status',
+            path: {
+                file_id: data.fileId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get File Job
+     * Get the FileJob record for a given file, containing detailed OCR progress info.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @returns FileJobPublic Successful Response
+     * @throws ApiError
+     */
+    public static getFileJob(data: FilesGetFileJobData): CancelablePromise<FilesGetFileJobResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/files/{file_id}/job',
             path: {
                 file_id: data.fileId
             },
@@ -201,11 +222,11 @@ export class FilesService {
     
     /**
      * Get Files Batch Status
-     * Accept a list of file IDs, refresh each file's OCR job status,
-     * and return the updated list of files.
+     * Accept a list of file IDs, refresh each file's OCR job status via the OCR API,
+     * and return the updated list of FileJob records.
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns FilesPublic Successful Response
+     * @returns FileJobPublic Successful Response
      * @throws ApiError
      */
     public static getFilesBatchStatus(data: FilesGetFilesBatchStatusData): CancelablePromise<FilesGetFilesBatchStatusResponse> {
@@ -214,6 +235,27 @@ export class FilesService {
             url: '/api/v1/files/batch/status',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get File Result Url
+     * Get the presigned URL for the OCR result JSON file in R2 for a given file ID.
+     * @param data The data for the request.
+     * @param data.fileId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getFileResultUrl(data: FilesGetFileResultUrlData): CancelablePromise<FilesGetFileResultUrlResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/files/{file_id}/result_url',
+            path: {
+                file_id: data.fileId
+            },
             errors: {
                 422: 'Validation Error'
             }

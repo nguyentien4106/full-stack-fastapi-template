@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { Suspense, useEffect, useRef } from "react"
 
-import { FilesService } from "@/client"
+import { type FileWithJobPublic, FilesService } from "@/client"
 import { DataTable } from "@/components/Common/DataTable"
 import { columns } from "@/components/Files/columns"
 import PendingItems from "@/components/Pending/PendingItems"
@@ -34,8 +34,8 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
 
   useEffect(() => {
     const pollPendingFiles = async () => {
-      const pendingFiles = files.data.filter(
-        (f) => f.job_status !== "done" && f.job_status !== "failed",
+      const pendingFiles = files.filter(
+        (f) => f.job?.state !== "done" && f.job?.state !== "failed",
       )
 
       if (pendingFiles.length === 0) {
@@ -50,14 +50,17 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
         requestBody: { file_ids: pendingFiles.map((f) => f.id) },
       })
 
-      queryClient.setQueryData(["files"], (old: typeof files | undefined) => {
-        if (!old) return old
-        const updatedMap = new Map(result.data.map((f) => [f.id, f]))
-        return {
-          ...old,
-          data: old.data.map((f) => updatedMap.get(f.id) ?? f),
-        }
-      })
+      queryClient.setQueryData(
+        ["files"],
+        (old: FileWithJobPublic[] | undefined) => {
+          if (!old) return old
+          const updatedMap = new Map(result.map((job) => [job.file_id, job]))
+          return old.map((f) => {
+            const updatedJob = updatedMap.get(f.id)
+            return updatedJob ? { ...f, job: updatedJob } : f
+          })
+        },
+      )
     }
 
     pollingRef.current = setInterval(pollPendingFiles, 3000)
@@ -68,9 +71,9 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
         pollingRef.current = null
       }
     }
-  }, [files.data, queryClient])
+  }, [files, queryClient])
 
-  if (files.data.length === 0) {
+  if (files.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
         <div className="rounded-full bg-muted p-4 mb-4">
@@ -82,7 +85,7 @@ export function FilesTableContent({ limit = 0 }: { limit?: number }) {
     )
   }
 
-  return <DataTable columns={columns} data={files.data} />
+  return <DataTable columns={columns} data={files} />
 }
 
 function FilesTable() {

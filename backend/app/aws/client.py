@@ -59,5 +59,4 @@ def download_file_from_r2(key: str, bucket: str | None = None) -> bytes:
 
     client = get_s3_client()
     response = client.get_object(Bucket=bucket, Key=key)
-    print('S3 get_object response metadata:', response.get("ResponseMetadata", {}))
     return response["Body"].read()

@@ -180,6 +180,99 @@ export const CreatePaymentResponseSchema = {
     title: 'CreatePaymentResponse'
 } as const;
 
+export const FileJobPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        job_id: {
+            type: 'string',
+            title: 'Job Id'
+        },
+        file_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'File Id'
+        },
+        state: {
+            type: 'string',
+            title: 'State'
+        },
+        total_pages: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Total Pages'
+        },
+        extracted_pages: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Extracted Pages'
+        },
+        json_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Json Url'
+        },
+        markdown_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Markdown Url'
+        },
+        err_msg: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Err Msg'
+        },
+        created_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'job_id', 'file_id', 'state'],
+    title: 'FileJobPublic'
+} as const;
+
 export const FilePublicSchema = {
     properties: {
         filename: {
@@ -204,30 +297,6 @@ export const FilePublicSchema = {
                 }
             ],
             title: 'Size'
-        },
-        job_id: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Job Id'
-        },
-        job_status: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 50
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Job Status'
         },
         id: {
             type: 'string',
@@ -257,23 +326,68 @@ export const FilePublicSchema = {
     title: 'FilePublic'
 } as const;
 
-export const FilesPublicSchema = {
+export const FileWithJobPublicSchema = {
     properties: {
-        data: {
-            items: {
-                '$ref': '#/components/schemas/FilePublic'
-            },
-            type: 'array',
-            title: 'Data'
+        filename: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Filename'
         },
-        count: {
-            type: 'integer',
-            title: 'Count'
+        content_type: {
+            type: 'string',
+            maxLength: 255,
+            minLength: 1,
+            title: 'Content Type'
+        },
+        size: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Size'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        created_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Created At'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        },
+        job: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/FileJobPublic'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         }
     },
     type: 'object',
-    required: ['data', 'count'],
-    title: 'FilesPublic'
+    required: ['filename', 'content_type', 'id', 'user_id'],
+    title: 'FileWithJobPublic',
+    description: 'FilePublic enriched with its associated FileJob (if any).'
 } as const;
 
 export const FilesStatusRequestSchema = {

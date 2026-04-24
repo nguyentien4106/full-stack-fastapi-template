@@ -1,6 +1,6 @@
 import { ChevronDown, DownloadIcon, Eye, Loader2 } from "lucide-react"
 import { useState } from "react"
-import { type FilePublic, FilesService } from "@/client"
+import { type FileWithJobPublic, FilesService } from "@/client"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import {
@@ -20,7 +20,7 @@ async function fetchPreviewJson(
   }) as Promise<Record<string, unknown>[]>
 }
 
-export function FilePreviewModal({ file }: { file: FilePublic }) {
+export function FilePreviewModal({ file }: { file: FileWithJobPublic }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

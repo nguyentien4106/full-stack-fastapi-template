@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { CheckCircle, Wallet } from "lucide-react"
 import { Suspense, useState } from "react"
 
-import { TopupService, type TopupPackage } from "@/client"
+import { type TopupPackage, TopupService } from "@/client"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

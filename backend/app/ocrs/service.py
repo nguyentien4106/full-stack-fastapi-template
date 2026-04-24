@@ -5,8 +5,13 @@ from sqlmodel import Session
 
 from app.aws.client import upload_file_to_r2
 from app.core.config import settings
-from app.files.crud import update_file_info
-from app.files.models import File
+from app.files.crud import (
+    create_file_job,
+    get_file_job_by_file_id,
+    update_file_job,
+)
+from app.files.models import File, FileJob
+from app.files.schemas import FileJobCreate
 from app.ocrs.constants import OcrJobStatus
 from app.ocrs.dependencies import CurrentUser, SessionDep
 from app.ocrs.schemas import OcrJobResponse, OcrSubmitResponse
@@ -28,8 +33,8 @@ optional_payload = {
 
 def post_ocr_jobs(session: Session, file: File, file_url: str) -> tuple[bool, str | None]:
     """
-    Submit an OCR job for the given file URL and update job_id / job_status
-    on the File record. Only posts the job — polling is handled separately.
+    Submit an OCR job for the given file URL and create a FileJob record.
+    Only posts the job — polling is handled separately.
     """
 
     payload = {
@@ -44,61 +49,98 @@ def post_ocr_jobs(session: Session, file: File, file_url: str) -> tuple[bool, st
     submit_response = OcrSubmitResponse.model_validate(raw.json())
     is_success = submit_response.is_success()
     if not is_success:
+        create_file_job(
+            session=session,
+            file_job_in=FileJobCreate(
+                file_id=file.id,
+                state=OcrJobStatus.FAILED,
+                err_msg=submit_response.msg,
+                ),
+        )
         logger.error("Failed to submit OCR job for file %s: %s - %s", file.id, submit_response.code, submit_response.msg)
         return (False, None)
 
     job_id = submit_response.data.jobId
     logger.info("OCR job submitted successfully for file %s, job_id: %s", file.id, job_id)
-    update_file_info(
-        session,
-        file_id=file.id,
-        job_status=OcrJobStatus.RUNNING,
-        job_id=job_id,
-        err_msg=None
+
+    # Create a FileJob record to track this job
+    create_file_job(
+        session=session,
+        file_job_in=FileJobCreate(
+            job_id=job_id,
+            file_id=file.id,
+            state=OcrJobStatus.RUNNING,
+        ),
     )
 
     return (is_success, job_id)
 
+
 def get_ocr_job_status(file: File, session: SessionDep, user: CurrentUser) -> str | None:
     """
-    Poll the OCR API for job results. Returns a typed OcrJobResponse.
+    Poll the OCR API for job results. Reads job_id/state from the FileJob record.
     """
-    if not file.job_id:
-        logger.error("File %s has no job_id but is being polled for OCR status", file.id)
-        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.FAILED, err_msg="No job_id for this file")
-        raise Exception("No job_id for this file")
+    file_job: FileJob | None = get_file_job_by_file_id(session=session, file_id=file.id)
 
-    if file.job_status == OcrJobStatus.DONE or file.job_status == OcrJobStatus.FAILED:
-        return file.job_status
+    if not file_job:
+        logger.error("File %s has no FileJob record", file.id)
+        raise Exception("No FileJob record for this file")
 
-    headers = {"Authorization": f"bearer {settings.OCR_API_TOKEN}"}
+    if file_job.state in (OcrJobStatus.DONE, OcrJobStatus.FAILED):
+        return file_job.state
 
-    raw = requests.get(f"{settings.OCR_JOB_URL}/{file.job_id}", headers=headers)
-
+    req_headers = {"Authorization": f"bearer {settings.OCR_API_TOKEN}"}
+    raw = requests.get(f"{settings.OCR_JOB_URL}/{file_job.job_id}", headers=req_headers)
     assert raw.status_code in (200, 404), f"OCR API returned unexpected status code {raw.status_code}"
 
     result: OcrJobResponse = OcrJobResponse.model_validate(raw.json())
-    logger.info("get_ocr_job_status for file %s,\n result: %s", file.json(), result.json())
     if not result.is_success():
-        logger.error("Error fetching OCR job status for job_id %s: %s", file.job_id, result.msg)
-        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.FAILED, err_msg=result.msg)
+        logger.error("Error fetching OCR job status for job_id %s: %s", file_job.job_id, result.msg)
+        update_file_job(session=session, file_job=file_job, state=OcrJobStatus.FAILED, err_msg=result.msg)
         raise Exception(f"OCR API error: {result.msg}")
 
     state = result.data.state
-    logger.info("OCR job %s status: %s", file.job_id, state)
-    if state == OcrJobStatus.RUNNING and file.job_status == OcrJobStatus.PENDING:
-        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.RUNNING)  # Update all files with this job_id
+
+    if state == OcrJobStatus.RUNNING and file_job.state == OcrJobStatus.PENDING:
+        update_file_job(session=session, file_job=file_job, state=OcrJobStatus.RUNNING)
 
     elif state == OcrJobStatus.DONE:
-        logger.info("OCR job %s completed successfully. Result uploaded to R2.", file.job_id)
-        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.DONE)
+        logger.info("OCR job %s completed successfully.", file_job.job_id)
+        extract = result.data.extractProgress
+        result_url = result.data.resultUrl
+        update_file_job(
+            session=session,
+            file_job=file_job,
+            state=OcrJobStatus.DONE,
+            total_pages=extract.totalPages if extract else None,
+            extracted_pages=extract.extractedPages if extract else None,
+            json_url=result_url.jsonUrl if result_url else None,
+            markdown_url=result_url.markdownUrl if result_url else None,
+        )
         upload_ocr_job_result(user=user, file=file, result=result, session=session)
 
     elif state == OcrJobStatus.FAILED:
-        logger.error("OCR job %s failed: %s", file.job_id, result.data.errorMsg)
-        update_file_info(session, file_id=file.id, job_status=OcrJobStatus.FAILED, err_msg=result.data.errorMsg)
+        logger.error("OCR job %s failed: %s", file_job.job_id, result.data.errorMsg)
+        update_file_job(session=session, file_job=file_job, state=OcrJobStatus.FAILED, err_msg=result.data.errorMsg)
 
     return state
+
+
+def get_ocr_job_status_1(file: File, session: SessionDep, user: CurrentUser) -> OcrJobResponse | None:
+    """
+    Poll the OCR API for job results. Returns a typed OcrJobResponse.
+    """
+    file_job: FileJob | None = get_file_job_by_file_id(session=session, file_id=file.id)
+    if not file_job:
+        logger.error("File %s has no FileJob record", file.id)
+        raise Exception("No FileJob record for this file")
+
+    req_headers = {"Authorization": f"bearer {settings.OCR_API_TOKEN}"}
+    raw = requests.get(f"{settings.OCR_JOB_URL}/{file_job.job_id}", headers=req_headers)
+    assert raw.status_code in (200, 404), f"OCR API returned unexpected status code {raw.status_code}"
+
+    return OcrJobResponse.model_validate(raw.json())
+
 
 def upload_ocr_job_result(user: CurrentUser, file: File, result: OcrJobResponse, session: SessionDep):
     key = f"{user.email}/{file.id}/result.json"
