@@ -24,6 +24,7 @@ import { Route as LayoutFilesRouteImport } from './routes/_layout/files'
 import { Route as LayoutDashboardRouteImport } from './routes/_layout/dashboard'
 import { Route as LayoutApiKeysRouteImport } from './routes/_layout/api-keys'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutPaymentReturnRouteImport } from './routes/_layout/payment/return'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -98,6 +99,11 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutPaymentReturnRoute = LayoutPaymentReturnRouteImport.update({
+  id: '/payment/return',
+  path: '/payment/return',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof LayoutSettingsRoute
   '/topup': typeof LayoutTopupRoute
   '/pricing': typeof PublicPricingRoute
+  '/payment/return': typeof LayoutPaymentReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/settings': typeof LayoutSettingsRoute
   '/topup': typeof LayoutTopupRoute
   '/pricing': typeof PublicPricingRoute
+  '/payment/return': typeof LayoutPaymentReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/_layout/topup': typeof LayoutTopupRoute
   '/_public/pricing': typeof PublicPricingRoute
   '/_public/': typeof PublicIndexRoute
+  '/_layout/payment/return': typeof LayoutPaymentReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/topup'
     | '/pricing'
+    | '/payment/return'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/topup'
     | '/pricing'
+    | '/payment/return'
   id:
     | '__root__'
     | '/_layout'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/_layout/topup'
     | '/_public/pricing'
     | '/_public/'
+    | '/_layout/payment/return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -313,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/payment/return': {
+      id: '/_layout/payment/return'
+      path: '/payment/return'
+      fullPath: '/payment/return'
+      preLoaderRoute: typeof LayoutPaymentReturnRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
@@ -324,6 +343,7 @@ interface LayoutRouteChildren {
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutTopupRoute: typeof LayoutTopupRoute
+  LayoutPaymentReturnRoute: typeof LayoutPaymentReturnRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -334,6 +354,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutTopupRoute: LayoutTopupRoute,
+  LayoutPaymentReturnRoute: LayoutPaymentReturnRoute,
 }
 
 const LayoutRouteWithChildren =

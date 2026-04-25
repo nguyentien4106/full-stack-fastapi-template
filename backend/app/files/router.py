@@ -155,7 +155,7 @@ def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
 
     logger.info(f"Preparing to stream file {file_id} for user {user.email} with requested type {type}")
-    excel_bytes, content_disposition = download_file(session=session, file=file, user=user, type=type)
+    excel_bytes, content_disposition = download_file(session=session, file=file, type=type)
     media_type = {
         "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "csv": "text/csv",
@@ -207,11 +207,9 @@ def get_files_batch_status(
     Accept a list of file IDs, refresh each file's OCR job status via the OCR API,
     and return the updated list of FileJob records.
     """
-    logger.info(f"Received batch status request for file IDs: {body.file_ids} from user {user.email}")
     file_jobs: list[FileJob] = []
     for file_id in body.file_ids:
         file = session.get(File, file_id)
-        logger.info(f"Processing file ID {file_id}: found file {file} in database")
         if not file:
             raise HTTPException(status_code=404, detail=f"File {file_id} not found")
         if file.user_id != user.id:

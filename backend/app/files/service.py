@@ -7,13 +7,13 @@ from pandas.core.frame import DataFrame
 from sqlmodel import Session
 
 from app.api_keys.crud import get_api_key_by_user
-from app.aws.client import generate_presigned_put_url
-from app.aws.config import aws_settings
 from app.files.crud import get_file_job_by_file_id
 from app.files.dependencies import CurrentUser
 from app.files.models import File
 from app.files.strategies import DOWNLOAD_STRATEGIES
 from app.files.utils import get_df_from_result_json
+
+model = "gemini-3-flash-preview"
 
 user_instruction = (
     "Tôi muốn bạn đọc file này. Sau đó dựa vào nội dung để xác định giao dịch (Bạn phải tự xác định cột chứa nội dung giao dịch)"
@@ -23,7 +23,7 @@ user_instruction = (
     "không thêm giải thích, chú thích hay văn bản khác. Chỉ output nội dung file mới.\n\n"
 )
 
-def download_file(session: Session, file: File, user: CurrentUser, type: str = "xlsx") -> tuple[bytes, str]:
+def download_file(session: Session, file: File, type: str = "xlsx") -> tuple[bytes, str]:
     """
     Given a File record, download the file content from its URL and return bytes
     and a Content-Disposition header for the requested format.
@@ -41,7 +41,10 @@ def download_file(session: Session, file: File, user: CurrentUser, type: str = "
     if not file_job or not file_job.json_url:
         raise ValueError("No OCR result available for this file yet.")
 
-    df: DataFrame = get_df_from_result_json(file_job.json_url)  # type: ignore[union-attr]
+    df: DataFrame | None = get_df_from_result_json(file_job.json_url)
+    if df is None:
+        df = pd.DataFrame()
+
     safe_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
     data_bytes, content_disposition = strategy.convert(df, safe_name)
 
@@ -113,11 +116,14 @@ def download_file_with_account_code(session: Session, file: File, user: CurrentU
     """
     api_key = get_api_key_by_user(session=session, user_id=user.id)  # type: ignore[call-arg]
     client = genai.Client(api_key=api_key.key)
-    json_key = f"{user.email}/{file.id}/result.json"
-    model = "gemini-3-flash-preview"
+    file_job = get_file_job_by_file_id(session=session, file_id=file.id)
 
-    presigned_url = generate_presigned_put_url(key=json_key, bucket=aws_settings.R2_BUCKET_NAME, expiration=3600)
-    df: DataFrame = get_df_from_result_json(presigned_url)
+    if not file_job or not file_job.json_url:
+        raise ValueError("No OCR result available for this file yet.")
+
+    df: DataFrame | None = get_df_from_result_json(file_job.json_url)
+    if df is None:
+        raise ValueError("No tables found in OCR result.")
     file_text = df.to_csv(index=False)
 
     full_prompt = user_instruction + "---FILE-BEGIN---\n" + file_text + "\n---FILE-END---\n"

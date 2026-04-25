@@ -34,7 +34,6 @@ export function FilePreviewModal({ file }: { file: FileWithJobPublic }) {
     setError(null)
     try {
       const data = await fetchPreviewJson(file.id)
-      data[0] && console.log("Preview data sample:", data[0])
       setRows(Array.isArray(data) ? data : [])
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load preview")

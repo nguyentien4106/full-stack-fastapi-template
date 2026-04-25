@@ -169,8 +169,9 @@ export type UserStorageStatPublic = {
     total_size: number;
     total_cost: number;
     updated_at: string;
-    total_transactions: number;
+    total_transactions?: (number | null);
     total_pages?: (number | null);
+    balance: number;
 };
 
 export type UserUpdate = {

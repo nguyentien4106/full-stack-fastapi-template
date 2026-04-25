@@ -65,18 +65,10 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        {/* <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
-          <p className="text-foreground/60">
-            Upload and convert your bank statements to Excel
-          </p>
-        </div> */}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
           {/* Upload Section */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <Card className="p-8">
               <h2 className="text-2xl font-bold mb-6">
                 Convert Your Statement
@@ -175,6 +167,18 @@ function Dashboard() {
                   <span className="font-semibold">
                     {storageStat
                       ? `$${storageStat.total_cost.toFixed(2)}`
+                      : "—"}
+                  </span>
+                </div>
+                <div className="border-t border-border pt-4 flex justify-between">
+                  <span className="text-foreground/60">Balance</span>
+                  <span className="font-semibold text-green-600">
+                    {storageStat != null
+                      ? new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                          maximumFractionDigits: 0,
+                        }).format(storageStat.balance)
                       : "—"}
                   </span>
                 </div>

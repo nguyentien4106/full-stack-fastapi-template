@@ -5,14 +5,15 @@ from sqlmodel import SQLModel
 
 
 class UserStorageStatPublic(SQLModel):
-    id: uuid.UUID
-    user_id: uuid.UUID
-    file_count: int
-    total_size: int
-    total_cost: float
-    updated_at: datetime
-    total_transactions: int
+    id: uuid.UUID | None = None
+    user_id: uuid.UUID | None
+    file_count: int | None = None
+    total_size: int | None = None
+    total_cost: float | None = None
+    updated_at: datetime | None = None
+    total_transactions: int | None = None
     total_pages: int | None = None
+    balance: float = 0.0
 
 class UserStorageStatUpdate(SQLModel):
     file_count: int | None = None

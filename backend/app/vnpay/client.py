@@ -32,6 +32,7 @@ Usage example::
     return_data = ReturnURLRequest(**request.query_params)
     is_valid, parsed = client.verify_return_url(return_data)
 """
+from app.backend_pre_start import logger
 
 import hashlib
 import hmac
@@ -139,7 +140,7 @@ class VNPayClient:
             "vnp_OrderInfo": request.order_info,
             "vnp_OrderType": request.order_type.value,
             "vnp_ReturnUrl": self.config.return_url,
-            "vnp_TxnRef": request.txn_ref,
+            "vnp_TxnRef": str(request.txn_ref),
             "vnp_ExpireDate": _fmt_date(expire),
         }
 

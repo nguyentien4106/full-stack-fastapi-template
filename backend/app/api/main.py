@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-from app.api.routes.topup import router as topup_router
 from app.api.routes.utils import router as utils_router
 from app.api_keys.router import router as api_keys_router
 from app.auth.router import router as login_router
@@ -8,6 +7,7 @@ from app.core.config import settings
 from app.files.router import router as files_router
 from app.items.router import router as items_router
 from app.storages.router import router as storages_router
+from app.topup.router import router as topup_router
 from app.users.router import router as users_router
 
 api_router = APIRouter()

@@ -111,6 +111,7 @@ function TopupContent() {
       TopupService.createTopupPayment({ requestBody: { amount } }),
     onSuccess: (data) => {
       setPaymentUrl(data.payment_url)
+      console.log("Payment URL:", data.payment_url)
       showSuccessToast("QR code generated! Scan to pay.")
     },
     onError: handleError,

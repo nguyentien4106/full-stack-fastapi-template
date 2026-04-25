@@ -31,6 +31,11 @@ from app.storages.schemas import (  # noqa: F401
     UserStorageStatPublic,
     UserStorageStatUpdate,
 )
+from app.topup.models import TopupTransaction, UserBalance  # noqa: F401
+from app.topup.schemas import (  # noqa: F401
+    TopupTransactionPublic,
+    UserBalancePublic,
+)
 from app.users.models import User  # noqa: F401
 from app.users.schemas import (  # noqa: F401
     Message,

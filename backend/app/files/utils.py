@@ -25,15 +25,13 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
                         all_dfs.append(df)
                 except Exception as e:
                     pass
-    if not all_dfs:
-        raise Exception("No tables found")
 
     merged = pd.concat(all_dfs, ignore_index=True)
 
     return merged
 
 
-def _extract_tables_from_ndjson(text: str) -> DataFrame:
+def _extract_tables_from_ndjson(text: str) -> DataFrame | None:
     """Parse NDJSON (one JSON object per line) and extract all tables."""
     all_dfs: list[DataFrame] = []
     for line in text.splitlines():
@@ -46,17 +44,18 @@ def _extract_tables_from_ndjson(text: str) -> DataFrame:
             all_dfs.append(df)
         except Exception:
             pass
-    if not all_dfs:
-        raise Exception("No tables found")
-    return pd.concat(all_dfs, ignore_index=True)
+    if all_dfs:
+        return pd.concat(all_dfs, ignore_index=True)
+
+    return None
 
 
-def get_df_from_result_json(url) -> DataFrame:
+def get_df_from_result_json(url) -> DataFrame | None:
     res = requests.get(url)
     res.raise_for_status()
     return _extract_tables_from_ndjson(res.text)
 
 
-def get_df_from_json_bytes(json_bytes: bytes) -> DataFrame:
+def get_df_from_json_bytes(json_bytes: bytes) -> DataFrame | None:
     text = json_bytes.decode("utf-8")
     return _extract_tables_from_ndjson(text)

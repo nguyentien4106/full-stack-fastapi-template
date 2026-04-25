@@ -64,13 +64,18 @@ export const columns: ColumnDef<FileWithJobPublic>[] = [
   {
     accessorKey: "id",
     header: "File ID",
-    cell: ({ row }) => <span className="font-medium">{row.original.id}</span>,
+    cell: ({ row }) => <span className="font-medium">{row.original.id.slice(0,8)}</span>,
   },
   {
     accessorKey: "filename",
     header: "File Name",
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.filename}</span>
+      <span
+        className="font-medium block max-w-55 truncate"
+        title={row.original.filename}
+      >
+        {row.original.filename}
+      </span>
     ),
   },
   {

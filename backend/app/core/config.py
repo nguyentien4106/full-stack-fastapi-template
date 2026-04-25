@@ -131,5 +131,6 @@ class Settings(BaseSettings):
 
     VNPAY_TMN_CODE: str | None = None
     VNPAY_HASH_SECRET: str | None = None
+    VNPAY_RETURN_URL: str = "https://localhost:5173/payment/return"
 
 settings = Settings()  # type: ignore
