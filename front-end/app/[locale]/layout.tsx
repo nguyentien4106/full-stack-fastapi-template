@@ -9,9 +9,9 @@ import Providers from "@/components/ui/Providers";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Tabula — Turn Documents into Data",
+  title: "BankRow2Excel — Turn Bank Statements into Excel",
   description:
-    "Tabula reads your PDFs, scans, and images and reconstructs every table into a clean, formula-ready Excel file.",
+    "BankRow2Excel reads your bank statement PDFs, scans, and images and reconstructs every transaction row into a clean, formula-ready Excel file.",
 };
 
 export function generateStaticParams() {

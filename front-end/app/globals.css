@@ -659,7 +659,7 @@ a { color: inherit; text-decoration: none; }
 .icon-btn:hover { color: var(--fg); border-color: var(--fg-faint); background: var(--wash-06); }
 .icon-btn .badge-dot { position: absolute; top: 8px; right: 9px; width: 7px; height: 7px; border-radius: 99px; background: var(--amber); box-shadow: 0 0 0 2px var(--bg); }
 
-.content { padding: clamp(20px, 3vw, 34px); max-width: 1320px; width: 100%; }
+.content { padding: clamp(20px, 3vw, 34px); max-width: 1320px; width: 100%; margin-inline: auto;align-self: center; }
 
 /* section heading inside content */
 .block-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 16px; flex-wrap: wrap; }

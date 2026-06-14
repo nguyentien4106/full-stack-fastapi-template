@@ -20,7 +20,7 @@ export default function Footer() {
             <span className="glyph">
               <FileSpreadsheet size={16} strokeWidth={2.4} />
             </span>
-            <span className="wordmark">TABULA</span>
+            <span className="wordmark">BankRow2Excel</span>
           </div>
           <p>
             {t.rich("tagline", {

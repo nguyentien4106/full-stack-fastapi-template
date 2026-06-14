@@ -14,14 +14,14 @@
     "close": "Close"
   },
   "brand": {
-    "name": "TABULA",
-    "tagline": "Turn Documents into Data"
+    "name": "BankRow2Excel",
+    "tagline": "Turn Bank Statements into Excel"
   },
   "auth": {
     "back": "Back to site",
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to your TABULA workspace.",
+      "subtitle": "Sign in to your BankRow2Excel workspace.",
       "email": "Email",
       "password": "Password",
       "emailPlaceholder": "you@company.com",
@@ -64,7 +64,7 @@
       "headData": "Data",
       "headDash": " — ",
       "headInstantly": "Instantly",
-      "sub": "Tabula reads your PDFs, scans, and images — then reconstructs every table into a clean, formula-ready <excel>Excel</excel> file. No templates, no manual cleanup, no copy-paste.",
+      "sub": "BankRow2Excel reads your bank statement PDFs, scans, and images — then reconstructs every transaction row into a clean, formula-ready <excel>Excel</excel> file. No templates, no manual cleanup, no copy-paste.",
       "startFree": "Start for Free",
       "seeDemo": "See Demo",
       "proofNoCard": "No credit card",
@@ -72,7 +72,7 @@
       "proofSoc2": "SOC 2 Type II"
     },
     "preview": {
-      "addr": "tabula://parse/session-7f3a · live",
+      "addr": "bankrow2excel://parse/session-7f3a · live",
       "source": "SOURCE — invoice_q2.pdf",
       "extracted": "EXTRACTED — output.xlsx"
     },
@@ -81,10 +81,10 @@
       "titlePre": "From paper to spreadsheet in ",
       "titleEm": "three",
       "titlePost": " moves.",
-      "lead": "No setup, no field mapping. Tabula does the structural thinking so you don't have to.",
+      "lead": "No setup, no field mapping. BankRow2Excel does the structural thinking so you don't have to.",
       "step": "STEP",
       "s1Title": "Upload PDF or Image",
-      "s1Desc": "Drop in a PDF, scan, JPG or PNG — single files or whole batches. Tabula handles multi-page and rotated pages automatically.",
+      "s1Desc": "Drop in a PDF, scan, JPG or PNG — single files or whole batches. BankRow2Excel handles multi-page and rotated pages automatically.",
       "s2Title": "AI Parses & Structures",
       "s2Desc": "Our vision engine detects tables, merges split rows, infers headers and column types, and rebuilds the grid with cell-level precision.",
       "s3Title": "Download Excel",
@@ -138,7 +138,7 @@
       "linkTerms": "Terms",
       "linkSecurity": "Security",
       "linkSoc2": "SOC 2",
-      "copyright": "© 2026 Tabula Labs, Inc. — All rights reserved.",
+      "copyright": "© 2026 BankRow2Excel, Inc. — All rights reserved.",
       "madeFor": "Built for people who count things."
     },
     "launch": {
@@ -242,7 +242,7 @@
     "dropActive": "Drop to add files",
     "dropHintPre": "or ",
     "dropHintLink": "browse your files",
-    "dropHintPost": " — Tabula handles the rest.",
+    "dropHintPost": " — BankRow2Excel handles the rest.",
     "maxSize": "Max 50 MB",
     "queue": "Queue",
     "queueProgress": "· {done}/{total} done",

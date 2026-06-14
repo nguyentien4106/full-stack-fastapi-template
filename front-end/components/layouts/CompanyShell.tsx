@@ -20,7 +20,7 @@ const NAV: NavItem[] = [
   { key: "members", href: "/members", titleKey: "members", Icon: Users },
   { key: "billing", href: "/billing", titleKey: "billing", Icon: Wallet },
   { key: "profile", href: "/profile", titleKey: "profile", Icon: User },
-  { key: "settings", href: "/settings", titleKey: "settings", Icon: Settings },
+  // { key: "settings", href: "/settings", titleKey: "settings", Icon: Settings },
 ];
 
 export default function CompanyShell({ user, children }: { user: AuthUser; children: ReactNode }) {

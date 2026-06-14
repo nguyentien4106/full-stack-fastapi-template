@@ -1,7 +1,7 @@
 import { ApiError, OpenAPI } from "@/lib/client";
 
 /** Cookie that holds the backend JWT. Non-httpOnly so the browser SDK can send it. */
-export const TOKEN_COOKIE = "tabula_token";
+export const TOKEN_COOKIE = "bankrow2excel_token";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 

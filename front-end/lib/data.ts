@@ -39,10 +39,10 @@ export interface Member {
 }
 
 export const MEMBERS: Member[] = [
-  { name: "Mara Vance", email: "mara@tabula.io", roleKey: "owner", jobs: 4218, gradient: "linear-gradient(135deg,oklch(0.82 0.14 205),oklch(0.82 0.14 75))" },
-  { name: "Devon Park", email: "devon@tabula.io", roleKey: "admin", jobs: 2904, gradient: "linear-gradient(135deg,oklch(0.82 0.14 75),oklch(0.80 0.15 155))" },
-  { name: "Lena Ostrow", email: "lena@tabula.io", roleKey: "analyst", jobs: 1877, gradient: "linear-gradient(135deg,oklch(0.80 0.15 155),oklch(0.82 0.14 205))" },
-  { name: "Theo Marsh", email: "theo@tabula.io", roleKey: "analyst", jobs: 1102, gradient: "linear-gradient(135deg,oklch(0.82 0.14 205),oklch(0.68 0.17 25))" },
+  { name: "Mara Vance", email: "mara@bankrow2excel.io", roleKey: "owner", jobs: 4218, gradient: "linear-gradient(135deg,oklch(0.82 0.14 205),oklch(0.82 0.14 75))" },
+  { name: "Devon Park", email: "devon@bankrow2excel.io", roleKey: "admin", jobs: 2904, gradient: "linear-gradient(135deg,oklch(0.82 0.14 75),oklch(0.80 0.15 155))" },
+  { name: "Lena Ostrow", email: "lena@bankrow2excel.io", roleKey: "analyst", jobs: 1877, gradient: "linear-gradient(135deg,oklch(0.80 0.15 155),oklch(0.82 0.14 205))" },
+  { name: "Theo Marsh", email: "theo@bankrow2excel.io", roleKey: "analyst", jobs: 1102, gradient: "linear-gradient(135deg,oklch(0.82 0.14 205),oklch(0.68 0.17 25))" },
 ];
 
 export interface Company {

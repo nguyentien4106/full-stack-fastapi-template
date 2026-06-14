@@ -25,7 +25,7 @@ export default function Nav() {
         <span className="glyph">
           <FileSpreadsheet size={16} strokeWidth={2.4} />
         </span>
-        <span className="wordmark">TABULA</span>
+        <span className="wordmark">BankRow2Excel</span>
       </div>
       <div className="lp-nav-links">
         <a href="#how">{t("how")}</a>

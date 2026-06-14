@@ -58,7 +58,7 @@ export default function SidebarShell({
             <span className="glyph">
               <FileSpreadsheet size={16} strokeWidth={2.4} />
             </span>
-            <span className="wm">TABULA</span>
+            <span className="wm">BankRow2Excel</span>
           </div>
           <button
             className="sb-toggle"
@@ -119,7 +119,7 @@ export default function SidebarShell({
           </button>
           <div>
             <h1>{t(`pages.${active.titleKey}.title`)}</h1>
-            <div className="crumb">tabula / {active.key}</div>
+            <div className="crumb">bankrow2excel / {active.key}</div>
           </div>
           <div className="topbar-spacer" />
           <div className="topbar-search">

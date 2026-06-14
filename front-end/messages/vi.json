@@ -14,14 +14,14 @@
     "close": "Đóng"
   },
   "brand": {
-    "name": "TABULA",
-    "tagline": "Biến Tài Liệu Thành Dữ Liệu"
+    "name": "BankRow2Excel",
+    "tagline": "Biến Sao Kê Ngân Hàng Thành Excel"
   },
   "auth": {
     "back": "Về trang chính",
     "login": {
       "title": "Chào mừng trở lại",
-      "subtitle": "Đăng nhập vào không gian làm việc TABULA của bạn.",
+      "subtitle": "Đăng nhập vào không gian làm việc BankRow2Excel của bạn.",
       "email": "Email",
       "password": "Mật khẩu",
       "emailPlaceholder": "ban@congty.com",
@@ -64,7 +64,7 @@
       "headData": "Dữ Liệu",
       "headDash": " — ",
       "headInstantly": "Tức Thì",
-      "sub": "Tabula đọc các tệp PDF, bản scan và hình ảnh của bạn — rồi tái dựng mọi bảng thành một tệp <excel>Excel</excel> sạch sẽ, sẵn sàng cho công thức. Không cần mẫu, không dọn dẹp thủ công, không sao chép thủ công.",
+      "sub": "BankRow2Excel đọc các tệp PDF, bản scan và hình ảnh sao kê ngân hàng của bạn — rồi tái dựng mọi dòng giao dịch thành một tệp <excel>Excel</excel> sạch sẽ, sẵn sàng cho công thức. Không cần mẫu, không dọn dẹp thủ công, không sao chép thủ công.",
       "startFree": "Bắt đầu miễn phí",
       "seeDemo": "Xem demo",
       "proofNoCard": "Không cần thẻ",
@@ -72,7 +72,7 @@
       "proofSoc2": "SOC 2 Type II"
     },
     "preview": {
-      "addr": "tabula://parse/session-7f3a · trực tiếp",
+      "addr": "bankrow2excel://parse/session-7f3a · trực tiếp",
       "source": "NGUỒN — invoice_q2.pdf",
       "extracted": "ĐÃ TRÍCH XUẤT — output.xlsx"
     },
@@ -81,10 +81,10 @@
       "titlePre": "Từ giấy tờ thành bảng tính chỉ trong ",
       "titleEm": "ba",
       "titlePost": " bước.",
-      "lead": "Không cài đặt, không ánh xạ trường. Tabula lo phần tư duy cấu trúc để bạn không phải làm.",
+      "lead": "Không cài đặt, không ánh xạ trường. BankRow2Excel lo phần tư duy cấu trúc để bạn không phải làm.",
       "step": "BƯỚC",
       "s1Title": "Tải lên PDF hoặc ảnh",
-      "s1Desc": "Thả vào tệp PDF, bản scan, JPG hay PNG — từng tệp hoặc cả lô. Tabula tự xử lý nhiều trang và trang bị xoay.",
+      "s1Desc": "Thả vào tệp PDF, bản scan, JPG hay PNG — từng tệp hoặc cả lô. BankRow2Excel tự xử lý nhiều trang và trang bị xoay.",
       "s2Title": "AI phân tích & cấu trúc",
       "s2Desc": "Bộ máy thị giác của chúng tôi phát hiện bảng, gộp các hàng bị tách, suy ra tiêu đề và kiểu cột, rồi dựng lại lưới với độ chính xác đến từng ô.",
       "s3Title": "Tải về Excel",
@@ -138,7 +138,7 @@
       "linkTerms": "Điều khoản",
       "linkSecurity": "Bảo mật",
       "linkSoc2": "SOC 2",
-      "copyright": "© 2026 Tabula Labs, Inc. — Bảo lưu mọi quyền.",
+      "copyright": "© 2026 BankRow2Excel, Inc. — Bảo lưu mọi quyền.",
       "madeFor": "Dành cho những người làm việc với con số."
     },
     "launch": {
@@ -242,7 +242,7 @@
     "dropActive": "Thả để thêm tệp",
     "dropHintPre": "hoặc ",
     "dropHintLink": "duyệt tệp của bạn",
-    "dropHintPost": " — Tabula lo phần còn lại.",
+    "dropHintPost": " — BankRow2Excel lo phần còn lại.",
     "maxSize": "Tối đa 50 MB",
     "queue": "Hàng đợi",
     "queueProgress": "· {done}/{total} xong",

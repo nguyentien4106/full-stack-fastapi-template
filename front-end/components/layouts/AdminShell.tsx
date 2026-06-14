@@ -21,7 +21,7 @@ const NAV: AdminNavItem[] = [
   { key: "dashboard", href: "/dashboard", titleKey: "overview", Icon: LayoutDashboard },
   { key: "users", href: "/users", titleKey: "users", Icon: Users },
   { key: "companies", href: "/companies", titleKey: "companies", Icon: Building2 },
-  { key: "settings", href: "/settings", titleKey: "settings", Icon: Settings },
+  // { key: "settings", href: "/settings", titleKey: "settings", Icon: Settings },
 ];
 
 export default function AdminShell({ user, children }: { user: AuthUser; children: ReactNode }) {
@@ -39,7 +39,7 @@ export default function AdminShell({ user, children }: { user: AuthUser; childre
           <span className="glyph">
             <FileSpreadsheet size={16} strokeWidth={2.4} />
           </span>
-          <span className="wordmark">TABULA</span>
+          <span className="wordmark">BankRow2Excel</span>
         </div>
 
         <nav className={`admin-nav ${open ? "open" : ""}`}>
