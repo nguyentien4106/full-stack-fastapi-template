@@ -107,6 +107,23 @@ def charge_for_job(
     return txn
 
 
+def get_usage_summary(session: Session, *, user: User) -> dict[str, Any]:
+    """Return the current-month metering summary for *user*: pages used, free pages
+    remaining, the per-page price, and the prepaid VND balance.
+    """
+    year_month = current_year_month()
+    usage = get_monthly_usage(session, user_id=user.id, year_month=year_month)
+    pages_used = usage.pages_used if usage else 0
+    balance = topup_crud.get_or_create_balance(session, user.id)
+    return {
+        "year_month": year_month,
+        "pages_used": pages_used,
+        "free_pages_remaining": max(0, FREE_PAGES_PER_MONTH - pages_used),
+        "price_per_page_vnd": PRICE_PER_PAGE_VND,
+        "balance_vnd": balance.balance,
+    }
+
+
 def estimate_pdf_pages(data: bytes) -> int | None:
     """Best-effort PDF page count, or ``None`` when the bytes aren't a readable PDF."""
     try:
