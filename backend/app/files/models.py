@@ -40,6 +40,11 @@ class FileJob(SQLModel, table=True):
     json_url: str | None = Field(default=None, max_length=4000)
     markdown_url: str | None = Field(default=None, max_length=4000)
     err_msg: str | None = Field(default=None, max_length=500)
+    billed_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # ty:ignore[invalid-argument-type]
+        description="When this job's pages were metered/charged (idempotency guard)",
+    )
     created_at: datetime = Field(
         default_factory=get_datetime_utc,
         sa_type=DateTime(timezone=True),  # ty:ignore[invalid-argument-type]
