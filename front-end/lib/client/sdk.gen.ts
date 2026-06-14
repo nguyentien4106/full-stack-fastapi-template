@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, FilesListOcrModelsResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesGetFileJobData, FilesGetFileJobResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadNewVersionExcelData, FilesDownloadNewVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, FilesPreviewFileResultData, FilesPreviewFileResultResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreatePaymentData, TopupCreatePaymentResponse, TopupTopupReturnResponse, TopupGetMyBalanceResponse, TopupGetMyTransactionsData, TopupGetMyTransactionsResponse, TopupTopupIpnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
+import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, FilesListOcrModelsResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesGetFileJobData, FilesGetFileJobResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadAiVersionExcelData, FilesDownloadAiVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, FilesPreviewFileResultData, FilesPreviewFileResultResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreatePaymentData, TopupCreatePaymentResponse, TopupTopupReturnResponse, TopupGetMyBalanceResponse, TopupGetMyTransactionsData, TopupGetMyTransactionsResponse, TopupTopupIpnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
 
 export class ApiKeysService {
     /**
@@ -213,7 +213,7 @@ export class FilesService {
     }
     
     /**
-     * Download New Version Excel
+     * Download Ai Version Excel
      * Generate and return a new version of the Excel file created by the standard
      * download endpoint. This will fetch the existing generated Excel bytes, write
      * them to a temporary file, call `get_gemini_response_for_file` to produce a
@@ -223,10 +223,10 @@ export class FilesService {
      * @returns unknown Successful Response
      * @throws ApiError
      */
-    public static downloadNewVersionExcel(data: FilesDownloadNewVersionExcelData): CancelablePromise<FilesDownloadNewVersionExcelResponse> {
+    public static downloadAiVersionExcel(data: FilesDownloadAiVersionExcelData): CancelablePromise<FilesDownloadAiVersionExcelResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/files/{file_id}/download/new',
+            url: '/api/v1/files/{file_id}/download/ai',
             path: {
                 file_id: data.fileId
             },

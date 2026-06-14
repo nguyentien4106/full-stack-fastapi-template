@@ -1,4 +1,5 @@
-import { API_BASE, readToken } from "@/lib/api";
+import { apiMessage } from "@/lib/api";
+import { FilesService } from "@/lib/client";
 import type { FileJobPublic, FileWithJobPublic } from "@/lib/client";
 import type { DocRow, DocStatus } from "@/lib/data";
 
@@ -52,22 +53,24 @@ export function toDocRow(f: FileWithJobPublic): DocRow {
 
 /**
  * Downloads the generated export for a parsed file and saves it in the browser.
- * Uses fetch + blob because the generated axios client JSON-decodes responses.
+ * Delegates to the generated SDK; the request interceptor in `@/lib/api` forces a
+ * blob responseType for download endpoints so the binary payload survives.
  */
 export async function downloadExport(
   fileId: string,
   filename: string,
-  type: "xlsx" | "csv" | "json" | "html" = "xlsx",
+  type: "xlsx" | "csv" | "json" | "ai" | "html" = "xlsx",
 ): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/v1/files/${fileId}/download?type=${type}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${readToken() ?? ""}` },
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    throw new Error(body?.detail ?? `Download failed (${res.status})`);
+  let data: unknown;
+  try {
+    data =
+      type === "ai"
+        ? await FilesService.downloadAiVersionExcel({ fileId })
+        : await FilesService.downloadTableExcelFile({ fileId, type });
+  } catch (err) {
+    throw new Error(apiMessage(err));
   }
-  const blob = await res.blob();
+  const blob = data instanceof Blob ? data : new Blob([data as BlobPart]);
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

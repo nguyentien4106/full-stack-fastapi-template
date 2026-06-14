@@ -24,7 +24,7 @@ from app.files.schemas import (
 )
 from app.files.service import (
     download_file,
-    download_file_with_accounting_code,
+    download_file_with_ai,
     get_preview_data
 )
 from app.ocrs.constants import OcrJobStatus, OcrModel
@@ -201,8 +201,8 @@ def download_table_excel_file(file_id: uuid.UUID, type: str, session: SessionDep
     )
 
 
-@router.post("/{file_id}/download/new", response_class=Response)
-def download_new_version_excel(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+@router.post("/{file_id}/download/ai", response_class=Response)
+def download_ai_version_excel(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
     """
     Generate and return a new version of the Excel file created by the standard
     download endpoint. This will fetch the existing generated Excel bytes, write
@@ -218,7 +218,7 @@ def download_new_version_excel(file_id: uuid.UUID, session: SessionDep, user: Cu
     if not file_job or file_job.state != "done":
         raise HTTPException(status_code=400, detail="OCR job is not done yet")
     try:
-        ex_bytes, content_disposition = download_file_with_accounting_code(session=session, file=file, user=user)
+        ex_bytes, content_disposition = download_file_with_ai(session=session, file=file, user=user)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

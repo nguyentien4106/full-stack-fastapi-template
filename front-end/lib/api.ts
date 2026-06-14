@@ -15,6 +15,16 @@ export function readToken(): string | null {
 OpenAPI.BASE = API_BASE;
 OpenAPI.TOKEN = async () => readToken() ?? "";
 
+// The generated SDK uses axios with a default JSON responseType, which corrupts
+// binary payloads. Force a blob responseType for the file-download endpoints so
+// `FilesService.download*` resolves to a usable Blob.
+OpenAPI.interceptors.request.use((config) => {
+  if (typeof config.url === "string" && config.url.includes("/download")) {
+    config.responseType = "blob";
+  }
+  return config;
+});
+
 /** Extracts a human-readable message from an SDK error. */
 export function apiMessage(err: unknown): string {
   if (err instanceof ApiError) {

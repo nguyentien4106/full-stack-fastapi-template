@@ -12,13 +12,14 @@ import type { DocRow, DocStatus } from "@/lib/data";
 
 type StatusFilter = "all" | DocStatus;
 
-type DownloadFormat = "xlsx" | "csv" | "json" | "html";
+type DownloadFormat = "xlsx" | "csv" | "json" | "html" | "ai";
 
 const DOWNLOAD_FORMATS: { type: DownloadFormat; label: string }[] = [
   { type: "xlsx", label: "Excel (.xlsx)" },
   { type: "csv", label: "CSV (.csv)" },
   { type: "json", label: "JSON (.json)" },
   { type: "html", label: "HTML (.html)" },
+  { type: "ai", label: "Excel (AI) (.xlsx)" },
 ];
 
 interface PreviewState {

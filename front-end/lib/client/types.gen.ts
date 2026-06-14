@@ -308,11 +308,11 @@ export type FilesDownloadTableExcelFileData = {
 
 export type FilesDownloadTableExcelFileResponse = (unknown);
 
-export type FilesDownloadNewVersionExcelData = {
+export type FilesDownloadAiVersionExcelData = {
     fileId: string;
 };
 
-export type FilesDownloadNewVersionExcelResponse = (unknown);
+export type FilesDownloadAiVersionExcelResponse = (unknown);
 
 export type FilesGetFilesBatchStatusData = {
     requestBody: FilesStatusRequest;

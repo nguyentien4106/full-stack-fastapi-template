@@ -20,9 +20,7 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
 
                 try:
                     dfs = pd.read_html(StringIO(html))
-                    for df in dfs:
-                        df["__page__"] = page_idx + 1  # debug tracking
-                        all_dfs.append(df)
+                    all_dfs.extend(dfs)
                 except Exception as e:
                     pass
 
