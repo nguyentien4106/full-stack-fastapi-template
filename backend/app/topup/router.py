@@ -31,9 +31,7 @@ router = APIRouter(prefix="/topup", tags=["topup"])
 @router.get("/packages", response_model=TopupPackagesResponse)
 def get_topup_packages(_current_user: CurrentUser) -> Any:
     """Return the list of available top-up packages."""
-    return TopupPackagesResponse(
-        packages=[TopupPackage(**p) for p in TOPUP_PACKAGES]
-    )
+    return TopupPackagesResponse(packages=[TopupPackage(**p) for p in TOPUP_PACKAGES])
 
 
 @router.post("/create-payment", response_model=CreatePaymentResponse)
@@ -53,7 +51,9 @@ def create_payment(
             detail=f"Invalid topup amount. Allowed: {sorted(ALLOWED_AMOUNTS)}",
         )
 
-    txn_ref = str(int(time.time() * 1000))  # Unique txn_ref using current time in milliseconds
+    txn_ref = str(
+        int(time.time() * 1000)
+    )  # Unique txn_ref using current time in milliseconds
     origin = (
         request.headers.get("Origin")
         or request.headers.get("Referer", "").rstrip("/")
@@ -63,9 +63,8 @@ def create_payment(
     if "localhost" in origin or "127.0.0.1" in origin:
         origin = origin.replace("https://", "http://")
     return_url = f"{origin}/payment/return"
-    client_ip = (
-        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        or (request.client.host if request.client else "127.0.0.1")
+    client_ip = request.headers.get("X-Forwarded-For", "").split(",")[0].strip() or (
+        request.client.host if request.client else "127.0.0.1"
     )
 
     return create_topup_payment_url(
@@ -80,7 +79,9 @@ def create_payment(
 
 
 @router.get("/return", response_model=PaymentReturnResponse)
-def topup_return(request: Request, session: SessionDep, current_user: CurrentUser) -> Any:
+def topup_return(
+    request: Request, session: SessionDep, current_user: CurrentUser
+) -> Any:
     """
     VNPAY ReturnURL handler — VNPAY redirects the customer's browser here
     after payment.  Updates the user's balance accordingly.
@@ -115,7 +116,10 @@ def get_my_transactions(
     limit: int = 50,
 ) -> Any:
     """Return paginated transaction history for the authenticated user."""
-    return get_transaction_history(session, user_id=current_user.id, skip=skip, limit=limit)
+    return get_transaction_history(
+        session, user_id=current_user.id, skip=skip, limit=limit
+    )
+
 
 @router.get("/ipn")
 def topup_ipn(request: Request, session: SessionDep) -> Any:

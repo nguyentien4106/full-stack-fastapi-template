@@ -122,7 +122,7 @@ class Settings(BaseSettings):
         )
 
         return self
-    
+
     OCR_API_URL: HttpUrl | None = None
     OCR_API_TOKEN: str | None = None
     OCR_JOB_URL: HttpUrl | None = None
@@ -132,5 +132,6 @@ class Settings(BaseSettings):
     VNPAY_TMN_CODE: str | None = None
     VNPAY_HASH_SECRET: str | None = None
     VNPAY_RETURN_URL: str = "https://localhost:5173/payment/return"
+
 
 settings = Settings()  # type: ignore

@@ -4,6 +4,7 @@ All utilities now live in the per-domain utils modules:
   - app.users.utils  (email helpers)
   - app.auth.utils   (password reset token helpers)
 """
+
 from datetime import datetime, timezone
 
 from app.auth.utils import (  # noqa: F401
@@ -21,6 +22,7 @@ from app.users.utils import (  # noqa: F401
 
 def get_datetime_utc() -> datetime:
     return datetime.now(timezone.utc)
+
 
 def get_bytes_from_file_url(file_url: str) -> bytes:
     """

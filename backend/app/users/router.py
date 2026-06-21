@@ -61,7 +61,9 @@ def create_user_endpoint(*, session: SessionDep, user_in: UserCreate) -> Any:
     user = create_user(session=session, user_create=user_in)
     if settings.emails_enabled and user_in.email:
         email_data = generate_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password  # type: ignore[arg-type]
+            email_to=user_in.email,
+            username=user_in.email,
+            password=user_in.password,  # type: ignore[arg-type]
         )
         send_email(
             email_to=user_in.email,

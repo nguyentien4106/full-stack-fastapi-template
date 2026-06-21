@@ -11,8 +11,8 @@ from app.utils import get_datetime_utc
 
 
 class TopupType(str, Enum):
-    CREDIT = "credit"   # balance added (successful payment)
-    DEBIT = "debit"     # balance deducted (service charge, refund, etc.)
+    CREDIT = "credit"  # balance added (successful payment)
+    DEBIT = "debit"  # balance deducted (service charge, refund, etc.)
 
 
 class TopupStatus(str, Enum):

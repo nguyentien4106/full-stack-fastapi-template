@@ -1,12 +1,15 @@
 from __future__ import annotations
-from app.utils import get_datetime_utc
+
 import uuid
 from datetime import datetime
+
 from pydantic import EmailStr
 from sqlalchemy import DateTime, String
 from sqlmodel import Field, SQLModel
 
 from app.users.constants import UserType
+from app.utils import get_datetime_utc
+
 
 class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)

@@ -1,5 +1,6 @@
 import io
 import json
+import logging
 from io import StringIO
 from typing import Any
 
@@ -16,6 +17,8 @@ from app.files.models import File, FileJob
 from app.files.strategies import DOWNLOAD_STRATEGIES
 from app.files.utils import get_df_from_result_json
 
+logger = logging.getLogger(__name__)
+
 model = "gemini-3-flash-preview"
 
 user_instruction = (
@@ -26,7 +29,10 @@ user_instruction = (
     "không thêm giải thích, chú thích hay văn bản khác. Chỉ output nội dung file mới.\n\n"
 )
 
-def download_file(session: Session, file: File, type: str = "xlsx") -> tuple[bytes, str]:
+
+def download_file(
+    session: Session, file: File, type: str = "xlsx"
+) -> tuple[bytes, str]:
     """
     Given a File record, download the file content from its URL and return bytes
     and a Content-Disposition header for the requested format.
@@ -48,10 +54,13 @@ def download_file(session: Session, file: File, type: str = "xlsx") -> tuple[byt
     if df is None:
         df = pd.DataFrame()
 
-    safe_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
+    safe_name = (
+        file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
+    )
     data_bytes, content_disposition = strategy.convert(df, safe_name)
 
     return (data_bytes, content_disposition)
+
 
 def get_preview_data(file_job: FileJob) -> tuple[list[str], list[dict[str, Any]]]:
     """Build the OCR result table for previewing.
@@ -76,7 +85,9 @@ def get_preview_data(file_job: FileJob) -> tuple[list[str], list[dict[str, Any]]
     return columns, rows
 
 
-def get_gemini_response_for_file(input_path: str, output_path: str, *, model: str | None = None) -> None:
+def get_gemini_response_for_file(
+    input_path: str, output_path: str, *, model: str | None = None
+) -> None:
     """Read a local file (CSV or XLSX), send its contents to Gemini with the Vietnamese
     prompt, and write the model's returned contents into `output_path` as XLSX when
     the output filename ends with .xlsx.
@@ -101,7 +112,7 @@ def get_gemini_response_for_file(input_path: str, output_path: str, *, model: st
         model = "gemini-3-flash-preview"
 
     # Load input file. If Excel, convert to CSV text to include in the prompt.
-    file_ext = input_path.lower().rsplit('.', 1)[-1] if '.' in input_path else ''
+    file_ext = input_path.lower().rsplit(".", 1)[-1] if "." in input_path else ""
     if file_ext in ("xlsx", "xls"):
         df_in = pd.read_excel(input_path)
         file_text = df_in.to_csv(index=False)
@@ -112,28 +123,33 @@ def get_gemini_response_for_file(input_path: str, output_path: str, *, model: st
 
     # Build prompt that asks the model to return only the file contents (CSV/plain text)
 
-    full_prompt = user_instruction + "---FILE-BEGIN---\n" + file_text + "\n---FILE-END---\n"
+    full_prompt = (
+        user_instruction + "---FILE-BEGIN---\n" + file_text + "\n---FILE-END---\n"
+    )
 
     # Send to Gemini
     response = client.models.generate_content(model=model, contents=full_prompt)
     resp_text = response.text or ""
 
     # If output path requests xlsx, try to parse response as CSV/plain text and write to Excel
-    out_ext = output_path.lower().rsplit('.', 1)[-1] if '.' in output_path else ''
+    out_ext = output_path.lower().rsplit(".", 1)[-1] if "." in output_path else ""
     if out_ext in ("xlsx", "xls"):
         try:
             df_out = pd.read_csv(StringIO(resp_text))
-            df_out.to_excel(output_path, index=False, engine='openpyxl')
+            df_out.to_excel(output_path, index=False, engine="openpyxl")
         except Exception:
             # Fallback: write the raw response into a single-cell sheet
             fallback_df = pd.DataFrame({"result": [resp_text]})
-            fallback_df.to_excel(output_path, index=False, engine='openpyxl')
+            fallback_df.to_excel(output_path, index=False, engine="openpyxl")
     else:
         # For non-xlsx output, write raw text
         with open(output_path, "w", encoding="utf-8") as out_f:
             out_f.write(resp_text)
 
-def download_file_with_ai(session: Session, file: File, user: CurrentUser) -> tuple[bytes, str]:
+
+def download_file_with_ai(
+    session: Session, file: File, user: CurrentUser
+) -> tuple[bytes, str]:
     """
     This is a placeholder for a future function that would download the file with an additional account code column.
     The implementation would likely involve calling `get_gemini_response_for_file` to get the modified file content,
@@ -150,18 +166,22 @@ def download_file_with_ai(session: Session, file: File, user: CurrentUser) -> tu
     if df is None:
         raise ValueError("No tables found in OCR result.")
     file_text = df.to_csv(index=False)
-    full_prompt = user_instruction + "---FILE-BEGIN---\n" + file_text + "\n---FILE-END---\n"
-    print("File text extracted for AI processing:", full_prompt)  # debug log first 500 chars
+    full_prompt = (
+        user_instruction + "---FILE-BEGIN---\n" + file_text + "\n---FILE-END---\n"
+    )
+    logger.debug("File text extracted for AI processing: %s", full_prompt)
     response = client.models.generate_content(model=model, contents=full_prompt)
     resp_text = response.text or ""
-    print("AI response:", resp_text[:500])  # debug log first 500 chars
+    logger.debug("AI response: %s", resp_text[:500])
 
     df_out = pd.read_csv(StringIO(resp_text))
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:  # type: ignore[abstract]  # ty:ignore[invalid-argument-type]
         df_out.to_excel(writer, index=False, sheet_name="OCR Tables with Account Codes")
 
-    return output.getvalue(), DOWNLOAD_STRATEGIES["xlsx"].get_content_disposition(f"{file.filename.rsplit('.', 1)[0]}_with_account_codes.xlsx")
+    return output.getvalue(), DOWNLOAD_STRATEGIES["xlsx"].get_content_disposition(
+        f"{file.filename.rsplit('.', 1)[0]}_with_account_codes.xlsx"
+    )
 
 
 # ---------------------------------------------------------------------------

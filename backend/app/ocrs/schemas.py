@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
-
 # ---------------------------------------------------------------------------
 # Nested models
 # ---------------------------------------------------------------------------
+
 
 class ExtractProgress(BaseModel):
     totalPages: int | None = None
@@ -20,6 +20,7 @@ class ResultUrl(BaseModel):
 # ---------------------------------------------------------------------------
 # Submit-job response (POST /jobs)
 # ---------------------------------------------------------------------------
+
 
 class OcrSubmitData(BaseModel):
     jobId: str
@@ -38,6 +39,7 @@ class OcrSubmitResponse(BaseModel):
 # ---------------------------------------------------------------------------
 # Job-level response (GET /jobs/{jobId})
 # ---------------------------------------------------------------------------
+
 
 class OcrJobData(BaseModel):
     jobId: str
@@ -61,6 +63,7 @@ class OcrJobResponse(BaseModel):
 # Batch-job response (GET /jobs/batch/{batchId})
 # ---------------------------------------------------------------------------
 
+
 class OcrBatchExtractResult(BaseModel):
     jobId: str
     state: str  # pending | running | done | failed
@@ -79,4 +82,3 @@ class OcrBatchResponse(BaseModel):
     code: int | None = None
     msg: str | None = None
     data: OcrBatchData
-

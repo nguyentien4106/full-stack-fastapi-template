@@ -33,6 +33,7 @@ class DownloadStrategy(ABC):
     def encode_filename(self, filename: str) -> str:
         """Helper method to percent-encode a UTF-8 filename for Content-Disposition."""
         from urllib.parse import quote
+
         return quote(filename, safe="")
 
     def get_content_disposition(self, filename: str) -> str:
@@ -47,7 +48,7 @@ class DownloadStrategy(ABC):
         # header value never triggers a UnicodeEncodeError in latin-1.
         ascii_filename = filename.encode("ascii", errors="replace").decode("ascii")
         return (
-            f"attachment; filename=\"{ascii_filename}\"; "
+            f'attachment; filename="{ascii_filename}"; '
             f"filename*=UTF-8''{encoded_filename}"
         )
 
@@ -59,7 +60,9 @@ class XlsxDownloadStrategy(DownloadStrategy):
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine="openpyxl") as writer:  # type: ignore[abstract]  # ty:ignore[invalid-argument-type]
             df.to_excel(writer, index=False, sheet_name="OCR Tables")
-        return output.getvalue(), self.get_content_disposition(f"{safe_name}_tables.xlsx")
+        return output.getvalue(), self.get_content_disposition(
+            f"{safe_name}_tables.xlsx"
+        )
 
 
 class CsvDownloadStrategy(DownloadStrategy):
@@ -68,7 +71,9 @@ class CsvDownloadStrategy(DownloadStrategy):
     def convert(self, df: DataFrame, safe_name: str) -> tuple[bytes, str]:
         output = StringIO()
         df.to_csv(output, index=False)
-        return output.getvalue().encode("utf-8"), self.get_content_disposition(f"{safe_name}_tables.csv")
+        return output.getvalue().encode("utf-8"), self.get_content_disposition(
+            f"{safe_name}_tables.csv"
+        )
 
 
 class JsonDownloadStrategy(DownloadStrategy):
@@ -76,7 +81,9 @@ class JsonDownloadStrategy(DownloadStrategy):
 
     def convert(self, df: DataFrame, safe_name: str) -> tuple[bytes, str]:
         text = df.to_json(orient="records", force_ascii=False) or ""
-        return text.encode("utf-8"), self.get_content_disposition(f"{safe_name}_tables.json")
+        return text.encode("utf-8"), self.get_content_disposition(
+            f"{safe_name}_tables.json"
+        )
 
 
 class HtmlDownloadStrategy(DownloadStrategy):
@@ -84,7 +91,9 @@ class HtmlDownloadStrategy(DownloadStrategy):
 
     def convert(self, df: DataFrame, safe_name: str) -> tuple[bytes, str]:
         text = df.to_html(index=False) or ""
-        return text.encode("utf-8"), self.get_content_disposition(f"{safe_name}_tables.html")
+        return text.encode("utf-8"), self.get_content_disposition(
+            f"{safe_name}_tables.html"
+        )
 
 
 # Registry mapping type strings to strategy instances

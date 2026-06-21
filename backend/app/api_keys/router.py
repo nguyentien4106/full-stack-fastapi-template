@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import uuid
-from typing import List
 
 from fastapi import APIRouter, HTTPException
 
@@ -17,7 +16,9 @@ def create_api_key(
     api_key_in: ApiKeyCreate, session: SessionDep, current_user: CurrentUser
 ):
     """Upload an API key for the current user."""
-    api_key = api_keys_crud.create_api_key(session=session, user_id=current_user.id, api_key_in=api_key_in)
+    api_key = api_keys_crud.create_api_key(
+        session=session, user_id=current_user.id, api_key_in=api_key_in
+    )
     return ApiKeyPublic(id=api_key.id, name=api_key.name, created_at=api_key.created_at)
 
 
@@ -30,11 +31,15 @@ def list_api_keys(session: SessionDep, current_user: CurrentUser):
 
 
 @router.delete("/{api_key_id}")
-def delete_api_key(api_key_id: uuid.UUID, session: SessionDep, current_user: CurrentUser):
+def delete_api_key(
+    api_key_id: uuid.UUID, session: SessionDep, current_user: CurrentUser
+):
     api_key = api_keys_crud.get_api_key(session=session, api_key_id=api_key_id)
     if not api_key:
         raise HTTPException(status_code=404, detail="API key not found")
     if api_key.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized to delete this API key")
+        raise HTTPException(
+            status_code=403, detail="Not authorized to delete this API key"
+        )
     api_keys_crud.delete_api_key(session=session, api_key_id=api_key_id)
     return {"detail": "deleted"}

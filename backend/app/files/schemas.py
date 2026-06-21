@@ -10,13 +10,16 @@ class FileBase(SQLModel):
     content_type: str = Field(min_length=1, max_length=255)
     size: int | None = None
 
+
 class FileCreate(FileBase):
     url: str | None = None
+
 
 class FilePublic(FileBase):
     id: uuid.UUID
     created_at: datetime | None = None
     user_id: uuid.UUID
+
 
 class FilesPublic(SQLModel):
     data: list[FilePublic]
@@ -30,6 +33,7 @@ class FilesStatusRequest(SQLModel):
 # ---------------------------------------------------------------------------
 # FileJob schemas
 # ---------------------------------------------------------------------------
+
 
 class FileJobCreate(SQLModel):
     job_id: str = Field(max_length=255)
@@ -59,12 +63,14 @@ class FileJobPublic(SQLModel):
 
 class FileWithJobPublic(FilePublic):
     """FilePublic enriched with its associated FileJob (if any)."""
+
     job: FileJobPublic | None = None
 
 
 # ---------------------------------------------------------------------------
 # Result preview schemas
 # ---------------------------------------------------------------------------
+
 
 class FilePreviewResponse(SQLModel):
     """Parsed OCR result table for a file, ready to render in the front end.
@@ -73,6 +79,7 @@ class FilePreviewResponse(SQLModel):
     content as a list of ``{column: value}`` records — the same data the JSON
     download exports, returned inline for previewing.
     """
+
     file_id: uuid.UUID
     filename: str
     columns: list[str]
@@ -85,8 +92,10 @@ class FilePreviewResponse(SQLModel):
 # Transaction classification schemas
 # ---------------------------------------------------------------------------
 
+
 class TransactionResult(SQLModel):
     """A single classified transaction (Thông tư 200/2014/TT-BTC)."""
+
     description: str
     account_code: str
     account_name: str
@@ -94,4 +103,5 @@ class TransactionResult(SQLModel):
 
 class TransactionResponse(SQLModel):
     """Classification results for a batch of transactions."""
+
     results: list[TransactionResult]

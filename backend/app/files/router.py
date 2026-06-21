@@ -13,7 +13,12 @@ from app.files.crud import (
     get_file_job_by_file_id,
     update_file_job,
 )
-from app.files.dependencies import CurrentUser, SessionDep
+from app.files.dependencies import (
+    CurrentUser,
+    OwnedFile,
+    SessionDep,
+    require_done_job,
+)
 from app.files.models import File, FileJob
 from app.files.schemas import (
     FileCreate,
@@ -43,22 +48,12 @@ router = APIRouter(prefix="/files", tags=["files"])
 
 @router.post("/{file_id}/download/ai", response_class=Response)
 def analyze_transactions_endpoint(
-    file_id: uuid.UUID, session: SessionDep, user: CurrentUser
+    file: OwnedFile, session: SessionDep, user: CurrentUser
 ):
     """Classify the transactions in a file's OCR result into accounting codes
     (Thông tư 200/2014/TT-BTC) using the configured Gemini API key and stream the
     merged table back as an Excel (.xlsx) file."""
-    file = session.get(File, file_id)
-    if not file:
-        raise HTTPException(status_code=404, detail="File not found")
-    if file.user_id != user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to access this file"
-        )
-
-    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
-    if not file_job or file_job.state != OcrJobStatus.DONE:
-        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+    require_done_job(session=session, file_id=file.id)
 
     try:
         tx_df = analyze_transactions_for_file(session=session, file=file, user=user)
@@ -200,19 +195,11 @@ def get_file_status(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
 
 
 @router.get("/{file_id}/job", response_model=FileJobPublic)
-def get_file_job(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+def get_file_job(file: OwnedFile, session: SessionDep):
     """
     Get the FileJob record for a given file, containing detailed OCR progress info.
     """
-    file = session.get(File, file_id)
-    if not file:
-        raise HTTPException(status_code=404, detail="File not found")
-    if file.user_id != user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to access this file"
-        )
-
-    file_job: FileJob | None = get_file_job_by_file_id(session=session, file_id=file_id)
+    file_job: FileJob | None = get_file_job_by_file_id(session=session, file_id=file.id)
     if not file_job:
         raise HTTPException(status_code=404, detail="No job found for this file")
     return file_job
@@ -261,7 +248,7 @@ def list_files(session: SessionDep, user: CurrentUser, skip: int = 0, limit: int
 
 @router.post("/{file_id}/download", response_class=Response)
 def download_table_excel_file(
-    file_id: uuid.UUID,
+    file: OwnedFile,
     type: str,
     session: SessionDep,
     user: CurrentUser,
@@ -269,22 +256,10 @@ def download_table_excel_file(
     """
     Stream an Excel file built from the OCR result JSON stored in R2.
     """
-    file = session.get(File, file_id)
-    if not file:
-        raise HTTPException(status_code=404, detail="File not found")
-
-    if file.user_id != user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to access this file"
-        )
-
-    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
-
-    if not file_job or file_job.state != "done":
-        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+    require_done_job(session=session, file_id=file.id)
 
     logger.info(
-        f"Preparing to stream file {file_id} for user {user.email} with requested type {type}"
+        f"Preparing to stream file {file.id} for user {user.email} with requested type {type}"
     )
     excel_bytes, content_disposition = download_file(
         session=session, file=file, type=type
@@ -304,25 +279,14 @@ def download_table_excel_file(
 
 
 @router.post("/{file_id}/download/analyze-transactions", response_class=Response)
-def download_ai_version_excel(
-    file_id: uuid.UUID, session: SessionDep, user: CurrentUser
-):
+def download_ai_version_excel(file: OwnedFile, session: SessionDep, user: CurrentUser):
     """
     Generate and return a new version of the Excel file created by the standard
     download endpoint. This will fetch the existing generated Excel bytes, write
     them to a temporary file, call `get_gemini_response_for_file` to produce a
     modified xlsx, and stream that back to the client.
     """
-    file = session.get(File, file_id)
-    if not file:
-        raise HTTPException(status_code=404, detail="File not found")
-    if file.user_id != user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to access this file"
-        )
-    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
-    if not file_job or file_job.state != "done":
-        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+    require_done_job(session=session, file_id=file.id)
     try:
         ex_bytes, content_disposition = download_file_with_ai(
             session=session, file=file, user=user
@@ -370,23 +334,13 @@ def get_files_batch_status(
 
 
 @router.get("/{file_id}/preview", response_model=FilePreviewResponse)
-def preview_file_result(file_id: uuid.UUID, session: SessionDep, user: CurrentUser):
+def preview_file_result(file: OwnedFile, session: SessionDep):
     """
     Fetch the parsed OCR result for a file from its stored ``json_url`` and
     return the extracted table as JSON (``columns`` + ``rows``), ready to render
     in the front end. This is the same table data the download endpoint exports.
     """
-    file = session.get(File, file_id)
-    if not file:
-        raise HTTPException(status_code=404, detail="File not found")
-    if file.user_id != user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to access this file"
-        )
-
-    file_job = get_file_job_by_file_id(session=session, file_id=file_id)
-    if not file_job or file_job.state != OcrJobStatus.DONE:
-        raise HTTPException(status_code=400, detail="OCR job is not done yet")
+    file_job = require_done_job(session=session, file_id=file.id)
     if not file_job.json_url:
         raise HTTPException(
             status_code=400, detail="No result data available for this file"
@@ -395,7 +349,7 @@ def preview_file_result(file_id: uuid.UUID, session: SessionDep, user: CurrentUs
     try:
         columns, rows = get_preview_data(file_job)
     except Exception as exc:
-        logger.error("Failed to fetch OCR preview for file %s: %s", file_id, exc)
+        logger.error("Failed to fetch OCR preview for file %s: %s", file.id, exc)
         raise HTTPException(
             status_code=502, detail="Failed to load result data"
         ) from exc

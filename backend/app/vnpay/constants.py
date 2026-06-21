@@ -4,9 +4,9 @@ from enum import StrEnum
 class BankCode(StrEnum):
     """Supported payment method / bank codes."""
 
-    VNPAYQR = "VNPAYQR"   # QR code scan
-    VNBANK = "VNBANK"      # Domestic ATM / internet banking
-    INTCARD = "INTCARD"    # International card (Visa/Master/JCB)
+    VNPAYQR = "VNPAYQR"  # QR code scan
+    VNBANK = "VNBANK"  # Domestic ATM / internet banking
+    INTCARD = "INTCARD"  # International card (Visa/Master/JCB)
 
 
 class OrderType(StrEnum):
@@ -98,9 +98,9 @@ class TransactionStatus(StrEnum):
 class IPNRspCode(StrEnum):
     """Response codes that the merchant must send back to VNPAY on IPN."""
 
-    CONFIRMED = "00"         # Successfully updated – VNPAY stops retrying
-    ORDER_NOT_FOUND = "01"   # Order not found – VNPAY retries
-    ALREADY_CONFIRMED = "02" # Already confirmed – VNPAY stops retrying
-    INVALID_AMOUNT = "04"    # Amount mismatch – VNPAY retries
-    INVALID_SIGNATURE = "97" # Checksum failed – VNPAY retries
-    UNKNOWN_ERROR = "99"     # Unknown error – VNPAY retries
+    CONFIRMED = "00"  # Successfully updated – VNPAY stops retrying
+    ORDER_NOT_FOUND = "01"  # Order not found – VNPAY retries
+    ALREADY_CONFIRMED = "02"  # Already confirmed – VNPAY stops retrying
+    INVALID_AMOUNT = "04"  # Amount mismatch – VNPAY retries
+    INVALID_SIGNATURE = "97"  # Checksum failed – VNPAY retries
+    UNKNOWN_ERROR = "99"  # Unknown error – VNPAY retries

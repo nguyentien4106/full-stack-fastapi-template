@@ -4,15 +4,16 @@ from app.core.config import settings
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
+
 # make sure all SQLModel models are imported before initializing DB
 # otherwise, SQLModel might fail to initialize relationships properly
 def init_db(session: Session) -> None:
     # Import all models so SQLModel registers them
+    # ensure api_keys model is imported so SQLModel registers the table
+    from app.api_keys.models import ApiKey  # noqa: F401
     from app.files.models import File  # noqa: F401
     from app.items.models import Item  # noqa: F401
     from app.users.models import User
-    # ensure api_keys model is imported so SQLModel registers the table
-    from app.api_keys.models import ApiKey  # noqa: F401
     from app.users.schemas import UserCreate
     from app.users.service import create_user
 

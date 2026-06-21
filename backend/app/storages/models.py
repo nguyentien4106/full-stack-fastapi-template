@@ -33,5 +33,9 @@ class UserStorageStat(SQLModel, table=True):
         default_factory=get_datetime_utc,
         sa_type=DateTime(timezone=True),  # type: ignore[call-arg]
     )
-    total_transactions: int | None = Field(default=0, ge=0, description="Total number of transactions")
-    total_pages: int = Field(default=0, ge=0, description="Total number of pages processed")
+    total_transactions: int | None = Field(
+        default=0, ge=0, description="Total number of transactions"
+    )
+    total_pages: int = Field(
+        default=0, ge=0, description="Total number of pages processed"
+    )

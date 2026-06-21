@@ -22,7 +22,7 @@ def read_items(
     """
     if current_user.is_superuser:
         count_statement = select(func.count()).select_from(Item)
-        count = 1#session.exec(count_statement).one()
+        count = 1  # session.exec(count_statement).one()
         statement = (
             select(Item).order_by(col(Item.created_at).desc()).offset(skip).limit(limit)
         )

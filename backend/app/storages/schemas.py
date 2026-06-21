@@ -15,6 +15,7 @@ class UserStorageStatPublic(SQLModel):
     total_pages: int | None = None
     balance: float = 0.0
 
+
 class UserStorageStatUpdate(SQLModel):
     file_count: int | None = None
     total_size: int | None = None

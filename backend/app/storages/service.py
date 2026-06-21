@@ -40,7 +40,8 @@ def update_storage_stat(
 
 
 def increment_storage_stat(
-    *, session: Session,
+    *,
+    session: Session,
     user_id: uuid.UUID,
     size_delta: int = 0,
     cost_delta: float = 0.0,
@@ -60,7 +61,11 @@ def increment_storage_stat(
 
 
 def decrement_storage_stat(
-    *, session: Session, user_id: uuid.UUID, size_delta: int = 0, cost_delta: float = 0.0
+    *,
+    session: Session,
+    user_id: uuid.UUID,
+    size_delta: int = 0,
+    cost_delta: float = 0.0,
 ) -> UserStorageStat:
     stat = get_or_create_storage_stat(session=session, user_id=user_id)
     stat.file_count = max(0, stat.file_count - 1)

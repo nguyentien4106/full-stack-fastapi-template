@@ -1,9 +1,13 @@
 from __future__ import annotations
-from app.utils import get_datetime_utc
+
 import uuid
 from datetime import datetime
+
 from sqlalchemy import DateTime
 from sqlmodel import Field, SQLModel
+
+from app.utils import get_datetime_utc
+
 
 class Item(SQLModel, table=True):
     __tablename__ = "items"

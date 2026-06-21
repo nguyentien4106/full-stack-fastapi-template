@@ -1,5 +1,4 @@
 from __future__ import annotations
-from app.users.models import User
 
 from collections.abc import Generator
 from typing import Annotated
@@ -15,6 +14,7 @@ from app.auth.schemas import TokenPayload
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
+from app.users.models import User
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
@@ -51,7 +51,9 @@ def get_current_user(session: SessionDep, token: TokenDep):
     return user
 
 
-def get_current_active_superuser(current_user: Annotated[object, Depends(get_current_user)]):
+def get_current_active_superuser(
+    current_user: Annotated[object, Depends(get_current_user)],
+):
     if not getattr(current_user, "is_superuser", False):
         raise HTTPException(
             status_code=403, detail="The user doesn't have enough privileges"

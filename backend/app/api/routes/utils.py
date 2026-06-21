@@ -3,9 +3,9 @@ from pydantic.networks import EmailStr
 from sqlalchemy import delete
 from sqlmodel import Session
 
+from app.auth.dependencies import get_current_active_superuser, get_db
 from app.aws.client import get_s3_client
 from app.aws.config import aws_settings
-from app.auth.dependencies import get_current_active_superuser, get_db
 from app.files.models import File
 from app.users.schemas import Message
 from app.users.utils import generate_test_email, send_email
@@ -69,7 +69,9 @@ def clear_all_files(session: Session = Depends(get_db)) -> Message:
 
             if not resp.get("IsTruncated"):
                 break
-            resp = client.list_objects_v2(Bucket=bucket, ContinuationToken=resp.get("NextContinuationToken"))
+            resp = client.list_objects_v2(
+                Bucket=bucket, ContinuationToken=resp.get("NextContinuationToken")
+            )
 
         if keys_to_delete:
             client.delete_objects(Bucket=bucket, Delete={"Objects": keys_to_delete})
@@ -82,7 +84,10 @@ def clear_all_files(session: Session = Depends(get_db)) -> Message:
         session.exec(statement)
         session.commit()
     except Exception as exc:  # pragma: no cover - db issue
-        raise HTTPException(status_code=500, detail=f"Failed to delete File records: {exc}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to delete File records: {exc}"
+        )
 
-    return Message(message="Cleared all objects from R2 bucket and deleted File records")
-
+    return Message(
+        message="Cleared all objects from R2 bucket and deleted File records"
+    )

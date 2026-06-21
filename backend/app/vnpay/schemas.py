@@ -4,7 +4,6 @@ from pydantic import BaseModel, Field, field_validator
 
 from .constants import BankCode, Locale, OrderType
 
-
 # ---------------------------------------------------------------------------
 # Payment request (merchant → VNPAY)
 # ---------------------------------------------------------------------------
@@ -109,10 +108,7 @@ class _VNPayCallbackBase(BaseModel):
 
     @property
     def is_success(self) -> bool:
-        return (
-            self.vnp_ResponseCode == "00"
-            and self.vnp_TransactionStatus == "00"
-        )
+        return self.vnp_ResponseCode == "00" and self.vnp_TransactionStatus == "00"
 
 
 class IPNRequest(_VNPayCallbackBase):

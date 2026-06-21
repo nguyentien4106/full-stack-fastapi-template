@@ -32,7 +32,6 @@ Usage example::
     return_data = ReturnURLRequest(**request.query_params)
     is_valid, parsed = client.verify_return_url(return_data)
 """
-from app.backend_pre_start import logger
 
 import hashlib
 import hmac
@@ -182,8 +181,7 @@ class VNPayClient:
         secure_hash = _hmac_sha512(self.config.hash_secret, hash_data)
 
         payment_url = (
-            f"{self.config.payment_url}?{query_string}"
-            f"&vnp_SecureHash={secure_hash}"
+            f"{self.config.payment_url}?{query_string}&vnp_SecureHash={secure_hash}"
         )
 
         return PaymentResponse(
@@ -208,11 +206,15 @@ class VNPayClient:
         str_params = {k: str(v) for k, v in raw.items() if v is not None}
 
         if not _verify_signature(str_params, secure_hash, self.config.hash_secret):
-            return IPNResponse(RspCode=IPNRspCode.INVALID_SIGNATURE, Message="Invalid signature")
+            return IPNResponse(
+                RspCode=IPNRspCode.INVALID_SIGNATURE, Message="Invalid signature"
+            )
 
         return IPNResponse(RspCode=IPNRspCode.CONFIRMED, Message="Confirm Success")
 
-    def verify_return_url(self, data: ReturnURLRequest) -> tuple[bool, ReturnURLRequest]:
+    def verify_return_url(
+        self, data: ReturnURLRequest
+    ) -> tuple[bool, ReturnURLRequest]:
         """
         Validate the ReturnURL callback that VNPAY sends back to the customer's
         browser after payment.

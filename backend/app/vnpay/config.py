@@ -20,7 +20,9 @@ class VNPayConfig:
     # VNPAY endpoints
     payment_url: str = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
     api_url: str = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"
-    bank_list_url: str = "https://sandbox.vnpayment.vn/qrpayauth/api/merchant/get_bank_list"
+    bank_list_url: str = (
+        "https://sandbox.vnpayment.vn/qrpayauth/api/merchant/get_bank_list"
+    )
 
     # API version
     version: str = "2.1.0"

@@ -4,7 +4,6 @@ import boto3
 from botocore.client import Config
 
 from app.aws.config import aws_settings
-from app.backend_pre_start import logger
 
 
 def get_s3_client():
@@ -21,7 +20,9 @@ def get_s3_client():
     return boto3.client("s3", endpoint_url=endpoint, config=client_config, **kwargs)
 
 
-def generate_presigned_put_url(key: str, bucket: str | None = None, expiration: int = 60*60*24*7) -> str:
+def generate_presigned_put_url(
+    key: str, bucket: str | None = None, expiration: int = 60 * 60 * 24 * 7
+) -> str:
     bucket = bucket or aws_settings.R2_BUCKET_NAME
     if not bucket:
         raise RuntimeError("S3 bucket not configured")
@@ -36,7 +37,9 @@ def generate_presigned_put_url(key: str, bucket: str | None = None, expiration: 
     return url
 
 
-def upload_file_to_r2(key: str, data: bytes, content_type: str | None = None, presign: bool = False) -> dict:
+def upload_file_to_r2(
+    key: str, data: bytes, content_type: str | None = None, presign: bool = False
+) -> dict:
     bucket = aws_settings.R2_BUCKET_NAME
     if not bucket:
         raise RuntimeError("S3 bucket not configured")
@@ -51,6 +54,7 @@ def upload_file_to_r2(key: str, data: bytes, content_type: str | None = None, pr
     if presign:
         resp["PresignedURL"] = generate_presigned_put_url(key=key, bucket=bucket)
     return resp
+
 
 def download_file_from_r2(key: str, bucket: str | None = None) -> bytes:
     bucket = bucket or aws_settings.R2_BUCKET_NAME

@@ -11,7 +11,7 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
 
     pages = data["result"]["layoutParsingResults"]
 
-    for page_idx, page in enumerate(pages):
+    for page in pages:
         blocks = page.get("prunedResult", {}).get("parsing_res_list", [])
 
         for block in blocks:
@@ -21,7 +21,7 @@ def extract_tables_from_ocr(data) -> pd.DataFrame:
                 try:
                     dfs = pd.read_html(StringIO(html))
                     all_dfs.extend(dfs)
-                except Exception as e:
+                except Exception:
                     pass
 
     merged = pd.concat(all_dfs, ignore_index=True)

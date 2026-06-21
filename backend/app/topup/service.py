@@ -3,6 +3,7 @@ Topup service — business logic, no router.
 
 Call these functions from the router or payment callbacks.
 """
+
 from __future__ import annotations
 
 import uuid
@@ -33,7 +34,9 @@ def get_vnpay_client(return_url: str | None = None) -> VNPayClient:
     config = VNPayConfig(
         tmn_code=settings.VNPAY_TMN_CODE or "36PBP850",
         hash_secret=settings.VNPAY_HASH_SECRET or "Q6NRDOTHBWMJ5KWUMAZUNRT4MNYLHR2E",
-        return_url=return_url or settings.VNPAY_RETURN_URL or "https://localhost:5173/payment/return",
+        return_url=return_url
+        or settings.VNPAY_RETURN_URL
+        or "https://localhost:5173/payment/return",
         expire_minutes=15,
     )
     return VNPayClient(config)
@@ -198,9 +201,7 @@ def deduct_balance(
     """
     balance = crud.get_or_create_balance(session, user_id)
     if balance.balance < amount:
-        raise ValueError(
-            f"Insufficient balance: has {balance.balance}, needs {amount}"
-        )
+        raise ValueError(f"Insufficient balance: has {balance.balance}, needs {amount}")
     txn = crud.create_transaction(
         session,
         user_id=user_id,
@@ -274,14 +275,18 @@ def handle_ipn(session: Session, params: dict[str, str]) -> IPNResponse:
     if txn is None:
         # Order not found — create a new SUCCESS transaction for the user
         # We don't know the user_id from IPN alone, so just log and confirm
-        logger.warning("IPN: transaction not found for txn_ref=%s, amount=%s", txn_ref, amount_vnd)
+        logger.warning(
+            "IPN: transaction not found for txn_ref=%s, amount=%s", txn_ref, amount_vnd
+        )
         return IPNResponse(RspCode="01", Message="Order not found")
 
     # 3. Check amount
     if int(txn.amount) != amount_vnd:
         logger.warning(
             "IPN amount mismatch: expected %s, got %s for txn_ref=%s",
-            txn.amount, amount_vnd, txn_ref,
+            txn.amount,
+            amount_vnd,
+            txn_ref,
         )
         return IPNResponse(RspCode="04", Message="Invalid amount")
 
@@ -296,7 +301,12 @@ def handle_ipn(session: Session, params: dict[str, str]) -> IPNResponse:
             crud.mark_transaction(session, txn, TopupStatus.SUCCESS)
             crud.apply_balance_change(session, balance, txn.amount, TopupType.CREDIT)
             session.commit()
-            logger.info("IPN: credited %s VND to user %s (txn_ref=%s)", txn.amount, txn.user_id, txn_ref)
+            logger.info(
+                "IPN: credited %s VND to user %s (txn_ref=%s)",
+                txn.amount,
+                txn.user_id,
+                txn_ref,
+            )
         except Exception as exc:
             session.rollback()
             logger.error("IPN: failed to process payment: %s", exc)
@@ -304,6 +314,8 @@ def handle_ipn(session: Session, params: dict[str, str]) -> IPNResponse:
     else:
         crud.mark_transaction(session, txn, TopupStatus.FAILED)
         session.commit()
-        logger.info("IPN: marked txn_ref=%s as FAILED (code=%s)", txn_ref, ipn.vnp_ResponseCode)
+        logger.info(
+            "IPN: marked txn_ref=%s as FAILED (code=%s)", txn_ref, ipn.vnp_ResponseCode
+        )
 
     return IPNResponse(RspCode="00", Message="Confirm Success")

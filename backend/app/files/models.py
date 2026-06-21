@@ -26,11 +26,14 @@ class File(SQLModel, table=True):
         foreign_key="users.id", nullable=False, ondelete="CASCADE"
     )
 
+
 class FileJob(SQLModel, table=True):
     __tablename__ = "file_jobs"
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     job_id: str = Field(max_length=255, index=True)
-    file_id: uuid.UUID = Field(foreign_key="files.id", nullable=False, ondelete="CASCADE")
+    file_id: uuid.UUID = Field(
+        foreign_key="files.id", nullable=False, ondelete="CASCADE"
+    )
     state: str = Field(default=OcrJobStatus.PENDING, max_length=50)
     model: str | None = Field(default=None, max_length=100)
     total_pages: int | None = None

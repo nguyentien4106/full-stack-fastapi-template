@@ -7,6 +7,7 @@ All models now live in the per-domain model modules:
   - app.storages.models / app.storages.schemas
   - app.auth.schemas
 """
+
 from sqlmodel import SQLModel  # noqa: F401
 
 from app.api_keys.models import ApiKey  # noqa: F401
