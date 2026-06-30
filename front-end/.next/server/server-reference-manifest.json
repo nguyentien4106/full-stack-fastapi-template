@@ -1,0 +1,66 @@
+{
+  "node": {
+    "28ea6c1e475a58127f1f07928762e1c7ec91a137": {
+      "workers": {
+        "app/[locale]/(auth)/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/documents/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/billing/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/upload/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/[locale]/(auth)/login/page": "action-browser",
+        "app/[locale]/(auth)/signup/page": "action-browser",
+        "app/[locale]/(app)/documents/page": "action-browser",
+        "app/[locale]/(app)/dashboard/page": "action-browser",
+        "app/[locale]/(app)/profile/page": "action-browser",
+        "app/[locale]/(app)/billing/page": "action-browser",
+        "app/[locale]/(app)/upload/page": "action-browser"
+      }
+    },
+    "9950c55ff29fd5f1778f05adf3ba63cd9a28dd37": {
+      "workers": {
+        "app/[locale]/(auth)/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/documents/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/billing/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/upload/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/[locale]/(auth)/login/page": "action-browser",
+        "app/[locale]/(auth)/signup/page": "action-browser",
+        "app/[locale]/(app)/documents/page": "action-browser",
+        "app/[locale]/(app)/dashboard/page": "action-browser",
+        "app/[locale]/(app)/profile/page": "action-browser",
+        "app/[locale]/(app)/billing/page": "action-browser",
+        "app/[locale]/(app)/upload/page": "action-browser"
+      }
+    },
+    "ea41af267c742edf488f00fe428d0b84a7628dba": {
+      "workers": {
+        "app/[locale]/(auth)/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(auth)/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/documents/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/billing/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!",
+        "app/[locale]/(app)/upload/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fwalter%2FDesktop%2FProjects%2Ffull-stack-fastapi-template%2Ffront-end%2Flib%2Factions.ts%22%2C%5B%22signup%22%2C%22login%22%2C%22logout%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/[locale]/(auth)/login/page": "action-browser",
+        "app/[locale]/(auth)/signup/page": "action-browser",
+        "app/[locale]/(app)/documents/page": "action-browser",
+        "app/[locale]/(app)/dashboard/page": "action-browser",
+        "app/[locale]/(app)/profile/page": "action-browser",
+        "app/[locale]/(app)/billing/page": "action-browser",
+        "app/[locale]/(app)/upload/page": "action-browser"
+      }
+    }
+  },
+  "edge": {},
+  "encryptionKey": "RDQqDrwt/92IT46ZuTwRraeX9JbSlX5/J4/TGbqRCYk="
+}
