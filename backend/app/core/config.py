@@ -129,9 +129,17 @@ class Settings(BaseSettings):
     OCR_JOB_POLLING_INTERVAL: int = 5  # in seconds
     OCR_MODEL: str = "PaddleOCR-VL"
 
-    VNPAY_TMN_CODE: str | None = None
-    VNPAY_HASH_SECRET: str | None = None
-    VNPAY_RETURN_URL: str = "https://localhost:5173/payment/return"
+    # SePay (bank-transfer webhook model). The QR is generated client-side via
+    # qr.sepay.vn; SePay POSTs a webhook (Authorization: Apikey <SEPAY_API_KEY>)
+    # when a matching transfer arrives.
+    SEPAY_API_KEY: str | None = (
+        None  # shared secret in the webhook Authorization header
+    )
+    SEPAY_BANK_ACCOUNT: str | None = None  # receiving account number for the QR
+    SEPAY_BANK_CODE: str | None = None  # bank short name/code, e.g. "Vietcombank"
+    SEPAY_CONTENT_PREFIX: str = (
+        "NAP"  # alphanumeric prefix for the payment content code
+    )
 
 
 settings = Settings()  # type: ignore

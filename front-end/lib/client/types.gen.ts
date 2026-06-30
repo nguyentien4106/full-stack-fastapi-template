@@ -43,6 +43,22 @@ export type CreatePaymentResponse = {
     amount: number;
 };
 
+export type CreateSepayPaymentRequest = {
+    /**
+     * Top-up amount in VND
+     */
+    amount: number;
+};
+
+export type CreateSepayPaymentResponse = {
+    qr_url: string;
+    txn_ref: string;
+    amount: number;
+    account: string;
+    bank: string;
+    content: string;
+};
+
 export type FileJobPublic = {
     id: string;
     job_id: string;
@@ -142,6 +158,33 @@ export type PaymentReturnResponse = {
     txn_ref: string;
     message: string;
     code?: (string | null);
+};
+
+export type SepayStatusResponse = {
+    txn_ref: string;
+    status: TopupStatus;
+};
+
+/**
+ * Payload SePay POSTs to the webhook when a transfer is received.
+ *
+ * Only the fields we rely on are typed; any extra fields are ignored.
+ */
+export type SepayWebhookPayload = {
+    id: number;
+    gateway?: (string | null);
+    transactionDate?: (string | null);
+    accountNumber?: (string | null);
+    code?: (string | null);
+    content?: string;
+    transferType: string;
+    transferAmount: number;
+    referenceCode?: (string | null);
+    description?: (string | null);
+};
+
+export type SepayWebhookResponse = {
+    success: boolean;
 };
 
 export type Token = {
@@ -402,6 +445,25 @@ export type LoginRecoverPasswordHtmlContentData = {
 };
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
+
+export type SepayCreatePaymentData = {
+    requestBody: CreateSepayPaymentRequest;
+};
+
+export type SepayCreatePaymentResponse = (CreateSepayPaymentResponse);
+
+export type SepayGetStatusData = {
+    txnRef: string;
+};
+
+export type SepayGetStatusResponse = (SepayStatusResponse);
+
+export type SepaySepayWebhookData = {
+    authorization?: string;
+    requestBody: SepayWebhookPayload;
+};
+
+export type SepaySepayWebhookResponse = (SepayWebhookResponse);
 
 export type StoragesGetMyStorageStatResponse = (UserStorageStatPublic);
 

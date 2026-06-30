@@ -1,7 +1,9 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { API_BASE, TOKEN_COOKIE } from "@/lib/api";
+import { TOKEN_COOKIE } from "@/lib/api";
+import { OpenAPI } from "@/lib/client";
+import { request as apiRequest } from "@/lib/client/core/request";
 import type { UserPublic } from "@/lib/client";
 
 export type UserRole = "user" | "company" | "admin";
@@ -71,16 +73,20 @@ export const getSession = cache(async (): Promise<AuthUser | null> => {
   const token = cookieStore.get(TOKEN_COOKIE)?.value;
   if (!token) return null;
 
+  // Mirrors UsersService.readUserMe() but injects this request's token: the
+  // global OpenAPI.TOKEN resolver reads document.cookie and is browser-only, and
+  // mutating it would race across concurrent server requests.
+  const request = apiRequest<UserPublic>(
+    { ...OpenAPI, TOKEN: token },
+    { method: "GET", url: "/api/v1/users/me" },
+  );
+  const timeout = setTimeout(() => request.cancel(), 5000);
   try {
-    const res = await fetch(`${API_BASE}/api/v1/users/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!res.ok) return null;
-    return toAuthUser((await res.json()) as UserPublic);
+    return toAuthUser(await request);
   } catch {
     return null;
+  } finally {
+    clearTimeout(timeout);
   }
 });
 

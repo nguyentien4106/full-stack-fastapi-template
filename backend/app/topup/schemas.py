@@ -52,20 +52,3 @@ class TopupPackage(BaseModel):
 
 class TopupPackagesResponse(BaseModel):
     packages: list[TopupPackage]
-
-
-class CreatePaymentRequest(BaseModel):
-    amount: int = Field(gt=0, description="Top-up amount in VND")
-
-
-class CreatePaymentResponse(BaseModel):
-    payment_url: str
-    txn_ref: str
-    amount: int
-
-
-class PaymentReturnResponse(BaseModel):
-    status: str
-    txn_ref: str
-    message: str
-    code: str | None = None

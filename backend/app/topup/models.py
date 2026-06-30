@@ -53,7 +53,7 @@ class TopupTransaction(SQLModel, table=True):
         ondelete="CASCADE",
         index=True,
     )
-    # Payment gateway transaction reference (e.g. VNPAY txn_ref)
+    # Payment gateway reference (e.g. SePay content code)
     txn_ref: str | None = Field(default=None, max_length=100, index=True)
     amount: float = Field(description="Transaction amount in VND (always positive)")
     type: TopupType = Field(description="credit = add balance, debit = deduct balance")

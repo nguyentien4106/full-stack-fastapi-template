@@ -681,6 +681,25 @@ a { color: inherit; text-decoration: none; }
 .stat-card .val { font-family: var(--font-mono); font-weight: 500; font-size: 30px; letter-spacing: -0.02em; margin: 18px 0 4px; }
 .stat-card .cap { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--fg-dim); text-transform: uppercase; }
 
+/* ---------- monthly usage ---------- */
+.usage-panel { margin-bottom: 22px; }
+.usage-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.usage-meter { display: flex; flex-direction: column; gap: 11px; }
+.usage-meter-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.usage-meter-top .lead { font-family: var(--font-mono); font-size: 15px; color: var(--fg-muted); }
+.usage-meter-top .lead b { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--cyan); margin-right: 4px; }
+.usage-pct { font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; color: var(--cyan); background: var(--cyan-dim); }
+.usage-pct.am { color: var(--amber); background: var(--amber-dim); }
+.usage-bar { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.usage-bar i { display: block; height: 100%; border-radius: 99px; background: var(--cyan); box-shadow: 0 0 10px color-mix(in oklch, var(--cyan) 50%, transparent); transition: width 0.5s ease; }
+.usage-bar i.am { background: var(--amber); box-shadow: 0 0 10px color-mix(in oklch, var(--amber) 50%, transparent); }
+.usage-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.usage-tile { padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line); background: var(--wash-02); }
+.usage-tile .k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-dim); }
+.usage-tile .v { font-family: var(--font-mono); font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--fg); margin-top: 7px; }
+.usage-tile .v .u { color: var(--fg-dim); font-size: 14px; font-weight: 400; }
+@media (max-width: 640px) { .usage-tiles { grid-template-columns: 1fr; } }
+
 /* ---------- overview grid ---------- */
 .ov-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
 .panel { border-radius: var(--r-lg); border: 1px solid var(--line); background: linear-gradient(180deg, var(--surface), var(--bg-deep)); }

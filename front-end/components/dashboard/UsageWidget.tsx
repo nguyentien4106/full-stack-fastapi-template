@@ -27,30 +27,49 @@ export default function UsageWidget() {
 
   const fmt = (n: number) => n.toLocaleString();
 
+  const total = usage.pages_used + usage.free_pages_remaining;
+  const usedPct = total > 0 ? Math.min(100, Math.round((usage.pages_used / total) * 100)) : 100;
+  const nearLimit = usage.free_pages_remaining === 0 || usedPct >= 80;
+
   return (
-    <div className="panel">
+    <div className="panel usage-panel">
       <div className="panel-head">
         <div>
           <h3>{t("title")}</h3>
-          {usage.free_pages_remaining > 0 && (
-            <div className="sub">
-              {t("freeUsed", {
-                used: usage.pages_used,
-                total: usage.pages_used + usage.free_pages_remaining,
-              })}
-            </div>
-          )}
+          <div className="sub">
+            {t("freeUsed", { used: usage.pages_used, total })}
+          </div>
         </div>
-        <span className="sc-ico">
+        <span className={`sc-ico ${nearLimit ? "am" : ""}`}>
           <Sparkles size={18} />
         </span>
       </div>
-      <div className="panel-body">
-        <div className="val">{t("freeLeft", { count: usage.free_pages_remaining })}</div>
-        <div className="sub">
-          {t("balance")}: {fmt(usage.balance_vnd)} ₫
+      <div className="usage-body">
+        <div className="usage-meter">
+          <div className="usage-meter-top">
+            <div className="lead">
+              <b>{fmt(usage.free_pages_remaining)}</b> {t("freeLeftLabel")}
+            </div>
+            <span className={`usage-pct ${nearLimit ? "am" : ""}`}>{usedPct}%</span>
+          </div>
+          <div className="usage-bar">
+            <i className={nearLimit ? "am" : ""} style={{ width: `${usedPct}%` }} />
+          </div>
         </div>
-        <div className="sub">{t("pricePerPage", { price: fmt(usage.price_per_page_vnd) })}</div>
+        <div className="usage-tiles">
+          <div className="usage-tile">
+            <div className="k">{t("balance")}</div>
+            <div className="v">
+              {fmt(usage.balance_vnd)} <span className="u">₫</span>
+            </div>
+          </div>
+          <div className="usage-tile">
+            <div className="k">{t("perPageLabel")}</div>
+            <div className="v">
+              {fmt(usage.price_per_page_vnd)} <span className="u">₫</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

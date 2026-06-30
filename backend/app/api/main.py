@@ -7,6 +7,7 @@ from app.billing.router import router as billing_router
 from app.core.config import settings
 from app.files.router import router as files_router
 from app.items.router import router as items_router
+from app.sepay.router import router as sepay_router
 from app.storages.router import router as storages_router
 from app.topup.router import router as topup_router
 from app.users.router import router as users_router
@@ -20,6 +21,7 @@ api_router.include_router(files_router)
 api_router.include_router(storages_router)
 api_router.include_router(api_keys_router)
 api_router.include_router(topup_router)
+api_router.include_router(sepay_router)
 api_router.include_router(billing_router)
 
 if settings.ENVIRONMENT == "local":

@@ -193,6 +193,52 @@ export const CreatePaymentResponseSchema = {
     title: 'CreatePaymentResponse'
 } as const;
 
+export const CreateSepayPaymentRequestSchema = {
+    properties: {
+        amount: {
+            type: 'integer',
+            exclusiveMinimum: 0,
+            title: 'Amount',
+            description: 'Top-up amount in VND'
+        }
+    },
+    type: 'object',
+    required: ['amount'],
+    title: 'CreateSepayPaymentRequest'
+} as const;
+
+export const CreateSepayPaymentResponseSchema = {
+    properties: {
+        qr_url: {
+            type: 'string',
+            title: 'Qr Url'
+        },
+        txn_ref: {
+            type: 'string',
+            title: 'Txn Ref'
+        },
+        amount: {
+            type: 'integer',
+            title: 'Amount'
+        },
+        account: {
+            type: 'string',
+            title: 'Account'
+        },
+        bank: {
+            type: 'string',
+            title: 'Bank'
+        },
+        content: {
+            type: 'string',
+            title: 'Content'
+        }
+    },
+    type: 'object',
+    required: ['qr_url', 'txn_ref', 'amount', 'account', 'bank', 'content'],
+    title: 'CreateSepayPaymentResponse'
+} as const;
+
 export const FileJobPublicSchema = {
     properties: {
         id: {
@@ -680,6 +726,127 @@ export const PaymentReturnResponseSchema = {
     type: 'object',
     required: ['status', 'txn_ref', 'message'],
     title: 'PaymentReturnResponse'
+} as const;
+
+export const SepayStatusResponseSchema = {
+    properties: {
+        txn_ref: {
+            type: 'string',
+            title: 'Txn Ref'
+        },
+        status: {
+            '$ref': '#/components/schemas/TopupStatus'
+        }
+    },
+    type: 'object',
+    required: ['txn_ref', 'status'],
+    title: 'SepayStatusResponse'
+} as const;
+
+export const SepayWebhookPayloadSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        gateway: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Gateway'
+        },
+        transactionDate: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Transactiondate'
+        },
+        accountNumber: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Accountnumber'
+        },
+        code: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Code'
+        },
+        content: {
+            type: 'string',
+            title: 'Content',
+            default: ''
+        },
+        transferType: {
+            type: 'string',
+            title: 'Transfertype'
+        },
+        transferAmount: {
+            type: 'number',
+            title: 'Transferamount'
+        },
+        referenceCode: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Referencecode'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        }
+    },
+    type: 'object',
+    required: ['id', 'transferType', 'transferAmount'],
+    title: 'SepayWebhookPayload',
+    description: `Payload SePay POSTs to the webhook when a transfer is received.
+
+Only the fields we rely on are typed; any extra fields are ignored.`
+} as const;
+
+export const SepayWebhookResponseSchema = {
+    properties: {
+        success: {
+            type: 'boolean',
+            title: 'Success'
+        }
+    },
+    type: 'object',
+    required: ['success'],
+    title: 'SepayWebhookResponse'
 } as const;
 
 export const TokenSchema = {

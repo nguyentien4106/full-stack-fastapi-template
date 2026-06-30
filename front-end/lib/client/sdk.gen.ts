@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, BillingGetUsageResponse, FilesAnalyzeTransactionsEndpointData, FilesAnalyzeTransactionsEndpointResponse, FilesListOcrModelsResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesGetFileJobData, FilesGetFileJobResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadAiVersionExcelData, FilesDownloadAiVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, FilesPreviewFileResultData, FilesPreviewFileResultResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreatePaymentData, TopupCreatePaymentResponse, TopupTopupReturnResponse, TopupGetMyBalanceResponse, TopupGetMyTransactionsData, TopupGetMyTransactionsResponse, TopupTopupIpnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
+import type { ApiKeysListApiKeysResponse, ApiKeysCreateApiKeyData, ApiKeysCreateApiKeyResponse, ApiKeysDeleteApiKeyData, ApiKeysDeleteApiKeyResponse, BillingGetUsageResponse, FilesAnalyzeTransactionsEndpointData, FilesAnalyzeTransactionsEndpointResponse, FilesListOcrModelsResponse, FilesUploadFileEndpointData, FilesUploadFileEndpointResponse, FilesListFilesData, FilesListFilesResponse, FilesUpdateFileJobStatusEndpointData, FilesUpdateFileJobStatusEndpointResponse, FilesGetFileStatusData, FilesGetFileStatusResponse, FilesGetFileJobData, FilesGetFileJobResponse, FilesDownloadTableExcelFileData, FilesDownloadTableExcelFileResponse, FilesDownloadAiVersionExcelData, FilesDownloadAiVersionExcelResponse, FilesGetFilesBatchStatusData, FilesGetFilesBatchStatusResponse, FilesPreviewFileResultData, FilesPreviewFileResultResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemEndpointData, ItemsCreateItemEndpointResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemEndpointData, ItemsUpdateItemEndpointResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, SepayCreatePaymentData, SepayCreatePaymentResponse, SepayGetStatusData, SepayGetStatusResponse, SepaySepayWebhookData, SepaySepayWebhookResponse, StoragesGetMyStorageStatResponse, TopupGetTopupPackagesResponse, TopupCreatePaymentData, TopupCreatePaymentResponse, TopupTopupReturnResponse, TopupGetMyBalanceResponse, TopupGetMyTransactionsData, TopupGetMyTransactionsResponse, TopupTopupIpnResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserEndpointData, UsersCreateUserEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserEndpointData, UsersUpdateUserEndpointResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse, UtilsClearAllFilesResponse } from './types.gen';
 
 export class ApiKeysService {
     /**
@@ -520,6 +520,77 @@ export class LoginService {
             path: {
                 email: data.email
             },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class SepayService {
+    /**
+     * Create Payment
+     * Create a PENDING top-up and return a VietQR for the selected amount.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns CreateSepayPaymentResponse Successful Response
+     * @throws ApiError
+     */
+    public static createPayment(data: SepayCreatePaymentData): CancelablePromise<SepayCreatePaymentResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/sepay/create-payment',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Status
+     * Return the status of a top-up so the client can poll for confirmation.
+     * @param data The data for the request.
+     * @param data.txnRef
+     * @returns SepayStatusResponse Successful Response
+     * @throws ApiError
+     */
+    public static getStatus(data: SepayGetStatusData): CancelablePromise<SepayGetStatusResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/sepay/status/{txn_ref}',
+            path: {
+                txn_ref: data.txnRef
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Sepay Webhook
+     * SePay server-to-server webhook.
+     *
+     * Authenticated by a shared API key sent as ``Authorization: Apikey <key>``.
+     * Always responds 200 with ``{"success": ...}``; SePay retries on any non-2xx
+     * response or a ``success`` other than ``true``.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @param data.authorization
+     * @returns SepayWebhookResponse Successful Response
+     * @throws ApiError
+     */
+    public static sepayWebhook(data: SepaySepayWebhookData): CancelablePromise<SepaySepayWebhookResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/sepay/webhook',
+            headers: {
+                authorization: data.authorization
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: 'Validation Error'
             }

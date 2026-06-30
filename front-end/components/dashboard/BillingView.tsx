@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, RefreshCw, Wallet } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { apiMessage } from "@/lib/api";
 import {
+  SepayService,
   TopupService,
+  type CreateSepayPaymentResponse,
   type TopupPackage,
   type TopupTransactionPublic,
   type UserBalancePublic,
 } from "@/lib/client";
 import { formatDate } from "@/lib/files";
 import type { DocStatus } from "@/lib/data";
+import TopupQrModal from "./TopupQrModal";
 
 const STATUS_PILL: Record<TopupTransactionPublic["status"], DocStatus> = {
   success: "done",
@@ -30,26 +33,32 @@ export default function BillingView() {
   const [loading, setLoading] = useState(true);
   const [payingId, setPayingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [payment, setPayment] = useState<CreateSepayPaymentResponse | null>(null);
+
+  const refresh = useCallback(
+    (signal?: { active: boolean }) =>
+      Promise.all([
+        TopupService.getMyBalance(),
+        TopupService.getTopupPackages(),
+        TopupService.getMyTransactions({ limit: 20 }),
+      ])
+        .then(([bal, pkgs, txns]) => {
+          if (signal && !signal.active) return;
+          setBalance(bal);
+          setPackages(pkgs.packages);
+          setTransactions(txns);
+        })
+        .catch((err) => (!signal || signal.active) && setError(apiMessage(err))),
+    [],
+  );
 
   useEffect(() => {
-    let active = true;
-    Promise.all([
-      TopupService.getMyBalance(),
-      TopupService.getTopupPackages(),
-      TopupService.getMyTransactions({ limit: 20 }),
-    ])
-      .then(([bal, pkgs, txns]) => {
-        if (!active) return;
-        setBalance(bal);
-        setPackages(pkgs.packages);
-        setTransactions(txns);
-      })
-      .catch((err) => active && setError(apiMessage(err)))
-      .finally(() => active && setLoading(false));
+    const signal = { active: true };
+    refresh(signal).finally(() => signal.active && setLoading(false));
     return () => {
-      active = false;
+      signal.active = false;
     };
-  }, []);
+  }, [refresh]);
 
   const vnd = (amount: number) =>
     format.number(amount, { style: "currency", currency: "VND", maximumFractionDigits: 0 });
@@ -58,17 +67,36 @@ export default function BillingView() {
     setPayingId(pkg.id);
     setError(null);
     try {
-      const res = await TopupService.createPayment({ requestBody: { amount: pkg.amount } });
-      window.location.href = res.payment_url;
+      const res = await SepayService.createPayment({ requestBody: { amount: pkg.amount } });
+      console.log('Payment created:', res);
+      setPayment(res);
     } catch (err) {
       setError(apiMessage(err));
+    } finally {
       setPayingId(null);
     }
+  };
+
+  const onPaymentSuccess = () => {
+    void refresh();
   };
 
   return (
     <div className="settings-wrap">
       {error && <div className="field-error">{error}</div>}
+
+      {payment && (
+        <TopupQrModal
+          txnRef={payment.txn_ref}
+          qrUrl={payment.qr_url}
+          amount={payment.amount}
+          account={payment.account}
+          bank={payment.bank}
+          content={payment.content}
+          onClose={() => setPayment(null)}
+          onSuccess={onPaymentSuccess}
+        />
+      )}
 
       <div className="set-panel">
         <div className="sp-head">
@@ -108,10 +136,10 @@ export default function BillingView() {
             >
               {payingId === pkg.id ? (
                 <>
-                  <RefreshCw size={15} className="spin" /> {t("redirecting")}
+                  <RefreshCw size={15} className="spin" /> {tc("loading")}
                 </>
               ) : (
-                t("payWithVnpay")
+                t("payWithSepay")
               )}
             </button>
           </div>
